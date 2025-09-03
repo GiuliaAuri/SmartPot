@@ -2,13 +2,15 @@ import time
 import sys
 import os
 import logging
-#TODO elimina le print con i log
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from process.policy_manager import PolicyManager
 from resourses.factory_plants import PlantFactory
 from process.mqtt_sensor_manager import MqttSensorManager
 from process.mqtt_actuator_manager import MqttActuatorManager
 from model.plant_descriptor import PlantDescriptor
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("plant_server")
 
 class PlantServer:
     def __init__(self, plants: list[PlantDescriptor], policy_manager=None):
@@ -22,7 +24,7 @@ class PlantServer:
 
     def run(self, interval=3.0):
         try:
-            print("Plants Server running... ")
+            logging.info("Plants Server running...")
             while True:
                 for plant in self.plants:
                     for sensor in plant.sensors:
@@ -32,7 +34,7 @@ class PlantServer:
 
                 time.sleep(interval)
         except KeyboardInterrupt:
-            print("Stopping Plant Server...")
+            logging.info("Stopping Plant Server...")
             self.stop()
 
     def stop(self):

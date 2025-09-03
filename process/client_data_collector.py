@@ -1,12 +1,13 @@
 import sys
 import os
 import logging
-#TODO sostituisci le print con i log
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from resourses.factory_plants import PlantFactory
 from process.mqtt_sensor_manager import MqttSensorManager
 from process.mqtt_actuator_manager import MqttActuatorManager
-
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("plant_client")
 
 class PlantClient:
     def __init__(self, plants):
@@ -28,16 +29,16 @@ class PlantClient:
         """
         plant = next((p for p in self.plants if p.plant_id == plant_id), None)
         if not plant:
-            print(f"Pianta {plant_id} non trovata.")
+            logging.error(f"Plant {plant_id} not found.")
             return
 
         actuator = next((a for a in plant.actuators if a.device == actuator_name), None)
         if not actuator:
-            print(f"Attuatore {actuator_name} non trovato nella pianta {plant_id}.")
+            logging.error(f"Actuator {actuator_name} not found in plant {plant_id}.")
             return
 
         self.actuator_managers[plant_id].send_command(command, actuator)
-        print(f"Comando inviato a {actuator_name} della pianta {plant_id}: {command}")
+        logging.info(f"Command sent to {actuator_name} of plant {plant_id}: {command}")
 
     def stop(self):
         for sm in self.sensor_managers.values():
@@ -52,15 +53,15 @@ if __name__ == "__main__":
     client = PlantClient(plants)
 
     try:
-        print("Plant Client running..")
+        logging.info("Plant Client running...")
         while True:
-            cmd_input = input("Inserisci comando (formato: plant_id actuator command): ")
+            cmd_input = input("Enter command (format: plant_id actuator command): ")
             if cmd_input.lower() == "exit":
                 break
 
             parts = cmd_input.strip().split()
             if len(parts) != 3:
-                print("Formato comando errato. Esempio corretto: plant01 pump01 ON")
+                logging.error("Invalid command format. Correct example: plant01 pump01 ON")
                 continue
 
             plant_id, actuator_name, command = parts
@@ -69,6 +70,6 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         pass
     finally:
-        print("Stopping Plant Client...")
+        logging.info("Stopping Plant Client...")
         client.stop()
 
