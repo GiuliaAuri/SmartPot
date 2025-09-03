@@ -36,7 +36,7 @@ class MqttSensorManager:
             topic = MqttConfigurationParameters.build_telemetry_plant_topic(
                 self.plant_descriptor.plant_id, sensor.device, sensor.type)
             self.client.publish(topic, sensor.to_json())
-            logger.info("Published telemetry: %s %s", topic, sensor.to_json())
+            logger.info("Published telemetry: %s %s", topic, sensor.to_json())  # Log disattivato lato client
 
     def stop(self):
         self.client.loop_stop()
