@@ -1,0 +1,14 @@
+[
+  {
+    "uuid": "plant-001",
+    "species": "cactus"
+  },
+  {
+    "uuid": "plant-002",
+    "species": "rose"
+  },
+  {
+    "uuid": "plant-003",
+    "species": "orchid"
+  }
+]
