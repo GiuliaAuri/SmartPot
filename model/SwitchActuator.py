@@ -1,9 +1,9 @@
 
 class SwitchActuator:
 
-    def __init__(self, type: str):
+    def __init__(self, device:str):
         self.status = False
-        self.type = type
+        self.device = device
 
     def change_status(self):
         self.status = not self.status

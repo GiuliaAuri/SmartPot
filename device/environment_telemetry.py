@@ -14,11 +14,11 @@ class EnvironmentTelemetryData:
 
     def __init__(self, plant_id: str):
         self.plant_id = plant_id
-        self.resource = "environment_telemetry"
-        self.batteryLevel = BatteryLevelSensor(initial_value=100.0, unit="%", min_value=0.0, max_value=5.0) #max_increse e max_decrease
-        self.temperature = TemperatureSensor(initial_value=0.0, unit="°C", min_value=0.0, max_value=50.0)
-        self.humidity = HumiditySensor(initial_value=0.0, unit="%", min_value=0.0, max_value=100.0)
-        self.lightness = LightnessSensor(initial_value=0.0, unit="lx", min_value=200.0, max_value=60000.0)
+        self.device = "environment_telemetry"
+        self.batteryLevel = BatteryLevelSensor(initial_value=100.0, unit="%", min_value=0.0, max_value=5.0, device=self.device) #max_increse e max_decrease
+        self.temperature = TemperatureSensor(initial_value=0.0, unit="°C", min_value=0.0, max_value=50.0, device=self.device)
+        self.humidity = HumiditySensor(initial_value=0.0, unit="%", min_value=0.0, max_value=100.0, device=self.device)
+        self.lightness = LightnessSensor(initial_value=0.0, unit="lx", min_value=200.0, max_value=60000.0, device=self.device)
         self.timestamp = int(time.time())
 
     def update_measurements(self):

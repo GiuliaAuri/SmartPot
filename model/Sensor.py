@@ -6,12 +6,13 @@ T = TypeVar('T')
 
 
 class Sensor(ABC, Generic[T]):
-    def __init__(self, initial_value: T, unit:str, min_value: T, max_value: T, type:str):
+    def __init__(self, initial_value: T, unit:str, min_value: T, max_value: T, type:str, device:str):
         self.value = initial_value
         self.unit = unit
         self.min_value = min_value
         self.max_value = max_value
         self.type = type
+        self.device = device
 
     @abstractmethod
     def update(self):
@@ -31,3 +32,6 @@ class Sensor(ABC, Generic[T]):
 
     def _set_type(self, type: str):
         self.type = type
+
+    def _set_device(self, device: str):
+        self.device = device

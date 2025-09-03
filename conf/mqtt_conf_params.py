@@ -36,19 +36,17 @@ class MqttConfigurationParameters(object):
         )
 
     @staticmethod
-    def build_command_plant_topic(plant_id: str, device_id: str, resource_id: str) -> str:
+    def build_command_plant_topic(plant_id: str, device_id: str) -> str:
         """Build the control topic for a specific plant and device,
         communication from cloud to actuator.
-        e.g. plant/{plant_id}/device/{device_id}/command/{resource_id}
-
+        e.g. plant/{plant_id}/device/{device_id}/command
         """
-        return "{0}/{1}/{2}/{3}/{4}/{5}".format(
+        return "{0}/{1}/{2}/{3}/{4}".format(
             MqttConfigurationParameters.BASIC_TOPIC,
             plant_id,
             MqttConfigurationParameters.DEVICE_TOPIC,
             device_id,
-            MqttConfigurationParameters.COMMAND_TOPIC,
-            resource_id,
+            MqttConfigurationParameters.COMMAND_TOPIC
         )
     
     @staticmethod
