@@ -9,7 +9,7 @@ from device.environment_telemetry import EnvironmentTelemetryData
 from conf.mqtt_conf_params import MqttConfigurationParameters
 import re
 import json
-from model.irrigation_actuator import IrrigationActuatorResource
+from actuator.irrigation_actuator import IrrigationActuatorResource
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("producer")

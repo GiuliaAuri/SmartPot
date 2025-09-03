@@ -16,7 +16,6 @@ L’obiettivo del progetto è la realizzazione di un sistema **IoT** per la gest
 | **Environmental Monitoring Smart Object** | Sensore | Smart Object dotato dei seguenti sensori per il monitoraggio ambientale:<br> - Sensore di temperatura<br> - Sensore di umidità<br> - Sensore di luminosità<br> - Sensore per il livello di batteria del dispositivo |
 
 
-
 ## Funzionamento del Sistema
 
 Il progetto sarà progettato per supportare **n dispositivi per ogni tipologia** in funzione delle esigenze delle piante.  
@@ -32,5 +31,50 @@ Nell’architettura sarà presente anche un **Data Collector & Manager**, capace
   La fornitura sarà disattivata una volta raggiunto un valore ottimale o dopo un tempo massimo impostabile.
 - In caso di **batteria bassa** del dispositivo, sarà generato un avviso.
 - Quando il **livello di acqua** di un serbatoio scende sotto un determinato livello, verrà generato un avviso all’utente.
+
+## 🌱 Sensori di Telemetria
+
+I sensori monitorano diversi parametri ambientali e di consumo:
+
+- **Temperatura**
+- **Umidità**
+- **Luminosità**
+- **Livello della batteria**
+- **Livello del serbatoio**
+- **Quantità di acqua consumata**
+
+I dati raccolti vengono **pubblicati** sul topic MQTT con la seguente struttura: 
+
+ plant/{plant_id}/device/{device_id}/telemetry/{resource_id}
+
+## 💧 Attuatore per l’Irrigazione
+
+L’attuatore che gestisce l’irrigazione non pubblica dati, ma è **sottoscritto** a un topic dedicato ai comandi:
+
+plant/{plant_id}/device/{device_id}/command/{resource_id}
+
+
+
+               +----------------------+
+               |   🌱 Pianta          |
+               | (Sensori & Attuatori)|
+               +----------+-----------+
+                          |
+                          v
+                   +--------------+
+                   |  🌀 Broker   |
+                   |   MQTT       |
+                   +--------------+
+                          |
+                          v
+          +------------------------------+
+          |  📡 MQTT Consumer /          |
+          |     Data Collector           |
+          +--------------+---------------+
+                          |
+                          v
+                   +--------------+
+                   |    ☁️ Cloud   |
+                   +--------------+
 
 
