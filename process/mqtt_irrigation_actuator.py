@@ -3,13 +3,13 @@ import uuid
 import paho.mqtt.client as mqtt
 
 from conf.mqtt_conf_params import MqttConfigurationParameters
-from actuator.irrigation_actuator import IrrigationActuatorResource
+from actuator.irrigation_actuator import IrrigationActuator
 
 class MqttIrrigationActuator:
     def __init__(self, resource_id: str):
         self.client = mqtt.Client(resource_id)
         self.resource_id = resource_id
-        self.irrigation_actuator = IrrigationActuatorResource("irrigation"+str(uuid.uuid4()))
+        self.irrigation_actuator = IrrigationActuator("irrigation"+str(uuid.uuid4()))
         self.client.on_connect = self.on_connect
         self.client.on_message = self.on_message
         self.client.connect(MqttConfigurationParameters.BROKER_ADDRESS, MqttConfigurationParameters.BROKER_PORT)
