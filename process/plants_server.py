@@ -2,23 +2,20 @@ import time
 import sys
 import os
 import logging
+#TODO elimina le print con i log
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from process.policy_manager import PolicyManager
+from resourses.factory_plants import PlantFactory
 from process.mqtt_sensor_manager import MqttSensorManager
 from process.mqtt_actuator_manager import MqttActuatorManager
 from model.plant_descriptor import PlantDescriptor
-from model.SwitchActuator import SwitchActuator
-from model.Sensor import Sensor
-from sensors.humidity_sensor import HumiditySensor
-from sensors.temperature_sensor import TemperatureSensor
 
 class PlantServer:
-    def __init__(self, plants: list[PlantDescriptor]):
-        
+    def __init__(self, plants: list[PlantDescriptor], policy_manager=None):
         self.plants = plants
         self.sensor_managers = {}
         self.actuator_managers = {}
-
-        
+        self.policy_manager = policy_manager
         for plant in self.plants:
             self.sensor_managers[plant.plant_id] = MqttSensorManager(plant)
             self.actuator_managers[plant.plant_id] = MqttActuatorManager(plant)
@@ -27,8 +24,11 @@ class PlantServer:
         try:
             print("Plants Server running... ")
             while True:
-                for plant_id, sensor_manager in self.sensor_managers.items():
-                    sensor_manager.publish_telemetry()
+                for plant in self.plants:
+                    for sensor in plant.sensors:
+                        sensor.update()
+                    if self.policy_manager:
+                        self.policy_manager.evaluate(plant)
 
                 time.sleep(interval)
         except KeyboardInterrupt:
@@ -42,57 +42,10 @@ class PlantServer:
             am.stop()
 
 
-# --- Esempio di utilizzo multi-pianta ---
 
 if __name__ == "__main__":
-    
-    #TODO sostituzione: la creazione delle piante da fare in una classe specifica
-    from device.tank_monitoring import TankMonitoring
-    from device.water_metering import WaterMetering
-
-    # Test TankMonitoring
-    tank_monitor = TankMonitoring(plant_id="plant01")
-    tank_monitor.update_measurements()
-    print("TankMonitoring JSON:", tank_monitor.to_json())
-
-    # Test WaterMetering
-    water_meter = WaterMetering(plant_id="plant01")
-    water_meter.update_measurements()
-    print("WaterMetering JSON:", water_meter.to_json())
-
-    # Creazione pianta 1
-    plant1 = PlantDescriptor(
-        species="cactus",
-        sensors=[
-            TemperatureSensor(initial_value=20.0, unit="°C", min_value=0.0, max_value=50.0, device="environment_telemetry"),
-            HumiditySensor(initial_value=50.0, unit="%", min_value=0.0, max_value=100.0, device="environment_telemetry")
-        ],
-        actuators=[SwitchActuator("pump01")]
-    )
-
-    # Creazione pianta 2
-    plant2 = PlantDescriptor(
-        species="fico",
-        sensors=[
-            TemperatureSensor(initial_value=20.0, unit="°C", min_value=0.0, max_value=50.0, device="environment_telemetry"),
-            HumiditySensor(initial_value=50.0, unit="%", min_value=0.0, max_value=100.0, device="environment_telemetry")
-        ],
-        actuators=[SwitchActuator("fan01"), SwitchActuator("heater01")]
-    )
-    plant3 = PlantDescriptor(
-        species="cactus",
-        sensors=[
-            tank_monitor.level_tank,
-            water_meter.water_flow
-        ],
-        actuators=[
-            water_meter.irrigation
-        ]
-    )
-
-    # Lista di piante gestite dal server
-    plants = [plant1, plant2, plant3]
-
-    # Avvio server
-    server = PlantServer(plants)
+    plants = PlantFactory.create_plants_from_json("resourses/plants_config.json")
+    policy_manager = PolicyManager("resourses/policies_conf.json")
+    server = PlantServer(plants, policy_manager=policy_manager)
     server.run(interval=5.0)
+

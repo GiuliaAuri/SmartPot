@@ -1,0 +1,38 @@
+[
+  {
+    "plant_id": "plant_cactus_001",
+    "policies": [
+      {
+        "sensor": "humidity",
+  "condition": "<",
+        "value": 30,
+        "actuator": "irrigation",
+        "action": "irrigation_on"
+      }
+    ]
+  },
+  {
+    "plant_id": "plant_fico_001",
+    "policies": [
+      {
+        "sensor": "humidity",
+        "condition": "<",
+        "value": 40,
+        "actuator": "irrigation",
+        "action": "on"
+      }
+    ]
+  },
+  {
+    "plant_id": "plant_custom_001",
+    "policies": [
+      {
+        "sensor": "humidity",
+        "condition": "<",
+        "value": 50,
+        "actuator": "irrigation",
+        "action": "on"
+      }
+    ]
+  }
+]

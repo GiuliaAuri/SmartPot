@@ -1,14 +1,14 @@
 [
   {
-    "uuid": "plant-001",
-    "species": "cactus"
+    "species": "cactus",
+    "plant_id": "plant_cactus_001"
   },
   {
-    "uuid": "plant-002",
-    "species": "rose"
+    "species": "fico",
+    "plant_id": "plant_fico_001"
   },
   {
-    "uuid": "plant-003",
-    "species": "orchid"
+    "species": "orchidea",
+    "plant_id": "plant_custom_001"
   }
 ]
