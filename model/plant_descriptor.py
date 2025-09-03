@@ -1,12 +1,12 @@
 import json
+import uuid
 
 from model import Sensor, SwitchActuator, SwitchActuator
 
 
 class PlantDescriptor:
-    def __init__(self, plant_id, species, sensors:Sensor=None, actuators: SwitchActuator=None):
-        self.plant_id = plant_id
-        #TODO self.plant_id="plant_"+uuid.uuid
+    def __init__(self, species, sensors:Sensor=None, actuators: SwitchActuator=None):
+        self.plant_id = "plant_"+ str(uuid.uuid4())
         self.species = species
         self.sensors = sensors if sensors is not None else []
         self.actuators = actuators if actuators is not None else []

@@ -15,8 +15,6 @@ class MqttConfigurationParameters(object):
     TELEMETRY_TOPIC: ClassVar[str] = "telemetry"
     COMMAND_TOPIC: ClassVar[str] = "command"
 
-    #TODO DA AGGIUSTARE LA COERENZA
-
     @staticmethod
     def build_telemetry_plant_topic(
         plant_id: str, device_id: str, resource_id: str
