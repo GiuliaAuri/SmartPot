@@ -7,8 +7,8 @@ from process.mqtt_actuator_manager import MqttActuatorManager
 from model.plant_descriptor import PlantDescriptor
 from model.SwitchActuator import SwitchActuator
 from model.Sensor import Sensor
-from sensor.temperature_sensor import TemperatureSensor
-from sensor.humidity_sensor import HumiditySensor
+from sensors.temperature_sensor import TemperatureSensor
+from sensors.humidity_sensor import HumiditySensor
 
 class PlantClient:
     def __init__(self, plants):
@@ -51,6 +51,18 @@ class PlantClient:
 # --- Esempio di utilizzo multi-pianta ---
 
 if __name__ == "__main__":
+    from device.tank_monitoring import TankMonitoring
+    from device.water_metering import WaterMetering
+
+    # Test TankMonitoring
+    tank_monitor = TankMonitoring(plant_id="plant01")
+    tank_monitor.update_measurements()
+    print("TankMonitoring JSON:", tank_monitor.to_json())
+
+    # Test WaterMetering
+    water_meter = WaterMetering(plant_id="plant01")
+    water_meter.update_measurements()
+    print("WaterMetering JSON:", water_meter.to_json())
     #TODO sostituzione: la creazione delle piante da fare in una classe specifica
     # Creazione pianta 1
 

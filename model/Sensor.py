@@ -13,6 +13,7 @@ class Sensor(ABC, Generic[T]):
         self.max_value = max_value
         self.type = type
         self.device = device
+        self.timestamp = 0
 
     @abstractmethod
     def update(self):

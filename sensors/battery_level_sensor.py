@@ -1,5 +1,6 @@
 import logging
 import random
+import time
 from model.Sensor import Sensor
 
 class BatteryLevelSensor(Sensor[float]):
@@ -8,4 +9,5 @@ class BatteryLevelSensor(Sensor[float]):
 
     def update(self):
         self.value = max(0, self.value - random.uniform(self.min_value, self.max_value))
-        logging.info(f"Updated battery level measurement: {self.value} {self.unit}")
+        self.timestamp = int(time.time())
+        logging.info(f"Updated battery level measurement: {self.value} {self.unit} at {self.timestamp}")

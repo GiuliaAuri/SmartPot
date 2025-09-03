@@ -1,5 +1,6 @@
 import logging
 import random
+import time
 from model.Sensor import Sensor
 
 class HumiditySensor(Sensor[float]):
@@ -8,4 +9,5 @@ class HumiditySensor(Sensor[float]):
 
     def update(self):
         self.value = random.uniform(self.min_value, self.max_value)
-        logging.info(f"Updated humidity measurement: {self.value} {self.unit}")
+        self.timestamp = int(time.time())
+        logging.info(f"Updated humidity measurement: {self.value} {self.unit} at {self.timestamp}")

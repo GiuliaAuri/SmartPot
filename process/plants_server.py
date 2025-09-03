@@ -8,8 +8,8 @@ from process.mqtt_actuator_manager import MqttActuatorManager
 from model.plant_descriptor import PlantDescriptor
 from model.SwitchActuator import SwitchActuator
 from model.Sensor import Sensor
-from sensor.humidity_sensor import HumiditySensor
-from sensor.temperature_sensor import TemperatureSensor
+from sensors.humidity_sensor import HumiditySensor
+from sensors.temperature_sensor import TemperatureSensor
 
 class PlantServer:
     def __init__(self, plants: list[PlantDescriptor]):
@@ -45,7 +45,21 @@ class PlantServer:
 # --- Esempio di utilizzo multi-pianta ---
 
 if __name__ == "__main__":
+    
     #TODO sostituzione: la creazione delle piante da fare in una classe specifica
+    from device.tank_monitoring import TankMonitoring
+    from device.water_metering import WaterMetering
+
+    # Test TankMonitoring
+    tank_monitor = TankMonitoring(plant_id="plant01")
+    tank_monitor.update_measurements()
+    print("TankMonitoring JSON:", tank_monitor.to_json())
+
+    # Test WaterMetering
+    water_meter = WaterMetering(plant_id="plant01")
+    water_meter.update_measurements()
+    print("WaterMetering JSON:", water_meter.to_json())
+
     # Creazione pianta 1
     plant1 = PlantDescriptor(
         species="cactus",
@@ -65,9 +79,19 @@ if __name__ == "__main__":
         ],
         actuators=[SwitchActuator("fan01"), SwitchActuator("heater01")]
     )
+    plant3 = PlantDescriptor(
+        species="cactus",
+        sensors=[
+            tank_monitor.level_tank,
+            water_meter.water_flow
+        ],
+        actuators=[
+            water_meter.irrigation
+        ]
+    )
 
     # Lista di piante gestite dal server
-    plants = [plant1, plant2]
+    plants = [plant1, plant2, plant3]
 
     # Avvio server
     server = PlantServer(plants)
