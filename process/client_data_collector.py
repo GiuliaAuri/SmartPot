@@ -21,7 +21,9 @@ class PlantClient:
         # Inizializza manager per ogni pianta
         for plant in self.plants:
             self.sensor_managers[plant.plant_id] = MqttSensorManager(plant)
+            logger.info(f"Created MqttSensorManager for {plant.plant_id}")
             self.actuator_managers[plant.plant_id] = MqttActuatorManager(plant)
+            logger.info(f"Created MqttActuatorManager for {plant.plant_id}")
 
     def send_command(self, plant_id: str, actuator_name: str, command: str):
         """

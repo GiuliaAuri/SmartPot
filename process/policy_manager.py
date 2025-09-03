@@ -1,5 +1,6 @@
 import operator
 import json
+import logging
 
 
 class PolicyManager:
@@ -26,5 +27,7 @@ class PolicyManager:
                 if op(sensor.value, policy["value"]):
                     if policy["action"] == "activate":
                         actuator.status = True
+                        logging.info(f"Activated actuator: {actuator.device} - plant: {plant.plant_id}")
                     elif policy["action"] == "deactivate":
                         actuator.status = False
+                        logging.info(f"Deactivated actuator: {actuator.device} - plant: {plant.plant_id}")

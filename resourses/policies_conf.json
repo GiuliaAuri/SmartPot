@@ -4,10 +4,17 @@
     "policies": [
       {
         "sensor": "humidity",
-  "condition": "<",
+        "condition": "<",
         "value": 30,
         "actuator": "irrigation",
-        "action": "irrigation_on"
+        "action": "activate"
+      },
+      {
+        "sensor": "humidity",
+        "condition": ">",
+        "value": 40,
+        "actuator": "irrigation",
+        "action": "deactivate"
       }
     ]
   },
@@ -19,7 +26,14 @@
         "condition": "<",
         "value": 40,
         "actuator": "irrigation",
-        "action": "on"
+        "action": "activate"
+      },
+      {
+        "sensor": "humidity",
+        "condition": ">",
+        "value": 50,
+        "actuator": "irrigation",
+        "action": "deactivate"
       }
     ]
   },
@@ -31,7 +45,14 @@
         "condition": "<",
         "value": 50,
         "actuator": "irrigation",
-        "action": "on"
+        "action": "activate"
+      },
+      {
+        "sensor": "humidity",
+        "condition": ">",
+        "value": 60,
+        "actuator": "irrigation",
+        "action": "deactivate"
       }
     ]
   }

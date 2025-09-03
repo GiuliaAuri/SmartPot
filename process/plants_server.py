@@ -27,8 +27,9 @@ class PlantServer:
             logging.info("Plants Server running...")
             while True:
                 for plant in self.plants:
-                    for sensor in plant.sensors:
-                        sensor.update()
+                    self.sensor_managers[plant.plant_id].publish_telemetry()
+                    #for sensor in plant.sensors:
+                    #    sensor.update()
                     if self.policy_manager:
                         self.policy_manager.evaluate(plant)
 

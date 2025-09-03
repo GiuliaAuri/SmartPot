@@ -1,3 +1,4 @@
+import uuid
 import paho.mqtt.client as mqtt
 import logging
 from conf.mqtt_conf_params import MqttConfigurationParameters
@@ -9,11 +10,12 @@ logger = logging.getLogger("actuator")
 
 class MqttActuatorManager:
     def __init__(self, plant_descriptor: PlantDescriptor):
-        self.client = mqtt.Client(client_id=plant_descriptor.plant_id)
+        self.client = mqtt.Client(client_id=f"{plant_descriptor.plant_id}-actuator-{uuid.uuid4()}")
         self.plant_descriptor = plant_descriptor
         self.client.on_connect = self.on_connect
         self.client.on_message = self.on_message
-        self.client.username_pw_set(MqttConfigurationParameters.MQTT_USERNAME, MqttConfigurationParameters.MQTT_PASSWORD)
+        self.client.on_disconnect = self.on_disconnect
+        #self.client.username_pw_set(MqttConfigurationParameters.MQTT_USERNAME, MqttConfigurationParameters.MQTT_PASSWORD)
         self.client.connect(MqttConfigurationParameters.BROKER_ADDRESS, MqttConfigurationParameters.BROKER_PORT)
         self.client.loop_start()
 
@@ -45,6 +47,9 @@ class MqttActuatorManager:
     def stop(self):
         self.client.loop_stop()
         self.client.disconnect()
+    
+    def on_disconnect(self, client, userdata, rc):
+        logger.warning(f"Disconnected from MQTT broker with result code {rc}")
 
 # Esempio di utilizzo:
 # actuator_manager = MqttActuatorManager("irrigation01")
