@@ -11,7 +11,7 @@ class TankMonitoring:
     def __init__(self, plant_id: str):
         self.plant_id = plant_id
         self.device = "tank_monitoring"
-        self.level_tank=LevelTankSensor(initial_value=1.0, unit="l", min_value=0.0, max_value=1.0, device=self.device)
+        self.level_tank=LevelTankSensor(self.plant_id, initial_value=1.0, unit="l", min_value=0.0, max_value=1.0, device=self.device)
         self.timestamp = int(time.time())
 
     def update_measurements(self):

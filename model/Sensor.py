@@ -6,7 +6,8 @@ T = TypeVar('T')
 
 
 class Sensor(ABC, Generic[T]):
-    def __init__(self, initial_value: T, unit:str, min_value: T, max_value: T, type:str, device:str):
+    def __init__(self, plant_id: str, initial_value: T, unit:str, min_value: T, max_value: T, type:str, device:str):
+        self.plant_id = plant_id
         self.value = initial_value
         self.unit = unit
         self.min_value = min_value
