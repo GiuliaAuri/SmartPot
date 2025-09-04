@@ -1,7 +1,7 @@
 import logging
 import random
 import time
-from model.Sensor import Sensor
+from smart_objects.model.Sensor import Sensor
 
 class HumiditySensor(Sensor[float]):
     def __init__(self, plant_id: str, initial_value: float, unit: str, min_value: float, max_value: float, device:str):

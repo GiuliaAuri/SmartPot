@@ -1,11 +1,11 @@
 import json
-from model.plant_descriptor import PlantDescriptor
-from sensors.temperature_sensor import TemperatureSensor
-from sensors.humidity_sensor import HumiditySensor
-from device.tank_monitoring import TankMonitoring
-from device.water_metering import WaterMetering
-from device.environment_telemetry import EnvironmentTelemetryData
-from model.SwitchActuator import SwitchActuator
+from smart_objects.model.plant_descriptor import PlantDescriptor
+from smart_objects.sensors.temperature_sensor import TemperatureSensor
+from smart_objects.sensors.humidity_sensor import HumiditySensor
+from smart_objects.device.tank_monitoring import TankMonitoring
+from smart_objects.device.water_metering import WaterMetering
+from smart_objects.device.environment_telemetry import EnvironmentTelemetryData
+from smart_objects.model.SwitchActuator import SwitchActuator
 
 class PlantFactory:
     @staticmethod

@@ -50,7 +50,7 @@ class PlantClient:
 
 
 if __name__ == "__main__":
-    plants = PlantFactory.create_plants_from_json("resourses/plants_config.json")
+    plants = PlantFactory.create_plants_from_json("smart_objects/resourses/plants_config.json")
     
     client = PlantClient(plants)
 

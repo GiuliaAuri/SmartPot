@@ -2,7 +2,7 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import unittest
-from device.water_metering import WaterMetering
+from smart_objects.device.water_metering import WaterMetering
 
 class TestWaterMetering(unittest.TestCase):
     def setUp(self):

@@ -2,7 +2,7 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import unittest
-from actuators.irrigation_actuator import IrrigationActuator
+from smart_objects.actuators.irrigation_actuator import IrrigationActuator
 
 class TestIrrigationActuator(unittest.TestCase):
     def setUp(self):

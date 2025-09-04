@@ -1,14 +1,14 @@
 import json
-
+from smart_objects.device.environment_telemetry import EnvironmentTelemetryData
+from smart_objects.device.tank_monitoring import TankMonitoring
+from smart_objects.device.water_metering import WaterMetering
 
 class PlantDescriptor:
     def __init__(self, species, plant_id):
         self.plant_id = plant_id
         self.species = species
         # Crea dispositivi base
-        from device.environment_telemetry import EnvironmentTelemetryData
-        from device.tank_monitoring import TankMonitoring
-        from device.water_metering import WaterMetering
+
         self.env_telemetry = EnvironmentTelemetryData(self.plant_id)
         self.tank_monitor = TankMonitoring(self.plant_id)
         self.water_meter = WaterMetering(self.plant_id)

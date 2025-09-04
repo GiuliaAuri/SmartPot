@@ -47,8 +47,8 @@ class PlantServer:
 
 
 if __name__ == "__main__":
-    plants = PlantFactory.create_plants_from_json("resourses/plants_config.json")
-    policy_manager = PolicyManager("resourses/policies_conf.json")
+    plants = PlantFactory.create_plants_from_json("smart_objects/resourses/plants_config.json")
+    policy_manager = PolicyManager("smart_objects/resourses/policies_conf.json")
     server = PlantServer(plants, policy_manager=policy_manager)
-    server.run(interval=5.0)
+    server.run(interval=10.0)
 

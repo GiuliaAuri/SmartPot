@@ -5,9 +5,9 @@ import unittest
 from unittest.mock import MagicMock
 from process.mqtt_sensor_manager import MqttSensorManager
 from process.mqtt_actuator_manager import MqttActuatorManager
-from model.plant_descriptor import PlantDescriptor
-from actuators.irrigation_actuator import IrrigationActuator
-from device.environment_telemetry import EnvironmentTelemetryData
+from smart_objects.model.plant_descriptor import PlantDescriptor
+from smart_objects.actuators.irrigation_actuator import IrrigationActuator
+from smart_objects.device.environment_telemetry import EnvironmentTelemetryData
 
 class TestMqttSensorManager(unittest.TestCase):
     def setUp(self):

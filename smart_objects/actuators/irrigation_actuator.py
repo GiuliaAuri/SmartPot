@@ -1,4 +1,4 @@
-from model.SwitchActuator import SwitchActuator
+from smart_objects.model.SwitchActuator import SwitchActuator
 
 
 class IrrigationActuator(SwitchActuator):

@@ -2,10 +2,10 @@ import json
 import time
 import logging
 
-from sensors.battery_level_sensor import BatteryLevelSensor
-from sensors.humidity_sensor import HumiditySensor
-from sensors.lightness_sensor import LightnessSensor
-from sensors.temperature_sensor import TemperatureSensor
+from smart_objects.sensors.battery_level_sensor import BatteryLevelSensor
+from smart_objects.sensors.humidity_sensor import HumiditySensor
+from smart_objects.sensors.lightness_sensor import LightnessSensor
+from smart_objects.sensors.temperature_sensor import TemperatureSensor
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("environment_telemetry")

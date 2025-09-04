@@ -4,7 +4,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import unittest
 from unittest.mock import MagicMock
 from process.policy_manager import PolicyManager
-from model.plant_descriptor import PlantDescriptor
+from smart_objects.model.plant_descriptor import PlantDescriptor
 
 class TestPolicyManager(unittest.TestCase):
     def setUp(self):

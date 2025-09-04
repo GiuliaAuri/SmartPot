@@ -4,7 +4,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import unittest
 from unittest.mock import MagicMock, patch
 from process.mqtt_sensor_manager import MqttSensorManager
-from model.plant_descriptor import PlantDescriptor
+from smart_objects.model.plant_descriptor import PlantDescriptor
 
 class TestMqttSensorManager(unittest.TestCase):
     @patch("process.mqtt_sensor_manager.mqtt.Client")
