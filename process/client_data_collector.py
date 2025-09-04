@@ -3,7 +3,7 @@ import os
 import logging
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from resourses.factory_plants import PlantFactory
+from smart_objects.resourses.factory_plants import PlantFactory
 from process.mqtt_sensor_manager import MqttSensorManager
 from process.mqtt_actuator_manager import MqttActuatorManager
 logging.basicConfig(level=logging.INFO)

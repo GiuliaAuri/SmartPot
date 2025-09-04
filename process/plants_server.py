@@ -5,10 +5,10 @@ import logging
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from process.policy_manager import PolicyManager
-from resourses.factory_plants import PlantFactory
+from smart_objects.resourses.factory_plants import PlantFactory
 from process.mqtt_sensor_manager import MqttSensorManager
 from process.mqtt_actuator_manager import MqttActuatorManager
-from model.plant_descriptor import PlantDescriptor
+from smart_objects.model.plant_descriptor import PlantDescriptor
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("plant_server")
 
