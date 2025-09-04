@@ -2,7 +2,7 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import unittest
-from device.tank_monitoring import TankMonitoring
+from plants_system.smart_objects.devices.tank_monitoring import TankMonitoring
 
 class TestTankMonitoring(unittest.TestCase):
     def setUp(self):

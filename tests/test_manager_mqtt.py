@@ -3,11 +3,11 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import unittest
 from unittest.mock import MagicMock
-from process.mqtt_sensor_manager import MqttSensorManager
-from process.mqtt_actuator_manager import MqttActuatorManager
-from smart_objects.model.plant_descriptor import PlantDescriptor
-from smart_objects.actuators.irrigation_actuator import IrrigationActuator
-from smart_objects.device.environment_telemetry import EnvironmentTelemetryData
+from plants_system.process.mqtt_sensor_manager import MqttSensorManager
+from plants_system.process.mqtt_actuator_manager import MqttActuatorManager
+from plants_system.smart_objects.models.plant_descriptor import PlantDescriptor
+from plants_system.smart_objects.actuators.irrigation_actuator import IrrigationActuator
+from plants_system.smart_objects.devices.environment_telemetry import EnvironmentTelemetryData
 
 class TestMqttSensorManager(unittest.TestCase):
     def setUp(self):

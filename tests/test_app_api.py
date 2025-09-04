@@ -2,14 +2,14 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import unittest
-from app import app
+from backend.app import app
 
 class TestApiTelemetry(unittest.TestCase):
     def setUp(self):
         self.client = app.test_client()
         # Assicura che ci sia almeno una pianta per il test
         if not app.plants:
-            from smart_objects.resourses.factory_plants import PlantFactory
+            from plants_system.smart_objects.resources.factory_plants import PlantFactory
             app.plants = PlantFactory.create_plants_from_json("smart_objects/resourses/plants_config.json")
 
     def test_get_plant_telemetry_success(self):

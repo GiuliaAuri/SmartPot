@@ -3,7 +3,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import unittest
 import os
-from smart_objects.resourses.factory_plants import PlantFactory
+from plants_system.smart_objects.resources.factory_plants import PlantFactory
 
 class TestPlantFactory(unittest.TestCase):
     def setUp(self):

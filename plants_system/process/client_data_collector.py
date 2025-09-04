@@ -1,11 +1,11 @@
 import sys
 import os
-import logging
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from smart_objects.resourses.factory_plants import PlantFactory
-from process.mqtt_sensor_manager import MqttSensorManager
-from process.mqtt_actuator_manager import MqttActuatorManager
+from plants_system.smart_objects.resources.factory_plants import PlantFactory
+from plants_system.process.mqtt_sensor_manager import MqttSensorManager
+from plants_system.process.mqtt_actuator_manager import MqttActuatorManager
+import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("plant_client")
 
@@ -50,7 +50,7 @@ class PlantClient:
 
 
 if __name__ == "__main__":
-    plants = PlantFactory.create_plants_from_json("smart_objects/resourses/plants_config.json")
+    plants = PlantFactory.create_plants_from_json("plants_system/smart_objects/resources/plants_config.json")
     
     client = PlantClient(plants)
 

@@ -2,7 +2,7 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import unittest
-from smart_objects.model.plant_descriptor import PlantDescriptor
+from plants_system.smart_objects.models.plant_descriptor import PlantDescriptor
 
 class TestPlantDescriptor(unittest.TestCase):
     def setUp(self):

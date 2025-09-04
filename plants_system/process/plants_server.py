@@ -3,12 +3,12 @@ import sys
 import os
 import logging
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from process.policy_manager import PolicyManager
-from smart_objects.resourses.factory_plants import PlantFactory
-from process.mqtt_sensor_manager import MqttSensorManager
-from process.mqtt_actuator_manager import MqttActuatorManager
-from smart_objects.model.plant_descriptor import PlantDescriptor
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+from plants_system.process.policy_manager import PolicyManager
+from plants_system.smart_objects.resources.factory_plants import PlantFactory
+from plants_system.process.mqtt_sensor_manager import MqttSensorManager
+from plants_system.process.mqtt_actuator_manager import MqttActuatorManager
+from plants_system.smart_objects.models.plant_descriptor import PlantDescriptor
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("plant_server")
 
@@ -47,8 +47,8 @@ class PlantServer:
 
 
 if __name__ == "__main__":
-    plants = PlantFactory.create_plants_from_json("smart_objects/resourses/plants_config.json")
-    policy_manager = PolicyManager("smart_objects/resourses/policies_conf.json")
+    plants = PlantFactory.create_plants_from_json("plants_system/smart_objects/resources/plants_config.json")
+    policy_manager = PolicyManager("plants_system/smart_objects/resources/policies_conf.json")
     server = PlantServer(plants, policy_manager=policy_manager)
     server.run(interval=10.0)
 

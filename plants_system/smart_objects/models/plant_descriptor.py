@@ -1,7 +1,7 @@
 import json
-from smart_objects.device.environment_telemetry import EnvironmentTelemetryData
-from smart_objects.device.tank_monitoring import TankMonitoring
-from smart_objects.device.water_metering import WaterMetering
+from plants_system.smart_objects.devices.environment_telemetry import EnvironmentTelemetryData
+from plants_system.smart_objects.devices.tank_monitoring import TankMonitoring
+from plants_system.smart_objects.devices.water_metering import WaterMetering
 
 class PlantDescriptor:
     def __init__(self, species, plant_id):

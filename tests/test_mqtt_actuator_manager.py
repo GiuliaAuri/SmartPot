@@ -3,8 +3,8 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import unittest
 from unittest.mock import MagicMock, patch
-from process.mqtt_actuator_manager import MqttActuatorManager
-from smart_objects.model.plant_descriptor import PlantDescriptor
+from plants_system.process.mqtt_actuator_manager import MqttActuatorManager
+from plants_system.smart_objects.models.plant_descriptor import PlantDescriptor
 
 class TestMqttActuatorManager(unittest.TestCase):
     @patch("process.mqtt_actuator_manager.mqtt.Client")

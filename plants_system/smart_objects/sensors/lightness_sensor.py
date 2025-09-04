@@ -1,7 +1,7 @@
 import logging
 import random
 import time
-from smart_objects.model.Sensor import Sensor
+from plants_system.smart_objects.models.Sensor import Sensor
 
 class LightnessSensor(Sensor[float]):
     def __init__(self, plant_id: str, initial_value: float, unit: str, min_value: float, max_value: float, device:str):

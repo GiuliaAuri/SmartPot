@@ -3,7 +3,7 @@ import paho.mqtt.client as mqtt
 import logging
 
 from conf.mqtt_conf_params import MqttConfigurationParameters
-from smart_objects.model.plant_descriptor import PlantDescriptor
+from plants_system.smart_objects.models.plant_descriptor import PlantDescriptor
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("sensor")

@@ -1,7 +1,7 @@
 import json
 import time
 import logging
-from smart_objects.sensors.level_tank_sensor import LevelTankSensor
+from plants_system.smart_objects.sensors.level_tank_sensor import LevelTankSensor
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("tank_monitoring")

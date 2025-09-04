@@ -2,8 +2,8 @@
 import json
 import time
 import logging
-from smart_objects.actuators.irrigation_actuator import IrrigationActuator
-from smart_objects.sensors.water_flow_sensor import WaterFlowSensor
+from plants_system.smart_objects.actuators.irrigation_actuator import IrrigationActuator
+from plants_system.smart_objects.sensors.water_flow_sensor import WaterFlowSensor
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("water_metering")

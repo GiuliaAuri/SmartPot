@@ -2,7 +2,7 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import unittest
-from smart_objects.device.environment_telemetry import EnvironmentTelemetryData
+from plants_system.smart_objects.devices.environment_telemetry import EnvironmentTelemetryData
 
 class TestEnvironmentTelemetryData(unittest.TestCase):
     def setUp(self):

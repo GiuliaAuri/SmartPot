@@ -1,14 +1,18 @@
 from flask import Flask, jsonify, request
 import logging
-from smart_objects.model.plant_descriptor import PlantDescriptor
-from process.client_data_collector import PlantClient
-from smart_objects.resourses.factory_plants import PlantFactory
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from plants_system.smart_objects.models.plant_descriptor import PlantDescriptor
+from plants_system.process.client_data_collector import PlantClient
+from plants_system.smart_objects.resources.factory_plants import PlantFactory
+
 
 app = Flask(__name__)
 
 logging.basicConfig(level=logging.INFO)
 
-app.plants = PlantFactory.create_plants_from_json("smart_objects/resourses/plants_config.json")
+app.plants = PlantFactory.create_plants_from_json("plants_system/smart_objects/resources/plants_config.json")
 app.client = PlantClient(app.plants)
 
 @app.route('/api/plants/<plant_id>/telemetry', methods=['GET'])
@@ -46,4 +50,4 @@ def post_actuator_command(plant_id, actuator_name):
 
 if __name__ == "__main__":
     # Avvia il server Flask
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="127.0.0.1", port=5000)
