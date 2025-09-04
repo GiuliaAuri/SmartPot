@@ -28,6 +28,8 @@ class PolicyManager:
                     if policy["action"] == "activate":
                         actuator.status = True
                         logging.info(f"Activated actuator: {actuator.device} - plant: {plant.plant_id}")
+                        self.actuator_managers[plant.plant_id].send_command(actuator.device, "ON")
                     elif policy["action"] == "deactivate":
                         actuator.status = False
                         logging.info(f"Deactivated actuator: {actuator.device} - plant: {plant.plant_id}")
+                        self.actuator_managers[plant.plant_id].send_command(actuator.device, "OFF")
