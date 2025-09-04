@@ -12,10 +12,10 @@ class SwitchActuator:
         
     def handle_command(self, command: str):
         if command.upper() == "ON":
-            self.state = True
+            self.status = True
             logging.info(f"{self.device} -> switched ON")
         elif command.upper() == "OFF":
-            self.state = False
+            self.status = False
             logging.info(f"{self.device} -> switched OFF")
         else:
             logging.warning(f"{self.device} -> unknown command: {command}")
