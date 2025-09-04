@@ -13,8 +13,9 @@ class TestMqttSensorManager(unittest.TestCase):
     def setUp(self):
         # Usa EnvironmentTelemetryData con sensori reali
         self.env_telemetry = EnvironmentTelemetryData("plant01")
-        sensors = [self.env_telemetry.temperature, self.env_telemetry.humidity, self.env_telemetry.lightness, self.env_telemetry.batteryLevel]
-        self.plant_descriptor = PlantDescriptor("cactus", sensors=sensors)
+        self.plant_descriptor = PlantDescriptor("cactus", "plant01")
+        # Sovrascrivi manualmente la lista dei sensori
+        self.plant_descriptor.sensors = [self.env_telemetry.temperature, self.env_telemetry.humidity, self.env_telemetry.lightness, self.env_telemetry.batteryLevel]
         self.manager = MqttSensorManager(self.plant_descriptor)
         self.manager.client.publish = MagicMock()
 
@@ -26,8 +27,10 @@ class TestMqttSensorManager(unittest.TestCase):
 
 class TestMqttActuatorManager(unittest.TestCase):
     def setUp(self):
-        actuators = [IrrigationActuator()]
-        self.plant_descriptor = PlantDescriptor("cactus", actuators=actuators)
+        actuator = IrrigationActuator("plant01")
+        self.plant_descriptor = PlantDescriptor("cactus", "plant01")
+        # Sovrascrivi manualmente la lista degli attuatori
+        self.plant_descriptor.actuators = [actuator]
         self.manager = MqttActuatorManager(self.plant_descriptor)
         self.manager.client.publish = MagicMock()
 
