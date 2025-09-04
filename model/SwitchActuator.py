@@ -2,10 +2,10 @@ import logging
 
 class SwitchActuator:
 
-    def __init__(self, plant_id:str, device:str):
+    def __init__(self, plant_id:str, type:str):
         self.plant_id = plant_id
         self.status = False
-        self.device = device
+        self.type = type
 
     def change_status(self):
         self.status = not self.status

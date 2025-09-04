@@ -1,7 +1,4 @@
 import json
-import uuid
-
-from model import Sensor, SwitchActuator, SwitchActuator
 
 
 class PlantDescriptor:
