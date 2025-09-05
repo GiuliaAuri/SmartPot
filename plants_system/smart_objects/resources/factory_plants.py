@@ -14,7 +14,6 @@ class PlantFactory:
             plants_data = json.load(f)
         plants = []
         for pdata in plants_data:
-            # Passa il plant_id dal JSON se presente
             plant = PlantDescriptor(
                 species=pdata["species"],
                 plant_id=pdata.get("plant_id")

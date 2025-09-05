@@ -29,12 +29,10 @@ class Plants:
             self.consumers.append(consumer)
 
     def stop(self):
-        # Chiamata ai metodi stop di tutti i producer e consumer
         for producer in self.producers:
             producer.stop()
         for consumer in self.consumers:
             consumer.stop()
-        # Poi aspetta la fine dei thread
         for thread in self.threads:
             thread.join()
 

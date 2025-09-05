@@ -28,15 +28,14 @@ class PolicyManager:
         self.actions[plant.plant_id] = []
         self.alerts[plant.plant_id] = []
 
-        logged_sensors = set()  # evita duplicati nei log
+        logged_sensors = set()  
 
         for policy in policies:
             sensor = self._find_sensor(plant, policy["sensor"])
             actuator = self._find_actuator(plant, policy.get("actuator", ""))
 
-            # loggalo solo la prima volta che lo vedi
+            
             if sensor and policy["sensor"] not in logged_sensors:
-                #print(f"DEBUG: plant={plant.plant_id}, sensor={sensor.type}, value={sensor.value}")
                 logged_sensors.add(policy["sensor"])
 
             op = self.OPERATORS.get(policy["condition"])
@@ -53,11 +52,6 @@ class PolicyManager:
                             f"Alert: {sensor.type} value {sensor.value} for plant {plant.plant_id}"
                         )
                         self.alerts[plant.plant_id].append(alert_msg)
-
-                #if command is not None:
-                    # pubblica comando MQTT
-                 #   data_collector_producer = DataCollectorProducer(plant, command)
-                  #  data_collector_producer.run()
 
     @staticmethod
     def _find_sensor(plant: PlantDescriptor, sensor_type: str):

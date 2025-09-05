@@ -33,8 +33,6 @@ class PlantProducer:
         self.client.disconnect()
         logging.info("PlantProducer stopped...")
         
-
-
     def on_connect(self, client, userdata, flags, rc):
         logging.info("Connected with result code %s", str(rc))
 

@@ -16,8 +16,10 @@ class DataCollectorConsumer:
         self.client.on_message = self.on_message
         self.policy_manager = PolicyManager("plants_system/smart_objects/resources/policies_conf.json")
         self.running = False
+ 
 
     def on_connect(self, client, userdata, flags, rc):
+       #TODO aggiungere sottoscrizione al topic info
        for device in self.plant_descriptor.devices:
            for sensor in device.sensors:
                 topic = MqttConfigurationParameters.build_telemetry_plant_topic(
@@ -25,7 +27,7 @@ class DataCollectorConsumer:
                 )
                 self.client.subscribe(topic)
                 print(f"Subscribed to topic: {topic}")
-        #TODO aggiungere sottoscrizione al topic info
+        
     
 
     def on_message(self, client, userdata, msg):
@@ -50,7 +52,6 @@ class DataCollectorConsumer:
         except Exception as e:
             logging.error(f"Error parsing message: {e}")
 
-        # rivaluta le policy con i valori aggiornati
         self.policy_manager.evaluate(self.plant_descriptor)
         alerts = self.policy_manager.alerts.get(self.plant_descriptor.plant_id, [])
         for alert in alerts:

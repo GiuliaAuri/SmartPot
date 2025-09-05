@@ -21,7 +21,7 @@ class PlantConsumer():
         self.running = True
         try:
             while self.running:
-                time.sleep(1)  # mantiene vivo il loop
+                time.sleep(1)  
         finally:
             self.client.loop_stop()
 

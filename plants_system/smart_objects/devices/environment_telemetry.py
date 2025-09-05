@@ -10,7 +10,7 @@ logger = logging.getLogger("environment_telemetry")
 
 class EnvironmentTelemetryData(Device):
     def __init__(self, plant_id):
-        self.plant_id = plant_id  # Inizializza subito!
+        self.plant_id = plant_id  
         self.device = "environment_telemetry"
         sensors = [
             BatteryLevelSensor(plant_id, initial_value=100.0, unit="%", min_value=0.0, max_value=5.0, device=self.device),

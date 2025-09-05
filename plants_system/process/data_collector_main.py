@@ -21,11 +21,9 @@ class Main:
             self.consumers.append(consumer)
 
     def stop(self):
-        # Chiama stop su tutti i consumer
         for consumer in self.consumers:
             if hasattr(consumer, "stop"):
                 consumer.stop()
-        # Attendi la fine dei thread
         for t in self.threads:
             t.join()
 
@@ -34,7 +32,7 @@ if __name__ == "__main__":
     manager.start()
     try:
         while True:
-            pass  # Mantieni il main process vivo
+            pass  
     except KeyboardInterrupt:
         print("Stopping all threads...")
         manager.stop()
