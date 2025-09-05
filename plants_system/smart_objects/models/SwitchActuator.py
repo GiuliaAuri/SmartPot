@@ -1,6 +1,7 @@
+from abc import ABC
 import logging
 
-class SwitchActuator:
+class SwitchActuator(ABC):
 
     def __init__(self, plant_id:str, type:str, device:str):
         self.plant_id = plant_id
@@ -12,10 +13,10 @@ class SwitchActuator:
         self.status = not self.status
         
     def handle_command(self, command: str):
-        if command.upper() == "ON":
+        if command.upper().startswith("ACTIVATE"):
             self.status = True
             logging.info(f"{self.device} -> switched ON")
-        elif command.upper() == "OFF":
+        elif command.upper().startswith("DEACTIVATE"):
             self.status = False
             logging.info(f"{self.device} -> switched OFF")
         else:

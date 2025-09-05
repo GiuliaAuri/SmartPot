@@ -1,7 +1,5 @@
-import json
-import time
 import logging
-
+from plants_system.smart_objects.models.Device import Device
 from plants_system.smart_objects.sensors.battery_level_sensor import BatteryLevelSensor
 from plants_system.smart_objects.sensors.humidity_sensor import HumiditySensor
 from plants_system.smart_objects.sensors.lightness_sensor import LightnessSensor
@@ -10,24 +8,15 @@ from plants_system.smart_objects.sensors.temperature_sensor import TemperatureSe
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("environment_telemetry")
 
-class EnvironmentTelemetryData:
-
-    def __init__(self, plant_id: str):
-        self.plant_id = plant_id
+class EnvironmentTelemetryData(Device):
+    def __init__(self, plant_id):
+        self.plant_id = plant_id  # Inizializza subito!
         self.device = "environment_telemetry"
-        self.batteryLevel = BatteryLevelSensor(self.plant_id, initial_value=100.0, unit="%", min_value=0.0, max_value=5.0, device=self.device)
-        self.temperature = TemperatureSensor(self.plant_id, initial_value=0.0, unit="°C", min_value=0.0, max_value=50.0, device=self.device)
-        self.humidity = HumiditySensor(self.plant_id, initial_value=0.0, unit="%", min_value=0.0, max_value=100.0, device=self.device)
-        self.lightness = LightnessSensor(self.plant_id, initial_value=0.0, unit="lx", min_value=200.0, max_value=60000.0, device=self.device)
-        self.timestamp = int(time.time())
+        sensors = [
+            BatteryLevelSensor(plant_id, initial_value=100.0, unit="%", min_value=0.0, max_value=5.0, device=self.device),
+            TemperatureSensor(self.plant_id, initial_value=0.0, unit="°C", min_value=0.0, max_value=50.0, device=self.device),
+            HumiditySensor(self.plant_id, initial_value=0.0, unit="%", min_value=0.0, max_value=100.0, device=self.device),
+            LightnessSensor(self.plant_id, initial_value=0.0, unit="lx", min_value=200.0, max_value=60000.0, device=self.device)
+        ]
+        super().__init__(plant_id, self.device, sensors=sensors)
 
-    def update_measurements(self):
-        self.temperature.update()
-        self.humidity.update()
-        self.lightness.update()
-        self.batteryLevel.update()
-        self.timestamp = int(time.time())
-        logger.info(f"Updated: {self.to_json()}")
-
-    def to_json(self):
-        return json.dumps(self, default=lambda o: o.__dict__)
