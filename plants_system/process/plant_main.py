@@ -10,7 +10,6 @@ from plants_system.process.plant_consumer import PlantConsumer
 
 class Plants:
     def __init__(self, config_path):
-        #TODO creazione delle piante NON a partire dal json
         self.plants = PlantFactory.create_plants_from_json(config_path)
         self.threads = []
         self.producers = []

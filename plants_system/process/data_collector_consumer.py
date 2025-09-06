@@ -19,14 +19,14 @@ class DataCollectorConsumer:
  
 
     def on_connect(self, client, userdata, flags, rc):
-       #TODO aggiungere sottoscrizione al topic info
-       for device in self.plant_descriptor.devices:
-           for sensor in device.sensors:
-                topic = MqttConfigurationParameters.build_telemetry_plant_topic(
-                    self.plant_descriptor.plant_id, sensor.device, sensor.type
-                )
-                self.client.subscribe(topic)
-                print(f"Subscribed to topic: {topic}")
+        logging.info("Connected with result code %s", str(rc))
+        for device in self.plant_descriptor.devices:
+            for sensor in device.sensors:
+                    topic = MqttConfigurationParameters.build_telemetry_plant_topic(
+                        self.plant_descriptor.plant_id, sensor.device, sensor.type
+                    )
+                    self.client.subscribe(topic)
+                    print(f"Subscribed to topic: {topic}")
         
     
 

@@ -6,8 +6,9 @@ import time
 import threading
 from plants_system.smart_objects.resources.factory_plants import PlantFactory
 from plants_system.process.data_collector_consumer import DataCollectorConsumer
-
 from plants_system.smart_objects.resources.plant_info_consumer import PlantInfoConsumer
+
+FILENAME="plants_system/smart_objects/resources/plants_discovery.json"
 
 class Main:
     def __init__(self, config_path):
@@ -43,9 +44,9 @@ class Main:
             t.join()
 
 if __name__ == "__main__":
-    manager = Main("plants_system/smart_objects/resources/plants_discovery.json")
+    manager = Main(FILENAME)
     # Discovery delle piante per 20 secondi
-    manager.discover_plants("plants_system/smart_objects/resources/plants_discovery.json", 20)
+    manager.discover_plants(FILENAME, 20)
     # Avvio dei consumer
     manager.start()
     try:
