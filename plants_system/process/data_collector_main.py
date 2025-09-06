@@ -8,10 +8,12 @@ from plants_system.smart_objects.resources.factory_plants import PlantFactory
 from plants_system.process.data_collector_consumer import DataCollectorConsumer
 from plants_system.smart_objects.resources.plant_info_consumer import PlantInfoConsumer
 
-FILENAME="plants_system/smart_objects/resources/plants_discovery.json"
+FILENAME="cloud_simulator/plants.json"
+PATH="cloud_simulator/plants_log/"
 
 class Main:
     def __init__(self, config_path):
+        self.discover_plants(config_path, 10)
         self.plants = PlantFactory.create_plants_from_json(config_path)
         self.threads = []
         self.consumers = []
@@ -30,7 +32,7 @@ class Main:
 
     def start(self):
         for plant in self.plants:
-            consumer = DataCollectorConsumer(plant)
+            consumer = DataCollectorConsumer(plant, PATH)
             t = threading.Thread(target=consumer.run)
             t.start()
             self.threads.append(t)
@@ -45,8 +47,6 @@ class Main:
 
 if __name__ == "__main__":
     manager = Main(FILENAME)
-    # Discovery delle piante per 20 secondi
-    manager.discover_plants(FILENAME, 20)
     # Avvio dei consumer
     manager.start()
     try:

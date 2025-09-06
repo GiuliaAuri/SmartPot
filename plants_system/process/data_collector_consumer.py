@@ -2,14 +2,16 @@ import logging
 import time
 import paho.mqtt.client as mqtt
 import json
+import os
 from conf.mqtt_conf_params import MqttConfigurationParameters
 from plants_system.smart_objects.models.plant_descriptor import PlantDescriptor
 from plants_system.process.policy_manager import PolicyManager
 from plants_system.process.data_collector_producer import DataCollectorProducer
 
 class DataCollectorConsumer:
-    def __init__(self, plant_descriptor: PlantDescriptor):
+    def __init__(self, plant_descriptor: PlantDescriptor, path:str):
         self.plant_descriptor = plant_descriptor
+        self.filename=path+self.plant_descriptor.plant_id+".json"
         client_id = f"{self.plant_descriptor.plant_id}-data-collector-consumer"
         self.client = mqtt.Client(client_id)
         self.client.on_connect = self.on_connect
@@ -17,7 +19,6 @@ class DataCollectorConsumer:
         self.policy_manager = PolicyManager("plants_system/smart_objects/resources/policies_conf.json")
         self.running = False
  
-
     def on_connect(self, client, userdata, flags, rc):
         logging.info("Connected with result code %s", str(rc))
         for device in self.plant_descriptor.devices:
@@ -28,7 +29,6 @@ class DataCollectorConsumer:
                     self.client.subscribe(topic)
                     print(f"Subscribed to topic: {topic}")
         
-    
 
     def on_message(self, client, userdata, msg):
         message_payload = msg.payload.decode("utf-8")
@@ -49,19 +49,37 @@ class DataCollectorConsumer:
                             logging.debug(f"Updated sensor {sensor.type} of {device.device} to {sensor.value}")
                             break
 
+            # Aggiorna la storia del sensore nel file json
+            self.update_sensor_history(sensor_type, value, device_name)
+
         except Exception as e:
             logging.error(f"Error parsing message: {e}")
 
+        # Rivaluta le policy
         self.policy_manager.evaluate(self.plant_descriptor)
         alerts = self.policy_manager.alerts.get(self.plant_descriptor.plant_id, [])
         for alert in alerts:
             print(f"ALERT: {alert}")
-        actions=self.policy_manager.actions.get(self.plant_descriptor.plant_id, [])
-        for action in actions:
-            print(f"ACTION: {action}")
-            data_collector_producer = DataCollectorProducer(self.plant_descriptor, action)
-            data_collector_producer.run()
 
+        # Esegui solo le azioni relative al sensore appena aggiornato
+        actions = self.policy_manager.actions.get(self.plant_descriptor.plant_id, [])
+        for action in actions:
+            # Esempio: "Activate irrigation"
+            action_parts = action.split()
+            if len(action_parts) < 2:
+                continue
+            # Cerca la policy corrispondente
+            for policy in self.policy_manager.plant_policies.get(self.plant_descriptor.plant_id, []):
+                if (
+                    policy.get("action", "").capitalize() + " " + policy.get("actuator", "") == action
+                    and policy.get("sensor", "") == sensor_type
+                ):
+                    print(f"ACTION: {action}")
+                    self.update_actuator_history(action)
+                    data_collector_producer = DataCollectorProducer(self.plant_descriptor, action)
+                    data_collector_producer.run()
+                    break  # esegui solo una volta per questa azione
+            
     def run(self):
         self.client.connect(MqttConfigurationParameters.BROKER_ADDRESS, MqttConfigurationParameters.BROKER_PORT)
         self.client.loop_start()
@@ -76,3 +94,97 @@ class DataCollectorConsumer:
         self.running = False
         self.client.disconnect()
         logging.info("DataCollectorConsumer stopped...")
+
+
+    def update_sensor_history(self, sensor_type, value, device_name):
+        timestamp = int(time.time())
+        # Se il file non esiste, crea la struttura base
+        if not os.path.exists(self.filename):
+            plants = [{
+                "plant_id": self.plant_descriptor.plant_id,
+                "sensors": [],
+                "actuators": []
+            }]
+        else:
+            with open(self.filename, "r") as f:
+                plants = json.load(f)
+
+        for plant in plants:
+            if plant["plant_id"] == self.plant_descriptor.plant_id:
+                found = False
+                for s in plant["sensors"]:
+                    if s.get("sensor") == sensor_type and s.get("device") == device_name:
+                        found = True
+                        if "values" not in s:
+                            s["values"] = []
+                        s["values"].append({"value": value, "timestamp": str(timestamp)})
+                        break
+                if not found:
+                    plant["sensors"].append({
+                        "sensor": sensor_type,
+                        "device": device_name,
+                        "values": [{"value": value, "timestamp": str(timestamp)}]
+                    })
+                break
+
+        with open(self.filename, "w") as f:
+            json.dump(plants, f, indent=2)
+
+    #TODO da aggiungere alla chiamata
+    def update_actuator_history(self, action):
+        timestamp = int(time.time())
+        action_parts = action.split()
+        if len(action_parts) < 2:
+            logging.warning(f"Cannot parse action: {action}")
+            return
+
+        action_type = action_parts[0]  # "Activate" o "Deactivate"
+        actuator_type = action_parts[1]  # nome attuatore (es: "irrigation")
+
+        value = True if action_type.lower() == "activate" else False
+
+        # Cerca il device che contiene l'attuatore richiesto
+        device_name = None
+        for device in self.plant_descriptor.devices:
+            for actuator in getattr(device, "actuators", []):
+                if getattr(actuator, "type", None) == actuator_type:
+                    device_name = device.device  # <-- usa il nome del device!
+                    break
+            if device_name:
+                break
+
+        if device_name is None:
+            device_name = actuator_type  # fallback
+
+        # Carica o crea il file
+        if not os.path.exists(self.filename):
+            plants = [{
+                "plant_id": self.plant_descriptor.plant_id,
+                "sensors": [],
+                "actuators": []
+            }]
+        else:
+            with open(self.filename, "r") as f:
+                plants = json.load(f)
+
+        for plant in plants:
+            if plant["plant_id"] == self.plant_descriptor.plant_id:
+                found = False
+                for a in plant["actuators"]:
+                    if a.get("actuator") == actuator_type and a.get("device") == device_name:
+                        found = True
+                        if "values" not in a:
+                            a["values"] = []
+                        a["values"].append({"value": value, "timestamp": str(timestamp)})
+                        break
+                if not found:
+                    plant["actuators"].append({
+                        "actuator": actuator_type,
+                        "device": device_name,
+                        "values": [{"value": value, "timestamp": str(timestamp)}]
+                    })
+                break
+
+        with open(self.filename, "w") as f:
+            json.dump(plants, f, indent=2)
+

@@ -14,6 +14,7 @@ class PlantConsumer():
         self.client.on_connect = self.on_connect
         self.client.on_message = self.on_message
         self.running = False
+        
 
     def run(self):
         self.client.connect(MqttConfigurationParameters.BROKER_ADDRESS, MqttConfigurationParameters.BROKER_PORT)
@@ -31,19 +32,20 @@ class PlantConsumer():
         logging.info("PlantConsumer stopped...")
 
     def on_connect(self, client, userdata, flags, rc):
-        for device in self.plant_descriptor.devices:
-            for actuator in device.actuators:
-                plant_topic = MqttConfigurationParameters.build_command_plant_topic(self.plant_descriptor.plant_id, device.device)
-                self.client.subscribe(plant_topic)
-                logging.info(f"Subscribed to topic: {plant_topic}")
+        plant_topic = MqttConfigurationParameters.build_command_plant_topic(self.plant_descriptor.plant_id, "+")
+        self.client.subscribe(plant_topic)
+        logging.info(f"Subscribed to topic: {plant_topic}")
 
     def on_message(self, client, userdata, msg):
         message_payload = str(msg.payload.decode("utf-8"))
         logging.info(f"Received message: {message_payload}")
-        #TODO cambiare lo stato dell'attuatore - qui solo uno ce nè
-        for device in self.plant_descriptor.devices:
-            for actuator in device.actuators:
-                actuator.handle_command(command=message_payload)
+        topic_parts = msg.topic.split('/')
+        if len(topic_parts) >= 5:
+            device_id = topic_parts[3]  # plant/{plant_id}/device/{device_id}/command
+            for device in self.plant_descriptor.devices:
+                for actuator in device.actuators:
+                    if actuator.device == device_id:
+                        actuator.handle_command(command=message_payload)
 
 
 

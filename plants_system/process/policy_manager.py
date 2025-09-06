@@ -28,30 +28,23 @@ class PolicyManager:
         self.actions[plant.plant_id] = []
         self.alerts[plant.plant_id] = []
 
-        logged_sensors = set()  
-
         for policy in policies:
             sensor = self._find_sensor(plant, policy["sensor"])
             actuator = self._find_actuator(plant, policy.get("actuator", ""))
 
-            
-            if sensor and policy["sensor"] not in logged_sensors:
-                logged_sensors.add(policy["sensor"])
-
             op = self.OPERATORS.get(policy["condition"])
-            if sensor and op:
-                
+            if sensor and op and actuator:
                 if op(sensor.value, policy["value"]):
-                    if policy["action"] == "activate" and actuator:
-                        self.actions[plant.plant_id].append(f"Activate {actuator.device}")
-                    elif policy["action"] == "deactivate" and actuator:
-                        self.actions[plant.plant_id].append(f"Deactivate {actuator.device}")
-                    elif policy["action"] == "alert":
-                        alert_msg = policy.get(
-                            "message",
-                            f"Alert: {sensor.type} value {sensor.value} for plant {plant.plant_id}"
-                        )
-                        self.alerts[plant.plant_id].append(alert_msg)
+                    action_str = f"{policy['action'].capitalize()} {actuator.type}"
+                    # Evita duplicati
+                    if action_str not in self.actions[plant.plant_id]:
+                        self.actions[plant.plant_id].append(action_str)
+                elif policy["action"] == "alert":
+                    alert_msg = policy.get(
+                        "message",
+                        f"Alert: {sensor.type} value {sensor.value} for plant {plant.plant_id}"
+                    )
+                    self.alerts[plant.plant_id].append(alert_msg)
 
     @staticmethod
     def _find_sensor(plant: PlantDescriptor, sensor_type: str):

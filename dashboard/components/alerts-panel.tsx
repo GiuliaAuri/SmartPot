@@ -139,46 +139,52 @@ export function AlertsPanel({ alerts, setAlerts }: AlertsPanelProps) {
           ) : (
             alerts.map((alert) => (
               <Alert key={alert.id} className={getAlertColor(alert.type)}>
-                <div className="flex items-center justify-between w-full">
-                  <div className="flex items-center gap-3 flex-1 min-w-0">
-                    <div className={`${getAlertTextColor(alert.type)} flex-shrink-0`}>{getAlertIcon(alert.type)}</div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between mb-1">
-                        <AlertTitle className={`${getAlertTextColor(alert.type)} truncate`}>
-                          {alert.plantName}
-                        </AlertTitle>
-                        <Badge
-                          variant={alert.type === "critical" ? "destructive" : "secondary"}
-                          className="text-xs ml-2 flex-shrink-0"
-                        >
-                          {alert.type === "critical" ? "Critico" : alert.type === "warning" ? "Avviso" : "Info"}
-                        </Badge>
-                      </div>
-                      <AlertDescription className={`${getAlertTextColor(alert.type)} text-sm leading-relaxed`}>
-                        {alert.message}
-                      </AlertDescription>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">{alert.timestamp}</p>
-                    </div>
+                <div className="flex items-start gap-4 w-full">
+                  <div className={`${getAlertTextColor(alert.type)} flex-shrink-0 mt-1`}>
+                    {getAlertIcon(alert.type)}
                   </div>
-                  <div className="flex items-center gap-1 ml-3 flex-shrink-0">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => markAsResolved(alert.id)}
-                      className="h-8 w-8 p-0 hover:bg-green-100 dark:hover:bg-green-900"
-                      title="Risolvi"
-                    >
-                      <CheckCircle className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => dismissAlert(alert.id)}
-                      className="h-8 w-8 p-0 hover:bg-red-100 dark:hover:bg-red-900"
-                      title="Elimina"
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
+                  <div className="flex-1 min-w-0 space-y-2">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1">
+                        <AlertTitle className={`${getAlertTextColor(alert.type)} font-semibold mb-1`}>
+                          Pianta: {alert.plantName}
+                        </AlertTitle>
+                        <AlertDescription className={`${getAlertTextColor(alert.type)} text-sm leading-relaxed`}>
+                          {alert.message}
+                        </AlertDescription>
+                      </div>
+                      <Badge
+                        variant={alert.type === "critical" ? "destructive" : "secondary"}
+                        className="text-xs flex-shrink-0 ml-2"
+                      >
+                        {alert.type === "critical" ? "Critico" : alert.type === "warning" ? "Avviso" : "Info"}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center justify-between pt-2">
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => markAsResolved(alert.id)}
+                          className="h-8 px-3 hover:bg-green-100 dark:hover:bg-green-900 text-xs"
+                          title="Risolvi"
+                        >
+                          <CheckCircle className="h-4 w-4 mr-1" />
+                          Risolvi
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => dismissAlert(alert.id)}
+                          className="h-8 px-3 hover:bg-red-100 dark:hover:bg-red-900 text-xs"
+                          title="Elimina"
+                        >
+                          <X className="h-4 w-4 mr-1" />
+                          Elimina
+                        </Button>
+                      </div>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">{alert.timestamp}</p>
+                    </div>
                   </div>
                 </div>
               </Alert>

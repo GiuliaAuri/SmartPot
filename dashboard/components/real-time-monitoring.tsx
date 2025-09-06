@@ -78,12 +78,12 @@ export function RealTimeMonitoring({ plants }: RealTimeMonitoringProps) {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="flex flex-wrap gap-4">
             {plants.map((plant) => (
               <Badge
                 key={plant.id}
                 variant={selectedPlant === plant.id ? "default" : "outline"}
-                className={`cursor-pointer px-6 py-4 text-center font-medium transition-all duration-200 hover:scale-105 flex items-center justify-center gap-2 text-lg ${
+                className={`cursor-pointer px-6 py-4 text-center font-medium transition-all duration-200 hover:scale-105 flex items-center justify-center gap-2 text-lg flex-1 min-w-0 ${
                   selectedPlant === plant.id
                     ? "bg-green-600 hover:bg-green-700 text-white shadow-lg"
                     : "border-green-300 text-green-700 hover:bg-green-100 dark:border-green-600 dark:text-green-300 dark:hover:bg-green-900"
