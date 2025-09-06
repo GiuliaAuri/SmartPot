@@ -1,0 +1,20 @@
+[
+  {
+    "plant_id": "plant_cactus_001",
+    "species": "cactus",
+    "sensors": [],
+    "actuators": []
+  },
+  {
+    "plant_id": "plant_fico_001",
+    "species": "fico",
+    "sensors": [],
+    "actuators": []
+  },
+  {
+    "plant_id": "plant_custom_001",
+    "species": "orchidea",
+    "sensors": [],
+    "actuators": []
+  }
+]
