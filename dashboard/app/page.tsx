@@ -101,7 +101,11 @@ export default function SmartPlantDashboard() {
         </div>
 
         {/* Main Content - Only Dashboard */}
-        <PlantDashboard plants={plants} setPlantsData={setPlantsData} alerts={alerts} />
+        <PlantDashboard
+          plants={plants as any}
+          setPlantsData={setPlantsData as any}
+          alerts={alerts as any}
+        />
       </div>
     </div>
   )
