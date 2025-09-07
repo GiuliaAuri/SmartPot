@@ -1,0 +1,15 @@
+{
+  "server": {
+    "host": "127.0.0.1",
+    "port": 5000,
+    "debug": true
+  },
+  "update": {
+    "frequency_seconds": 30,
+    "description": "Dashboard refresh frequency"
+  },
+  "data": {
+    "precision": 1,
+    "description": "Number of decimal places for numeric values"
+  }
+}
