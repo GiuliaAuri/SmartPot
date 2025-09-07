@@ -27,6 +27,6 @@ class DataCollectorProducer:
         self.client.connect(MqttConfigurationParameters.BROKER_ADDRESS, MqttConfigurationParameters.BROKER_PORT)
         self.client.loop_start() 
         self.publish_command(self.command)
-        time.sleep(5) 
+        time.sleep(2) 
         self.client.loop_stop()
 

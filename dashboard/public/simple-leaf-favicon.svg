@@ -1,0 +1,13 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Contorno della foglia -->
+  <path d="M16 2C20 2 24 6 24 10C24 14 20 18 16 18C12 18 8 14 8 10C8 6 12 2 16 2Z" stroke="#22C55E" stroke-width="3" fill="none"/>
+  
+  <!-- Venature principali -->
+  <path d="M16 6L16 14" stroke="#22C55E" stroke-width="2"/>
+  <path d="M12 8L20 8" stroke="#22C55E" stroke-width="1.5"/>
+  <path d="M12 10L20 10" stroke="#22C55E" stroke-width="1.5"/>
+  <path d="M12 12L20 12" stroke="#22C55E" stroke-width="1.5"/>
+  
+  <!-- Stelo -->
+  <path d="M16 18L16 24" stroke="#22C55E" stroke-width="3"/>
+</svg>
