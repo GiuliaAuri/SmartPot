@@ -28,7 +28,6 @@ export default function SmartPlantDashboard() {
           type: "Erba aromatica",
           status: "healthy",
           waterLevel: 75,
-          soilMoisture: 65,
           temperature: 22,
           humidity: 60,
           lightLevel: 80,

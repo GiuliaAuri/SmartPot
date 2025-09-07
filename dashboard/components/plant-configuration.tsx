@@ -18,7 +18,6 @@ interface Plant {
   type: string
   status: string
   waterLevel: number
-  soilMoisture: number
   temperature: number
   humidity: number
   lightLevel: number

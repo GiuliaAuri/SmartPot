@@ -13,7 +13,6 @@ interface Plant {
   type: string
   status: string
   waterLevel: number
-  soilMoisture: number
   temperature: number
   humidity: number
   lightLevel: number
@@ -239,8 +238,8 @@ export function PlantDashboard({ plants, setPlantsData, alerts }: PlantDashboard
                     <Droplets className="h-3 w-3 sm:h-4 sm:w-4 text-cyan-500 flex-shrink-0" />
                     <span className="text-xs sm:text-sm truncate">Umidità</span>
                   </div>
-                  <Progress value={plant.soilMoisture} className="h-1.5 sm:h-2" />
-                  <p className="text-xs text-gray-600 dark:text-gray-400">{plant.soilMoisture.toFixed(1)}%</p>
+                  <Progress value={plant.humidity} className="h-1.5 sm:h-2" />
+                  <p className="text-xs text-gray-600 dark:text-gray-400">{plant.humidity.toFixed(1)}%</p>
                 </div>
 
                 {/* Luminosità */}

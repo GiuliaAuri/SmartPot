@@ -8,6 +8,6 @@ class BatteryLevelSensor(Sensor[float]):
         super().__init__(plant_id, initial_value, unit, min_value, max_value, "battery_level",device)
 
     def update(self):
-        self.value = max(0, self.value - random.uniform(self.min_value, self.max_value))
+        self.value = round(max(0, self.value - random.uniform(self.min_value, self.max_value)),1)
         self.timestamp = int(time.time())
         logging.info(f"Updated battery level measurement: {self.value} {self.unit} at {self.timestamp} - plant: {self.plant_id}")

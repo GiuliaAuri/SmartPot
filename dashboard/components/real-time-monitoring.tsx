@@ -12,7 +12,6 @@ interface Plant {
   type: string
   status: string
   waterLevel: number
-  soilMoisture: number
   temperature: number
   humidity: number
   lightLevel: number
@@ -44,7 +43,7 @@ export function RealTimeMonitoring({ plants }: RealTimeMonitoringProps) {
           data.push({
             time: time.toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" }),
             temperature: plant.temperature + (Math.random() - 0.5) * 4,
-            humidity: plant.soilMoisture + (Math.random() - 0.5) * 10,
+            humidity: plant.humidity + (Math.random() - 0.5) * 10,
             lightLevel: plant.lightLevel + (Math.random() - 0.5) * 20,
             waterLevel: Math.max(0, plant.waterLevel + (Math.random() - 0.7) * 5),
           })
@@ -109,20 +108,6 @@ export function RealTimeMonitoring({ plants }: RealTimeMonitoringProps) {
               <div className="flex-1 min-w-0">
                 <p className="text-sm text-gray-600 dark:text-gray-400">Temperatura</p>
                 <p className="text-2xl font-bold truncate">{selectedPlantData.temperature.toFixed(1)}°C</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
-                <Droplets className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Umidità Terreno</p>
-                <p className="text-2xl font-bold">{selectedPlantData.soilMoisture.toFixed(1)}%</p>
               </div>
             </div>
           </CardContent>

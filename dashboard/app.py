@@ -93,14 +93,6 @@ class SensorDataProcessor:
     """Processes sensor data and extracts values"""
     
     @staticmethod
-    def round_to_one_decimal(value):
-        """Round value to one decimal place"""
-        try:
-            return round(float(value), 1)
-        except (ValueError, TypeError):
-            return 0.0
-    
-    @staticmethod
     def extract_sensor_value(sensors, sensor_name, default_value=0.0):
         """Extract sensor value from sensors array"""
         if isinstance(sensors, list):
@@ -109,8 +101,8 @@ class SensorDataProcessor:
                     values = sensor.get('values', [])
                     if values:
                         raw_value = values[-1].get('value', default_value)
-                        return SensorDataProcessor.round_to_one_decimal(raw_value)
-        return SensorDataProcessor.round_to_one_decimal(default_value)
+                        return raw_value
+        return default_value
     
     @staticmethod
     def get_sensor_device(sensors, sensor_name):
@@ -350,7 +342,7 @@ def get_plant_telemetry(plant_id):
             
             telemetry_data["devices"][device_name]["sensors"].append({
                 "name": sensor_name,
-                "value": SensorDataProcessor.round_to_one_decimal(latest_value.get('value', 0)),
+                "value": latest_value.get('value', 0),
                 "timestamp": latest_value.get('timestamp', ''),
                 "unit": sensor.get('unit', '')
             })
@@ -374,6 +366,7 @@ def post_actuator_command(plant_id, actuator_name):
     
     # In a real implementation, this would send to MQTT
     # For now, we'll just return success
+    # TODO: invocare la funzione inviare command all'attuatore
     return {
         "status": "success",
         "plant_id": plant_id,
@@ -394,7 +387,6 @@ def get_all_plants():
         # Extract sensor values
         temperature = SensorDataProcessor.extract_sensor_value(sensors, 'temperature', 20.0)
         humidity = SensorDataProcessor.extract_sensor_value(sensors, 'humidity', 50.0)
-        soil_moisture = SensorDataProcessor.extract_sensor_value(sensors, 'soil_moisture', 50.0)
         light_level = SensorDataProcessor.extract_sensor_value(sensors, 'lightness', 50.0)
         battery_level = SensorDataProcessor.extract_sensor_value(sensors, 'battery_level', 80.0)
         tank_level = SensorDataProcessor.extract_sensor_value(sensors, 'level_tank', 50.0)
@@ -426,10 +418,8 @@ def get_all_plants():
             "name": plant_data.get('plant_name', plant_id),
             "type": plant_data.get('plant_type', 'Unknown'),
             "species": plant_data.get('species', ''),
-            "location": plant_data.get('location', ''),
             "status": status,
             "waterLevel": tank_level,
-            "soilMoisture": soil_moisture,
             "temperature": temperature,
             "humidity": humidity,
             "lightLevel": light_level,
@@ -475,8 +465,8 @@ def get_alerts():
                     "message": alert.get('message', ''),
                     "timestamp": "Ora",
                     "sensor": alert.get('sensor', ''),
-                    "value": SensorDataProcessor.round_to_one_decimal(alert.get('value', 0)),
-                    "threshold": SensorDataProcessor.round_to_one_decimal(alert.get('threshold', 0))
+                    "value": alert.get('value', 0),
+                    "threshold": alert.get('threshold', 0)
                 })
                 alert_id += 1
     
@@ -528,7 +518,6 @@ def get_config():
             "battery_level",
             "level_tank",
             "water_flow",
-            "soil_moisture"
         ],
         "supported_actuators": [
             "irrigation"

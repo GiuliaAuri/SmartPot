@@ -8,6 +8,6 @@ class LightnessSensor(Sensor[float]):
         super().__init__(plant_id, initial_value, unit, min_value, max_value, "lightness", device)
 
     def update(self):
-        self.value = random.uniform(self.min_value, self.max_value)
+        self.value = round(random.uniform(self.min_value, self.max_value),1)
         self.timestamp = int(time.time())
         logging.info(f"Updated lightness measurement: {self.value} {self.unit} at {self.timestamp} - plant: {self.plant_id}")
