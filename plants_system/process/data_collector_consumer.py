@@ -64,20 +64,31 @@ class DataCollectorConsumer:
         # Esegui solo le azioni relative al sensore appena aggiornato
         actions = self.policy_manager.actions.get(self.plant_descriptor.plant_id, [])
         for action in actions:
-            # Esempio: "Activate irrigation"
             action_parts = action.split()
             if len(action_parts) < 2:
                 continue
+            actuator_type = action_parts[1]
+            desired_value = True if action_parts[0].lower() == "activate" else False
+
             # Cerca la policy corrispondente
             for policy in self.policy_manager.plant_policies.get(self.plant_descriptor.plant_id, []):
                 if (
                     policy.get("action", "").capitalize() + " " + policy.get("actuator", "") == action
                     and policy.get("sensor", "") == sensor_type
                 ):
-                    print(f"ACTION: {action}")
-                    self.update_actuator_history(action)
-                    data_collector_producer = DataCollectorProducer(self.plant_descriptor, action)
-                    data_collector_producer.run()
+                    # Trova l'attuatore
+                    for device in self.plant_descriptor.devices:
+                        for actuator in getattr(device, "actuators", []):
+                            if getattr(actuator, "type", None) == actuator_type:
+                                # Solo se lo stato deve cambiare
+                                if getattr(actuator, "status", None) != desired_value:
+                                    print(f"ACTION: {action}")
+                                    self.update_actuator_history(action)
+                                    data_collector_producer = DataCollectorProducer(self.plant_descriptor, action)
+                                    data_collector_producer.run()
+                                else:
+                                    logging.info(f"No ACTION: {action} (actuator already in desired state)")
+                                break
                     break  # esegui solo una volta per questa azione
             
     def run(self):
