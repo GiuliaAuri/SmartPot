@@ -25,12 +25,12 @@ export default function SmartPlantDashboard() {
         {
           id: "1",
           name: "Basilico",
-          type: "Erba aromatica",
+          type: "basilico",  // Show species instead of generic type
           status: "healthy",
-          waterLevel: 75,
+          waterLevel: 75,  // 0.75 liters = 75%
           temperature: 22,
           humidity: 60,
-          lightLevel: 80,
+          lightLevel: 65,  // ~39000 lux = 65%
           batteryLevel: 85,
           waterFlow: 0.2,
           isWatering: false,

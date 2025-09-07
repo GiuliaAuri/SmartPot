@@ -219,7 +219,7 @@ export function PlantDashboard({ plants, setPlantsData, alerts }: PlantDashboard
                     <span className="text-xs sm:text-sm truncate">Acqua</span>
                   </div>
                   <Progress value={plant.waterLevel} className="h-1.5 sm:h-2" />
-                  <p className="text-xs text-gray-600 dark:text-gray-400">{plant.waterLevel}%</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">{plant.waterLevel.toFixed(1)}%</p>
                 </div>
 
                 {/* Batteria */}

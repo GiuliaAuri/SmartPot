@@ -384,13 +384,20 @@ def get_all_plants():
         sensors = plant_data.get('sensors', [])
         actuators = plant_data.get('actuators', [])
         
-        # Extract sensor values
+        # Extract sensor values and convert to percentages
         temperature = SensorDataProcessor.extract_sensor_value(sensors, 'temperature', 20.0)
         humidity = SensorDataProcessor.extract_sensor_value(sensors, 'humidity', 50.0)
-        light_level = SensorDataProcessor.extract_sensor_value(sensors, 'lightness', 50.0)
+        light_level_raw = SensorDataProcessor.extract_sensor_value(sensors, 'lightness', 30000.0)  # Raw lux value
         battery_level = SensorDataProcessor.extract_sensor_value(sensors, 'battery_level', 80.0)
-        tank_level = SensorDataProcessor.extract_sensor_value(sensors, 'level_tank', 50.0)
+        tank_level_raw = SensorDataProcessor.extract_sensor_value(sensors, 'level_tank', 0.5)  # Raw liters value
         water_flow = SensorDataProcessor.extract_sensor_value(sensors, 'water_flow', 0.0)
+        
+        # Convert raw values to percentages
+        # Tank level: 0-1 liters -> 0-100%
+        tank_level = min(100, max(0, tank_level_raw * 100))
+        
+        # Light level: 200-60000 lux -> 0-100%
+        light_level = min(100, max(0, ((light_level_raw - 200) / (60000 - 200)) * 100))
         
         # Get irrigation status
         is_watering = ActuatorDataProcessor.get_actuator_value(actuators, 'irrigation', False)
@@ -416,7 +423,7 @@ def get_all_plants():
         plant_info = {
             "id": plant_id,
             "name": plant_data.get('plant_name', plant_id),
-            "type": plant_data.get('plant_type', 'Unknown'),
+            "type": plant_data.get('species', 'Unknown'),  # Use species instead of plant_type
             "species": plant_data.get('species', ''),
             "status": status,
             "waterLevel": tank_level,

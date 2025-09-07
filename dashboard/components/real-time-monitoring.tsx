@@ -135,7 +135,7 @@ export function RealTimeMonitoring({ plants }: RealTimeMonitoringProps) {
               </div>
               <div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Livello Acqua</p>
-                <p className="text-2xl font-bold">{selectedPlantData.waterLevel}%</p>
+                <p className="text-2xl font-bold">{selectedPlantData.waterLevel.toFixed(1)}%</p>
               </div>
             </div>
           </CardContent>
