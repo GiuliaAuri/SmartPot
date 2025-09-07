@@ -10,10 +10,44 @@ export default function SmartPlantDashboard() {
   const [alerts, setAlerts] = useState<Alert[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [isUpdating, setIsUpdating] = useState(false)
+  const [lastRequestTime, setLastRequestTime] = useState<number>(0)
+  const [isInitialized, setIsInitialized] = useState(false)
 
-  const loadPlantsData = async () => {
+  // Throttle requests to prevent consecutive calls
+  const canMakeRequest = () => {
+    const now = Date.now()
+    const timeSinceLastRequest = now - lastRequestTime
+    const minInterval = 5000 // Minimum 5 seconds between requests
+    
+    if (timeSinceLastRequest < minInterval) {
+      console.log(`Throttling request - only ${timeSinceLastRequest}ms since last request`)
+      return false
+    }
+    return true
+  }
+
+  const loadPlantsData = async (isInitialLoad = false) => {
+    // Prevent multiple simultaneous requests
+    if (isUpdating && !isInitialLoad) {
+      console.log('Skipping update - already in progress')
+      return
+    }
+    
+    // Throttle requests to prevent consecutive calls
+    if (!isInitialLoad && !canMakeRequest()) {
+      console.log('Skipping update - request throttled')
+      return
+    }
+    
     try {
-      setLoading(true)
+      setIsUpdating(true)
+      setLastRequestTime(Date.now())
+      
+      if (isInitialLoad) {
+        setLoading(true)
+      }
+      
       const plantsData = await apiService.getAllPlants()
       setPlantsData(plantsData)
       setError(null)
@@ -39,11 +73,19 @@ export default function SmartPlantDashboard() {
       ])
     } finally {
       setLoading(false)
+      setIsUpdating(false)
     }
   }
 
   const loadAlertsData = async () => {
+    // Throttle requests to prevent consecutive calls
+    if (!canMakeRequest()) {
+      console.log('Skipping alerts update - request throttled')
+      return
+    }
+    
     try {
+      setLastRequestTime(Date.now())
       const alertsData = await apiService.getAllAlerts()
       setAlerts(alertsData)
     } catch (err) {
@@ -54,17 +96,29 @@ export default function SmartPlantDashboard() {
   }
 
   useEffect(() => {
-    loadPlantsData()
+    // Prevent multiple initializations
+    if (isInitialized) {
+      return
+    }
+    
+    console.log('Initializing app...')
+    setIsInitialized(true)
+    
+    loadPlantsData(true) // Initial load
     loadAlertsData()
 
-    // Poll for updates every 10 seconds
+    // Poll for updates every 60 seconds
     const interval = setInterval(() => {
-      loadPlantsData()
+      console.log('Scheduled update...')
+      loadPlantsData(false) // Refresh without loading state
       loadAlertsData()
-    }, 10000)
+    }, 60000)
 
-    return () => clearInterval(interval)
-  }, [])
+    return () => {
+      console.log('Cleaning up interval...')
+      clearInterval(interval)
+    }
+  }, [isInitialized])
 
   if (loading) {
     return (
@@ -91,10 +145,16 @@ export default function SmartPlantDashboard() {
                 <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white">
                   Smart Plants - IoT System
                 </h1>
-                <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 mt-1">
-                  Sistema intelligente per la gestione e monitoraggio dei tuoi vasi
-                </p>
-                {error && <p className="text-red-500 text-xs sm:text-sm mt-1">{error} - Usando dati di fallback</p>}
+                  <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 mt-1">
+                    Sistema intelligente per la gestione e monitoraggio dei tuoi vasi
+                  </p>
+                  {error && <p className="text-red-500 text-xs sm:text-sm mt-1">{error} - Usando dati di fallback</p>}
+                  {isUpdating && (
+                    <p className="text-blue-500 text-xs sm:text-sm mt-1 flex items-center gap-1">
+                      <div className="w-3 h-3 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                      Aggiornamento dati...
+                    </p>
+                  )}
               </div>
             </div>
           </div>
