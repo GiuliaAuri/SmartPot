@@ -128,7 +128,12 @@ class DataCollectorConsumer:
                         found = True
                         if "values" not in s:
                             s["values"] = []
-                        s["values"].append({"value": value, "timestamp": str(timestamp)})
+                        # Solo memorizzare se il valore è cambiato
+                        if not s["values"] or s["values"][-1]["value"] != value:
+                            s["values"].append({"value": value, "timestamp": str(timestamp)})
+                            logging.info(f"Stored new sensor value: {sensor_type} = {value}")
+                        else:
+                            logging.debug(f"Skipped duplicate sensor value: {sensor_type} = {value}")
                         break
                 if not found:
                     plant["sensors"].append({
@@ -186,7 +191,12 @@ class DataCollectorConsumer:
                         found = True
                         if "values" not in a:
                             a["values"] = []
-                        a["values"].append({"value": value, "timestamp": str(timestamp)})
+                        # Solo memorizzare se il valore è cambiato
+                        if not a["values"] or a["values"][-1]["value"] != value:
+                            a["values"].append({"value": value, "timestamp": str(timestamp)})
+                            logging.info(f"Stored new actuator value: {actuator_type} = {value}")
+                        else:
+                            logging.debug(f"Skipped duplicate actuator value: {actuator_type} = {value}")
                         break
                 if not found:
                     plant["actuators"].append({
