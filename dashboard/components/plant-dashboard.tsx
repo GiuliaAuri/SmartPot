@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Switch } from "@/components/ui/switch"
-import { Droplets, Thermometer, Sun, Battery, Leaf, Play, Pause, AlertTriangle, AlertCircle, Info } from "lucide-react"
+import { Droplets, Thermometer, Sun, Battery, Leaf, AlertTriangle, AlertCircle, Info } from "lucide-react"
 import { apiService } from "@/lib/api"
 
 interface Plant {
@@ -125,7 +125,7 @@ export function PlantDashboard({ plants, setPlantsData, alerts }: PlantDashboard
   const getActiveAlertsForPlant = (plantId: string) => {
     // Gli alert hanno plantName come plant_id, quindi confrontiamo direttamente
     // Filtra gli avvisi escludendo quelli relativi all'irrigazione automatica
-    return alerts.filter((alert) => {
+    const filteredAlerts = alerts.filter((alert) => {
       if (alert.plantName !== plantId) return false
       
       // Escludi avvisi relativi all'irrigazione automatica
@@ -134,6 +134,36 @@ export function PlantDashboard({ plants, setPlantsData, alerts }: PlantDashboard
       
       return !irrigationKeywords.some(keyword => message.includes(keyword))
     })
+
+    // Raggruppa gli avvisi per sensore e mantieni solo il più recente per ogni sensore
+    const sensorAlertsMap = new Map<string, Alert>()
+    
+    filteredAlerts.forEach((alert) => {
+      // Identifica il sensore dal messaggio dell'avviso
+      const message = alert.message.toLowerCase()
+      let sensorType = 'unknown'
+      
+      if (message.includes('battery')) {
+        sensorType = 'battery_level'
+      } else if (message.includes('tank') || message.includes('level')) {
+        sensorType = 'level_tank'
+      } else if (message.includes('temperature')) {
+        sensorType = 'temperature'
+      } else if (message.includes('humidity') || message.includes('umidità')) {
+        sensorType = 'humidity'
+      } else if (message.includes('light') || message.includes('luminosità')) {
+        sensorType = 'lightness'
+      }
+      
+      // Se non abbiamo ancora un avviso per questo sensore, o se questo è più recente
+      const existingAlert = sensorAlertsMap.get(sensorType)
+      if (!existingAlert || new Date(alert.timestamp) > new Date(existingAlert.timestamp)) {
+        sensorAlertsMap.set(sensorType, alert)
+      }
+    })
+    
+    // Ritorna solo gli avvisi più recenti per ogni sensore
+    return Array.from(sensorAlertsMap.values())
   }
 
   const getAlertIcon = (type: string) => {
@@ -205,14 +235,6 @@ export function PlantDashboard({ plants, setPlantsData, alerts }: PlantDashboard
                     onCheckedChange={() => toggleWatering(plant.id)}
                     className="scale-75 sm:scale-100"
                   />
-                  <Button
-                    size="sm"
-                    variant={plant.isWatering ? "destructive" : "default"}
-                    onClick={() => toggleWatering(plant.id)}
-                    className="h-7 w-7 sm:h-8 sm:w-8 p-0"
-                  >
-                    {plant.isWatering ? <Pause className="h-3 w-3" /> : <Play className="h-3 w-3" />}
-                  </Button>
                 </div>
               </div>
 
