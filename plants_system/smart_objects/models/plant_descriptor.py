@@ -15,9 +15,17 @@ class PlantDescriptor:
     
         
     def to_json(self):
+        # Estrai tutti i sensori da tutti i dispositivi
+        all_sensors = []
+        all_actuators = []
+        
+        for device in self.devices:
+            all_sensors.extend([sensor.type for sensor in device.sensors])
+            all_actuators.extend([actuator.type for actuator in device.actuators])
+        
         return json.dumps({
             "plant_id": self.plant_id,
             "species": self.species,
-            "sensors": [sensor.type for sensor in self.devices if hasattr(sensor, 'type')],
-            "actuators": [actuator.type for actuator in self.devices if hasattr(actuator, 'type')]
+            "sensors": all_sensors,
+            "actuators": all_actuators
         })

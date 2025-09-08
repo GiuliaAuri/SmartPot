@@ -52,5 +52,5 @@ class PlantProducer:
 
     def publish_plant_info(self):
         topic = MqttConfigurationParameters.build_info_plant_topic(self.plant_descriptor.plant_id)
-        self.client.publish(topic, self.plant_descriptor.to_json())
+        self.client.publish(topic, self.plant_descriptor.to_json(), qos=1, retain=True)
         logging.info("Published plant info: %s %s", topic, self.plant_descriptor.to_json())
