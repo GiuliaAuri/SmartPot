@@ -1,9 +1,14 @@
-# Plants-System
+# 🌱 Plants-System
 
-## Smart Home - Vaso Smart per Piante
+## Smart Home - Sistema IoT per Gestione Intelligente delle Piante
 
+[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://python.org)
+[![Flask](https://img.shields.io/badge/Flask-2.0+-green.svg)](https://flask.palletsprojects.com)
+[![Next.js](https://img.shields.io/badge/Next.js-13+-black.svg)](https://nextjs.org)
+[![MQTT](https://img.shields.io/badge/MQTT-Mosquitto-orange.svg)](https://mosquitto.org)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## Descrizione
+## 📋 Descrizione
 
 L’obiettivo del progetto è la realizzazione di un sistema **IoT** per la gestione intelligente di uno o più vasi per piante, che coinvolga i seguenti dispositivi (sensori e attuatori):
 
@@ -20,17 +25,35 @@ L’obiettivo del progetto è la realizzazione di un sistema **IoT** per la gest
 
 Il progetto sarà progettato per supportare **n dispositivi per ogni tipologia** in funzione delle esigenze delle piante.  
 In fase di demo del progetto è possibile emulare il numero minimo di device (fino a 3) per mostrare il corretto funzionamento del sistema sviluppato.
-## Architettura
+## 🏗️ Architettura del Sistema
 
-Nell’architettura sarà presente anche un **Data Collector & Manager**, capace di ricevere i dati di tutti i device coinvolti e implementare i seguenti comportamenti:
+Il sistema è composto da tre componenti principali:
 
-- Ogni pianta è monitorata da uno o più **Water Metering Smart Object** e **Environmental Monitoring Smart Object**.  
-  Ad ogni vaso è associato un serbatoio dotato di **Tank Monitoring**.
-- Per ogni vaso sarà possibile definire una **policy di irrigazione configurabile** in base ai dati rilevati (es. umidità del terreno, temperatura e luminosità) e in base alla tipologia di pianta contenuta nel vaso.  
-  Se l’umidità scende sotto una soglia predefinita, verrà attivata automaticamente la fornitura d’acqua tramite attuatore.  
-  La fornitura sarà disattivata una volta raggiunto un valore ottimale o dopo un tempo massimo impostabile.
-- In caso di **batteria bassa** del dispositivo, sarà generato un avviso.
-- Quando il **livello di acqua** di un serbatoio scende sotto un determinato livello, verrà generato un avviso all’utente.
+### 🔧 Backend (Python/Flask)
+- **API REST** per gestione dati e comandi
+- **Data Collector** per raccolta dati MQTT
+- **Policy Manager** per valutazione automatica
+- **Gestione File JSON** per persistenza dati
+
+### 🎨 Frontend (Next.js/React)
+- **Dashboard Interattiva** per monitoraggio real-time
+- **Configurazione Policy** per personalizzazione
+- **Gestione Alert** per notifiche utente
+- **Monitoraggio Storico** con grafici
+
+### 🌐 Comunicazione MQTT
+- **Broker Mosquitto** per messaggistica
+- **Producer/Consumer** per telemetria e comandi
+- **Topic Strutturati** per organizzazione dati
+
+### 📊 Funzionalità Principali
+
+- **Monitoraggio Real-time**: Visualizzazione continua di tutti i parametri
+- **Irrigazione Automatica**: Attivazione basata su policy configurabili
+- **Sistema di Alert**: Notifiche per batteria bassa, livello acqua, anomalie
+- **Gestione Multi-pianta**: Supporto per più piante simultaneamente
+- **Configurazione Flessibile**: Policy personalizzabili per tipo di pianta
+- **Persistenza Dati**: Salvataggio storico per analisi e debugging
 
 ## 🌱 Sensori di Telemetria
 
@@ -48,6 +71,11 @@ I dati raccolti vengono **pubblicati** sul topic MQTT con la seguente struttura:
 ```
  plant/{plant_id}/device/{device_id}/telemetry/{resource_id}
 ```
+
+Per scoprire quali piante sono disponibili nel sistema, ci si sottoscrive al topic:
+```
+plant/+/info
+```
 ## 💧 Attuatore per l’Irrigazione
 
 L’attuatore che gestisce l’irrigazione non pubblica dati, ma è **sottoscritto** a un topic dedicato ai comandi:
@@ -56,186 +84,160 @@ plant/{plant_id}/device/{device_id}/command/{resource_id}
 ```
 
 
-               +----------------------+
-               |   🌱 Pianta          |
-               | (Sensori & Attuatori)|
-               +----------+-----------+
-                          |
-                          v
-                   +--------------+
-                   |  🌀 Broker   |
-                   |   MQTT       |
-                   +--------------+
-                          |
-                          v
-          +------------------------------+
-          |  📡 MQTT Consumer /          |
-          |     Data Collector           |
-          +--------------+---------------+
-                          |
-                          v
-                   +--------------+
-                   |    ☁️ Cloud   |
-                   +--------------+
+## 🚀 Installazione e Avvio
 
-# Parte per l'elaborato
-## Componenti principali
+### Prerequisiti
+- Python 3.8+
+- Node.js 16+
+- Docker (per MQTT Broker)
 
-- 🌱 **Pianta** (realizzati in hardware)
-  - **Sensore di umidità**: rileva il livello di umidità del terreno.  
-  - **Attuatore (rele per irrigazione)**: controlla l’erogazione dell’acqua in base ai dati del sensore.  
+### 1. Clonare il Repository
+```bash
+git clone https://github.com/yourusername/Plants-System.git
+cd Plants-System
+```
 
-- ⚡ **Arduino R4 con scheda Wi-Fi**
-  - Riceve i dati dai sensori e invia comandi all’attuatore.  
-  - Gestisce la comunicazione wireless verso il PC.
+### 2. Installare Dipendenze Backend
+```bash
+pip install -r requirements.txt
+```
 
-- 💻 **PC con Bridge**
-  - Funziona come intermediario tra Arduino e il cloud.  
-  - Riceve i dati dai dispositivi, li elabora e li inoltra al cloud.  
+### 3. Installare Dipendenze Frontend
+```bash
+cd dashboard
+npm install
+```
 
-- ☁️ **Cloud**
-  - Memorizza i dati delle piante e dello stato dei dispositivi.  
-  - Consente l’accesso remoto tramite applicazioni web.  
+### 4. Avviare MQTT Broker
+```bash
+cd mqtt_broker
+docker-compose up -d
+```
 
-- 🌐 **Applicazione Web**
-  - Permette all’utente di monitorare le piante, visualizzare i dati in tempo reale e configurare l’irrigazione.
+### 5. Avviare il Sistema
+```bash
+# Terminal 1: Backend
+python dashboard/app.py
 
+# Terminal 2: Frontend
+cd dashboard
+npm run dev
 
-                 +----------------------+
-                 |      🌱 Pianta       |
-                 | Sensore Umidità      |
-                 | Attuatore Rele       |
-                 +----------+-----------+
-                            |
-                            v
-                 +----------------------+
-                 |   ⚡ Arduino R4       |
-                 |  (con scheda Wi-Fi)  |
-                 +----------+-----------+
-                            |
-                            v
-                 +----------------------+
-                 |      💻 PC           |
-                 |   (Bridge installato)|
-                 +----------+-----------+
-                            |
-                            v
-                 +----------------------+
-                 |       ☁️ Cloud       |
-                 +----------+-----------+
-                            |
-                            v
-                 +----------------------+
-                 |  🌐 Applicazione Web |
-                 +----------------------+
+# Terminal 3: Simulazione Piante
+python plants_system/process/plant_main.py
 
-Esempio base di bridge:
-```python
+# Terminal 4: Data Collector
+python plants_system/process/data_collector_main.py
+```
 
-### author: Roberto Vezzani
-
-import serial
-import serial.tools.list_ports
-
-import configparser
-
-import paho.mqtt.client as mqtt
-
-class Bridge():
-
-	def __init__(self):
-		self.config = configparser.ConfigParser()
-		self.config.read('config.ini')
-		self.setupSerial()
-		self.setupMQTT()
-
-	def setupSerial(self):
-		# open serial port
-		self.ser = None
-
-		if self.config.get("Serial","UseDescription", fallback=False):
-			self.portname = self.config.get("Serial","PortName", fallback="COM1")
-		else:
-			print("list of available ports: ")
-			ports = serial.tools.list_ports.comports()
-
-			for port in ports:
-				print (port.device)
-				print (port.description)
-				if self.config.get("Serial","PortDescription", fallback="arduino").lower() \
-						in port.description.lower():
-					self.portname = port.device
-
-		try:
-			if self.portname is not None:
-				print ("connecting to " + self.portname)
-				self.ser = serial.Serial(self.portname, 9600, timeout=0)
-		except:
-			self.ser = None
-
-		# self.ser.open()
-
-		# internal input buffer from serial
-		self.inbuffer = []
-
-	def setupMQTT(self):
-		self.clientMQTT = mqtt.Client(mqtt.CallbackAPIVersion.VERSION1)
-		self.clientMQTT.on_connect = self.on_connect
-
-		print("connecting to MQTT broker...")
-		self.clientMQTT.connect(
-			self.config.get("MQTT","Server", fallback= "localhost"),
-			self.config.getint("MQTT","Port", fallback= 1883),
-			60)
-
-		self.clientMQTT.loop_start()
-
-	def on_connect(self, client, userdata, flags, rc):
-		print("Connected with result code " + str(rc))
-
-
-	def loop(self):
-		# infinite loop for serial managing
-		#
-		while (True):
-			#look for a byte from serial
-			if not self.ser is None:
-
-				if self.ser.in_waiting>0:
-					# data available from the serial port
-					lastchar=self.ser.read(1)
-
-					if lastchar==b'\xfe': #EOL
-						print("\nValue received")
-						self.useData()
-						self.inbuffer =[]
-					else:
-						# append
-						self.inbuffer.append (lastchar)
-
-	def useData(self):
-		# I have received a packet from the serial port. I can use it
-		if len(self.inbuffer)<3:   # at least header, size, footer
-			return False
-		# split parts
-		if self.inbuffer[0] != b'\xff':
-			return False
-
-		numval = int.from_bytes(self.inbuffer[1], byteorder='little')
-
-		for i in range (numval):
-			val = int.from_bytes(self.inbuffer[i+2], byteorder='little')
-			strval = "Sensor %d: %d " % (i, val)
-			print(strval)
-			self.clientMQTT.publish('RVsensor/{:d}'.format(i),'{:d}'.format(val))
-
-
-
-
-
-
-if __name__ == '__main__':
-	br=Bridge()
-	br.loop()
+## 📁 Struttura del Progetto
 
 ```
+Plants-System/
+├── 📁 dashboard/                 # Frontend Next.js
+│   ├── 📁 app/                   # Pagine applicazione
+│   ├── 📁 components/            # Componenti React
+│   ├── 📁 lib/                   # Utilities e API
+│   ├── 📁 managers/              # Gestori dati
+│   ├── 📁 processors/            # Elaboratori dati
+│   ├── 📁 routes/                # Route API Flask
+│   └── 📁 utils/                 # Funzioni di utilità
+├── 📁 plants_system/             # Backend Python
+│   ├── 📁 process/               # Processi principali
+│   ├── 📁 smart_objects/         # Sensori e attuatori
+│   └── 📁 resources/             # Configurazioni
+├── 📁 mqtt_broker/               # Configurazione MQTT
+├── 📁 cloud_simulator/           # Simulazione dati
+└── 📁 tests/                     # Test unitari
+```
+
+## 🔧 Configurazione
+
+### Policy di Irrigazione
+Le policy sono configurabili nel file `plants_system/smart_objects/resources/policies_conf.json`:
+
+```json
+{
+  "plant_id": "plant_cactus_001",
+  "policies": [
+    {
+      "sensor": "humidity",
+      "condition": "<",
+      "value": 30,
+      "action": "activate",
+      "actuator": "irrigation",
+      "message": "Umidità bassa - Attivazione irrigazione"
+    }
+  ]
+}
+```
+
+### Configurazione Piante
+Le piante sono definite in `plants_system/smart_objects/resources/plants_config.json`:
+
+```json
+[
+  {
+    "plant_id": "plant_cactus_001",
+    "species": "Cactus"
+  }
+]
+```
+
+## 📊 Monitoraggio
+
+### Dashboard Web
+- **URL**: http://localhost:3000
+- **Monitoraggio Real-time**: Visualizzazione dati live
+- **Configurazione**: Gestione policy e alert
+- **Storico**: Grafici e trend temporali
+
+### API Endpoints
+- `GET /api/plants` - Lista tutte le piante
+- `GET /api/alerts` - Alert attivi
+- `POST /api/plants/{id}/actuator/{actuator}` - Controllo attuatori
+- `GET /api/status` - Stato sistema
+
+## 🔄 Flusso di Dati
+
+```
+🌱 Sensori → 📡 MQTT → 📊 Data Collector → 💾 JSON Files → 🌐 API → 🎨 Frontend
+     ↓              ↓           ↓              ↓           ↓         ↓
+  Telemetria    Broker      Elaborazione    Persistenza   REST    Dashboard
+```
+
+## 🛠️ Sviluppo
+
+### Aggiungere Nuovo Sensore
+1. Creare classe in `plants_system/smart_objects/sensors/`
+2. Ereditare da `Sensor[T]`
+3. Implementare metodo `update()`
+4. Aggiungere al dispositivo appropriato
+
+### Aggiungere Nuovo Attuatore
+1. Creare classe in `plants_system/smart_objects/actuators/`
+2. Ereditare da `SwitchActuator`
+3. Implementare logica di controllo
+4. Aggiungere al dispositivo appropriato
+
+## 📝 Log e Debugging
+
+I log sono configurati per diversi livelli:
+- **INFO**: Operazioni normali
+- **DEBUG**: Dettagli tecnici
+- **WARNING**: Situazioni anomale
+- **ERROR**: Errori critici
+
+## 🤝 Contribuire
+
+1. Fork del repository
+2. Creare branch feature (`git checkout -b feature/AmazingFeature`)
+3. Commit delle modifiche (`git commit -m 'Add AmazingFeature'`)
+4. Push al branch (`git push origin feature/AmazingFeature`)
+5. Aprire Pull Request
+
+## 📄 Licenza
+
+Distribuito sotto licenza MIT. Vedi `LICENSE` per maggiori informazioni.
+
+
