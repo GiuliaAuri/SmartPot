@@ -153,25 +153,38 @@ class ActuatorDataProcessor:
     @staticmethod
     def calculate_time_since_last_watering(actuators):
         """Calculate time since last irrigation activation"""
-        irrigation_times = []
         if isinstance(actuators, list):
             for actuator in actuators:
                 if actuator.get('actuator') == 'irrigation':
                     values = actuator.get('values', [])
+                    if not values:
+                        return None
+                    
+                    # Get the most recent irrigation state
+                    last_value = values[-1]
+                    last_timestamp = last_value.get('timestamp')
+                    last_state = last_value.get('value')
+                    
+                    # If irrigation is currently active, return 0 time difference
+                    if last_state == True:
+                        return datetime.now() - datetime.now()  # Returns timedelta(0)
+                    
+                    # If irrigation is not active, find the last time it was active
+                    irrigation_times = []
                     for value_data in values:
                         if value_data.get('value') == True:  # When irrigation was active
                             irrigation_times.append(value_data.get('timestamp'))
-        
-        if irrigation_times:
-            # Get the most recent irrigation time
-            last_irrigation = max(irrigation_times)
-            try:
-                # Convert timestamp to datetime
-                irrigation_time = datetime.fromtimestamp(int(last_irrigation))
-                time_diff = datetime.now() - irrigation_time
-                return time_diff
-            except (ValueError, TypeError):
-                return None
+                    
+                    if irrigation_times:
+                        # Get the most recent irrigation time
+                        last_irrigation = max(irrigation_times)
+                        try:
+                            # Convert timestamp to datetime
+                            irrigation_time = datetime.fromtimestamp(int(last_irrigation))
+                            time_diff = datetime.now() - irrigation_time
+                            return time_diff
+                        except (ValueError, TypeError):
+                            return None
         return None
 
 class PolicyEvaluator:
@@ -364,9 +377,49 @@ def post_actuator_command(plant_id, actuator_name):
 
     logging.info(f"Received command for {actuator_name} of plant {plant_id}: {command}")
     
-    # In a real implementation, this would send to MQTT
-    # For now, we'll just return success
-    # TODO: invocare la funzione inviare command all'attuatore
+    # Update actuator state in memory
+    current_time = datetime.now().timestamp()
+    
+    # Find the actuator and update its state
+    actuator_found = False
+    for actuator in actuators:
+        if actuator.get('actuator') == actuator_name:
+            actuator_found = True
+            if 'values' not in actuator:
+                actuator['values'] = []
+            
+            # Determine the new value based on command
+            new_value = False
+            if command in ['on', 'start', 'true', '1']:
+                new_value = True
+            elif command in ['off', 'stop', 'false', '0']:
+                new_value = False
+            
+            # Only add if value changed
+            if not actuator['values'] or actuator['values'][-1]['value'] != new_value:
+                actuator['values'].append({
+                    "value": new_value,
+                    "timestamp": str(int(current_time))
+                })
+                logging.info(f"Updated actuator {actuator_name} to {new_value}")
+            break
+    
+    # If actuator not found, create it
+    if not actuator_found:
+        new_value = command in ['on', 'start', 'true', '1']
+        actuators.append({
+            "actuator": actuator_name,
+            "device": f"{actuator_name}_device",
+            "values": [{
+                "value": new_value,
+                "timestamp": str(int(current_time))
+            }]
+        })
+        logging.info(f"Created new actuator {actuator_name} with value {new_value}")
+    
+    # In a real implementation, this would also send to MQTT
+    # TODO: invocare la funzione inviare command all'attuatore via MQTT
+    
     return {
         "status": "success",
         "plant_id": plant_id,
@@ -405,8 +458,11 @@ def get_all_plants():
         
         # Format last watered time
         last_watered = "N/A"
-        if time_since_watering:
-            if time_since_watering.days > 0:
+        if time_since_watering is not None:
+            # If irrigation is currently active, show "Ora"
+            if is_watering and time_since_watering.total_seconds() == 0:
+                last_watered = "Ora"
+            elif time_since_watering.days > 0:
                 last_watered = f"{time_since_watering.days} giorni fa"
             elif time_since_watering.seconds > 3600:
                 hours = time_since_watering.seconds // 3600

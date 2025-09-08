@@ -6,9 +6,10 @@ import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Switch } from "@/components/ui/switch"
 import { Droplets, Thermometer, Sun, Battery, Leaf, Play, Pause, AlertTriangle, AlertCircle, Info } from "lucide-react"
+import { apiService } from "@/lib/api"
 
 interface Plant {
-  id: number
+  id: string
   name: string
   type: string
   status: string
@@ -83,14 +84,29 @@ export function PlantDashboard({ plants, setPlantsData, alerts }: PlantDashboard
     }
   }
 
-  const toggleWatering = (plantId: number) => {
-    setPlantsData(
-      plants.map((plant) =>
-        plant.id === plantId
-          ? { ...plant, isWatering: !plant.isWatering, waterFlow: plant.isWatering ? 0 : 0.3 }
-          : plant,
-      ),
-    )
+  const toggleWatering = async (plantId: string) => {
+    const plant = plants.find(p => p.id === plantId)
+    if (!plant) return
+
+    const newWateringState = !plant.isWatering
+    const newWaterFlow = newWateringState ? 0.3 : 0
+
+    try {
+      // Send command to backend
+      await apiService.toggleWatering(plantId, newWateringState)
+      
+      // Update local state only after successful API call
+      setPlantsData(
+        plants.map((plant) =>
+          plant.id === plantId
+            ? { ...plant, isWatering: newWateringState, waterFlow: newWaterFlow }
+            : plant,
+        ),
+      )
+    } catch (error) {
+      console.error('Failed to toggle watering:', error)
+      // Optionally show error message to user
+    }
   }
 
   const getProgressColor = (value: number, type: "water" | "battery" | "moisture") => {

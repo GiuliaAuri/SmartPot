@@ -1,14 +1,22 @@
 [
   {
     "species": "cactus",
-    "plant_id": "plant_cactus_001"
+    "plant_id": "my_cactus1"
   },
   {
     "species": "fico",
-    "plant_id": "plant_fico_001"
+    "plant_id": "my_fico1"
   },
   {
     "species": "orchidea",
-    "plant_id": "plant_custom_001"
+    "plant_id": "my_orchidea1"
+  },
+  {
+    "species": "felce",
+    "plant_id": "my_felce1"
+  },
+  {
+    "species": "lavanda",
+    "plant_id": "my_lavanda1"
   }
 ]

@@ -7,7 +7,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { Droplets, Thermometer, Sun, Battery, Activity, Leaf } from "lucide-react"
 
 interface Plant {
-  id: number
+  id: string
   name: string
   type: string
   status: string
@@ -27,7 +27,7 @@ interface RealTimeMonitoringProps {
 
 export function RealTimeMonitoring({ plants }: RealTimeMonitoringProps) {
   const [historicalData, setHistoricalData] = useState<any[]>([])
-  const [selectedPlant, setSelectedPlant] = useState(plants[0]?.id || 1)
+  const [selectedPlant, setSelectedPlant] = useState(plants[0]?.id || "1")
 
   // Genera dati storici simulati
   useEffect(() => {

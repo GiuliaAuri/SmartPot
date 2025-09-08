@@ -13,7 +13,7 @@ import { Badge } from "@/components/ui/badge"
 import { Settings, Droplets, Thermometer, Sun, Clock, Save, RotateCcw } from "lucide-react"
 
 interface Plant {
-  id: number
+  id: string
   name: string
   type: string
   status: string
@@ -34,7 +34,7 @@ interface PlantConfigurationProps {
 
 interface IrrigationPolicy {
   id: number
-  plantId: number
+  plantId: string
   minMoisture: number
   maxMoisture: number
   minTemperature: number
@@ -46,11 +46,11 @@ interface IrrigationPolicy {
 }
 
 export function PlantConfiguration({ plants, setPlantsData }: PlantConfigurationProps) {
-  const [selectedPlant, setSelectedPlant] = useState(plants[0]?.id || 1)
+  const [selectedPlant, setSelectedPlant] = useState(plants[0]?.id || "1")
   const [policies, setPolicies] = useState<IrrigationPolicy[]>([
     {
       id: 1,
-      plantId: 1,
+      plantId: "1",
       minMoisture: 40,
       maxMoisture: 70,
       minTemperature: 18,
@@ -62,7 +62,7 @@ export function PlantConfiguration({ plants, setPlantsData }: PlantConfiguration
     },
     {
       id: 2,
-      plantId: 2,
+      plantId: "2",
       minMoisture: 50,
       maxMoisture: 80,
       minTemperature: 20,
@@ -74,7 +74,7 @@ export function PlantConfiguration({ plants, setPlantsData }: PlantConfiguration
     },
     {
       id: 3,
-      plantId: 3,
+      plantId: "3",
       minMoisture: 60,
       maxMoisture: 85,
       minTemperature: 16,

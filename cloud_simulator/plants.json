@@ -1,19 +1,31 @@
 [
   {
-    "plant_id": "plant_cactus_001",
+    "plant_id": "my_cactus1",
     "species": "cactus",
     "sensors": [],
     "actuators": []
   },
   {
-    "plant_id": "plant_fico_001",
+    "plant_id": "my_fico1",
     "species": "fico",
     "sensors": [],
     "actuators": []
   },
   {
-    "plant_id": "plant_custom_001",
+    "plant_id": "my_orchidea1",
     "species": "orchidea",
+    "sensors": [],
+    "actuators": []
+  },
+  {
+    "plant_id": "my_felce1",
+    "species": "felce",
+    "sensors": [],
+    "actuators": []
+  },
+  {
+    "plant_id": "my_lavanda1",
+    "species": "lavanda",
     "sensors": [],
     "actuators": []
   }

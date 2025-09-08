@@ -1,0 +1,315 @@
+[
+  {
+    "plant_id": "my_felce1",
+    "sensors": [
+      {
+        "sensor": "battery_level",
+        "device": "environment_telemetry",
+        "values": [
+          {
+            "value": 92.1,
+            "timestamp": "1757326883"
+          },
+          {
+            "value": 91.1,
+            "timestamp": "1757326893"
+          },
+          {
+            "value": 88.2,
+            "timestamp": "1757326903"
+          },
+          {
+            "value": 83.6,
+            "timestamp": "1757326922"
+          },
+          {
+            "value": 81.4,
+            "timestamp": "1757326936"
+          },
+          {
+            "value": 76.5,
+            "timestamp": "1757326946"
+          },
+          {
+            "value": 72.6,
+            "timestamp": "1757326950"
+          },
+          {
+            "value": 68.6,
+            "timestamp": "1757326957"
+          },
+          {
+            "value": 65.1,
+            "timestamp": "1757326968"
+          },
+          {
+            "value": 61.4,
+            "timestamp": "1757326978"
+          },
+          {
+            "value": 58.6,
+            "timestamp": "1757326988"
+          }
+        ]
+      },
+      {
+        "sensor": "temperature",
+        "device": "environment_telemetry",
+        "values": [
+          {
+            "value": 26.3,
+            "timestamp": "1757326883"
+          },
+          {
+            "value": 23.0,
+            "timestamp": "1757326893"
+          },
+          {
+            "value": 46.8,
+            "timestamp": "1757326904"
+          },
+          {
+            "value": 7.7,
+            "timestamp": "1757326922"
+          },
+          {
+            "value": 16.4,
+            "timestamp": "1757326936"
+          },
+          {
+            "value": 28.2,
+            "timestamp": "1757326947"
+          },
+          {
+            "value": 10.6,
+            "timestamp": "1757326950"
+          },
+          {
+            "value": 30.4,
+            "timestamp": "1757326958"
+          },
+          {
+            "value": 35.7,
+            "timestamp": "1757326968"
+          },
+          {
+            "value": 4.6,
+            "timestamp": "1757326978"
+          },
+          {
+            "value": 3.0,
+            "timestamp": "1757326988"
+          }
+        ]
+      },
+      {
+        "sensor": "humidity",
+        "device": "environment_telemetry",
+        "values": [
+          {
+            "value": 84.8,
+            "timestamp": "1757326884"
+          },
+          {
+            "value": 82.9,
+            "timestamp": "1757326894"
+          },
+          {
+            "value": 41.0,
+            "timestamp": "1757326904"
+          },
+          {
+            "value": 50.6,
+            "timestamp": "1757326923"
+          },
+          {
+            "value": 17.3,
+            "timestamp": "1757326936"
+          },
+          {
+            "value": 72.1,
+            "timestamp": "1757326947"
+          },
+          {
+            "value": 68.2,
+            "timestamp": "1757326950"
+          },
+          {
+            "value": 2.1,
+            "timestamp": "1757326958"
+          },
+          {
+            "value": 95.7,
+            "timestamp": "1757326968"
+          },
+          {
+            "value": 61.4,
+            "timestamp": "1757326979"
+          },
+          {
+            "value": 16.7,
+            "timestamp": "1757326989"
+          }
+        ]
+      },
+      {
+        "sensor": "lightness",
+        "device": "environment_telemetry",
+        "values": [
+          {
+            "value": 5416.3,
+            "timestamp": "1757326884"
+          },
+          {
+            "value": 15599.9,
+            "timestamp": "1757326894"
+          },
+          {
+            "value": 44143.4,
+            "timestamp": "1757326908"
+          },
+          {
+            "value": 14427.2,
+            "timestamp": "1757326927"
+          },
+          {
+            "value": 1271.7,
+            "timestamp": "1757326940"
+          },
+          {
+            "value": 58140.1,
+            "timestamp": "1757326947"
+          },
+          {
+            "value": 12948.3,
+            "timestamp": "1757326951"
+          },
+          {
+            "value": 28119.0,
+            "timestamp": "1757326960"
+          },
+          {
+            "value": 44547.9,
+            "timestamp": "1757326968"
+          },
+          {
+            "value": 13308.8,
+            "timestamp": "1757326979"
+          },
+          {
+            "value": 27629.8,
+            "timestamp": "1757326992"
+          }
+        ]
+      },
+      {
+        "sensor": "level_tank",
+        "device": "tank_monitoring",
+        "values": [
+          {
+            "value": 0.9,
+            "timestamp": "1757326884"
+          },
+          {
+            "value": 0.5,
+            "timestamp": "1757326886"
+          },
+          {
+            "value": 0.6,
+            "timestamp": "1757326896"
+          },
+          {
+            "value": 0.8,
+            "timestamp": "1757326932"
+          },
+          {
+            "value": 0.0,
+            "timestamp": "1757326943"
+          },
+          {
+            "value": 0.3,
+            "timestamp": "1757326949"
+          },
+          {
+            "value": 0.1,
+            "timestamp": "1757326952"
+          },
+          {
+            "value": 0.4,
+            "timestamp": "1757326964"
+          },
+          {
+            "value": 0.5,
+            "timestamp": "1757326970"
+          },
+          {
+            "value": 0.1,
+            "timestamp": "1757326980"
+          }
+        ]
+      },
+      {
+        "sensor": "water_flow",
+        "device": "water_metering",
+        "values": [
+          {
+            "value": 3.2,
+            "timestamp": "1757326885"
+          },
+          {
+            "value": 4.7,
+            "timestamp": "1757326888"
+          },
+          {
+            "value": 1.3,
+            "timestamp": "1757326898"
+          },
+          {
+            "value": 1.5,
+            "timestamp": "1757326921"
+          },
+          {
+            "value": 1.2,
+            "timestamp": "1757326936"
+          },
+          {
+            "value": 3.6,
+            "timestamp": "1757326946"
+          },
+          {
+            "value": 0.5,
+            "timestamp": "1757326950"
+          },
+          {
+            "value": 4.1,
+            "timestamp": "1757326953"
+          },
+          {
+            "value": 0.4,
+            "timestamp": "1757326967"
+          },
+          {
+            "value": 3.3,
+            "timestamp": "1757326972"
+          },
+          {
+            "value": 3.7,
+            "timestamp": "1757326981"
+          }
+        ]
+      }
+    ],
+    "actuators": [
+      {
+        "actuator": "irrigation",
+        "device": "water_metering",
+        "values": [
+          {
+            "value": true,
+            "timestamp": "1757326905"
+          }
+        ]
+      }
+    ]
+  }
+]
