@@ -2,34 +2,10 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Switch } from "@/components/ui/switch"
 import { Droplets, Thermometer, Sun, Battery, Leaf, AlertTriangle, AlertCircle, Info } from "lucide-react"
-import { apiService } from "@/lib/api"
-
-interface Plant {
-  id: string
-  name: string
-  type: string
-  status: string
-  waterLevel: number
-  temperature: number
-  humidity: number
-  lightLevel: number
-  batteryLevel: number
-  waterFlow: number
-  isWatering: boolean
-  lastWatered: string
-}
-
-interface Alert {
-  id: number
-  plantName: string
-  type: "critical" | "warning" | "info"
-  message: string
-  timestamp: string
-}
+import { apiService, type Plant, type Alert } from "@/lib/api"
 
 interface PlantDashboardProps {
   plants: Plant[]
@@ -106,20 +82,6 @@ export function PlantDashboard({ plants, setPlantsData, alerts }: PlantDashboard
       console.error('Failed to toggle watering:', error)
       // Optionally show error message to user
     }
-  }
-
-  const getProgressColor = (value: number, type: "water" | "battery" | "moisture") => {
-    if (type === "water" || type === "battery") {
-      if (value < 20) return "bg-red-500"
-      if (value < 40) return "bg-yellow-500"
-      return "bg-green-500"
-    }
-    if (type === "moisture") {
-      if (value < 30) return "bg-red-500"
-      if (value < 50) return "bg-yellow-500"
-      return "bg-green-500"
-    }
-    return "bg-blue-500"
   }
 
   const getActiveAlertsForPlant = (plantId: string) => {

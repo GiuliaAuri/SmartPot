@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Leaf } from "lucide-react"
 import { PlantDashboard } from "@/components/plant-dashboard"
 import { apiService, type Plant, type Alert } from "@/lib/api"
@@ -15,7 +15,7 @@ export default function SmartPlantDashboard() {
   const [isInitialized, setIsInitialized] = useState(false)
 
   // Throttle requests to prevent consecutive calls
-  const canMakeRequest = () => {
+  const canMakeRequest = useCallback(() => {
     const now = Date.now()
     const timeSinceLastRequest = now - lastRequestTime
     const minInterval = 5000 // Minimum 5 seconds between requests
@@ -25,9 +25,9 @@ export default function SmartPlantDashboard() {
       return false
     }
     return true
-  }
+  }, [lastRequestTime])
 
-  const loadPlantsData = async (isInitialLoad = false) => {
+  const loadPlantsData = useCallback(async (isInitialLoad = false) => {
     // Prevent multiple simultaneous requests
     if (isUpdating && !isInitialLoad) {
       console.log('Skipping update - already in progress')
@@ -75,9 +75,9 @@ export default function SmartPlantDashboard() {
       setLoading(false)
       setIsUpdating(false)
     }
-  }
+  }, [isUpdating, lastRequestTime, canMakeRequest])
 
-  const loadAlertsData = async () => {
+  const loadAlertsData = useCallback(async () => {
     // Throttle requests to prevent consecutive calls
     if (!canMakeRequest()) {
       console.log('Skipping alerts update - request throttled')
@@ -93,7 +93,7 @@ export default function SmartPlantDashboard() {
       // Fallback to empty alerts if API fails
       setAlerts([])
     }
-  }
+  }, [canMakeRequest])
 
   useEffect(() => {
     // Prevent multiple initializations
@@ -118,7 +118,7 @@ export default function SmartPlantDashboard() {
       console.log('Cleaning up interval...')
       clearInterval(interval)
     }
-  }, [isInitialized])
+  }, [isInitialized, loadPlantsData, loadAlertsData])
 
   if (loading) {
     return (
@@ -162,9 +162,9 @@ export default function SmartPlantDashboard() {
 
         {/* Main Content - Only Dashboard */}
         <PlantDashboard
-          plants={plants as any}
-          setPlantsData={setPlantsData as any}
-          alerts={alerts as any}
+          plants={plants}
+          setPlantsData={setPlantsData}
+          alerts={alerts}
         />
       </div>
     </div>

@@ -204,7 +204,7 @@ export function AlertsPanel({ alerts, setAlerts }: AlertsPanelProps) {
             <div className="p-3 border rounded-lg">
               <h4 className="font-medium mb-2">Livello Acqua Basso</h4>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Avviso quando il livello dell'acqua scende sotto il 30%
+                Avviso quando il livello dell&apos;acqua scende sotto il 30%
               </p>
             </div>
 
@@ -218,7 +218,7 @@ export function AlertsPanel({ alerts, setAlerts }: AlertsPanelProps) {
             <div className="p-3 border rounded-lg">
               <h4 className="font-medium mb-2">Umidità Critica</h4>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Avviso quando l'umidità del terreno è troppo bassa
+                Avviso quando l&apos;umidità del terreno è troppo bassa
               </p>
             </div>
 

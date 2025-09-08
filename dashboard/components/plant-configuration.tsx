@@ -198,7 +198,7 @@ export function PlantConfiguration({ plants, setPlantsData }: PlantConfiguration
         <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle>Policy di Irrigazione</CardTitle>
-            <CardDescription>Configura i parametri per l'irrigazione automatica</CardDescription>
+            <CardDescription>Configura i parametri per l&apos;irrigazione automatica</CardDescription>
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="moisture" className="space-y-4">
@@ -240,7 +240,7 @@ export function PlantConfiguration({ plants, setPlantsData }: PlantConfiguration
 
                 <div className="p-3 bg-blue-50 dark:bg-blue-950 rounded-lg">
                   <p className="text-sm text-blue-700 dark:text-blue-300">
-                    L'irrigazione si attiva quando l'umidità scende sotto {currentPolicy.minMoisture}% e si ferma quando
+                    L&apos;irrigazione si attiva quando l&apos;umidità scende sotto {currentPolicy.minMoisture}% e si ferma quando
                     raggiunge {currentPolicy.maxMoisture}%
                   </p>
                 </div>
@@ -279,7 +279,7 @@ export function PlantConfiguration({ plants, setPlantsData }: PlantConfiguration
 
                 <div className="p-3 bg-red-50 dark:bg-red-950 rounded-lg">
                   <p className="text-sm text-red-700 dark:text-red-300">
-                    L'irrigazione è più frequente quando la temperatura è tra {currentPolicy.minTemperature}°C e{" "}
+                    L&apos;irrigazione è più frequente quando la temperatura è tra {currentPolicy.minTemperature}°C e{" "}
                     {currentPolicy.maxTemperature}°C
                   </p>
                 </div>
@@ -302,7 +302,7 @@ export function PlantConfiguration({ plants, setPlantsData }: PlantConfiguration
 
                 <div className="p-3 bg-yellow-50 dark:bg-yellow-950 rounded-lg">
                   <p className="text-sm text-yellow-700 dark:text-yellow-300">
-                    L'irrigazione si attiva solo se la luminosità è superiore al {currentPolicy.minLight}%
+                    L&apos;irrigazione si attiva solo se la luminosità è superiore al {currentPolicy.minLight}%
                   </p>
                 </div>
               </TabsContent>
@@ -355,7 +355,7 @@ export function PlantConfiguration({ plants, setPlantsData }: PlantConfiguration
 
                 <div className="p-3 bg-purple-50 dark:bg-purple-950 rounded-lg">
                   <p className="text-sm text-purple-700 dark:text-purple-300">
-                    L'irrigazione si ferma automaticamente dopo {currentPolicy.maxWateringTime} secondi
+                    L&apos;irrigazione si ferma automaticamente dopo {currentPolicy.maxWateringTime} secondi
                   </p>
                 </div>
               </TabsContent>

@@ -21,12 +21,20 @@ interface Plant {
   lastWatered: string
 }
 
+interface HistoricalData {
+  time: string
+  temperature: number
+  humidity: number
+  lightLevel: number
+  waterLevel: number
+}
+
 interface RealTimeMonitoringProps {
   plants: Plant[]
 }
 
 export function RealTimeMonitoring({ plants }: RealTimeMonitoringProps) {
-  const [historicalData, setHistoricalData] = useState<any[]>([])
+  const [historicalData, setHistoricalData] = useState<HistoricalData[]>([])
   const [selectedPlant, setSelectedPlant] = useState(plants[0]?.id || "1")
 
   // Genera dati storici simulati
