@@ -39,16 +39,21 @@ class PlantProducer:
     def generate_telemetry(self):
         for device in self.plant_descriptor.devices:
             device.update_measurements()
-            self.publish_telemetry_data()
+        # Pubblica una sola volta dopo aver aggiornato tutti i dispositivi
+        self.publish_telemetry_data()
 
     def publish_telemetry_data(self):
+        published_sensors = set()  # Evita pubblicazioni duplicate
         for device in self.plant_descriptor.devices:
             for sensor in device.sensors:
-                topic = MqttConfigurationParameters.build_telemetry_plant_topic(
-                    self.plant_descriptor.plant_id, sensor.device, sensor.type
-                )
-                self.client.publish(topic, sensor.to_json())
-                logging.info("Published telemetry: %s %s", topic, sensor.to_json())
+                sensor_key = f"{sensor.device}_{sensor.type}"
+                if sensor_key not in published_sensors:
+                    topic = MqttConfigurationParameters.build_telemetry_plant_topic(
+                        self.plant_descriptor.plant_id, sensor.device, sensor.type
+                    )
+                    self.client.publish(topic, sensor.to_json())
+                    logging.info("Published telemetry: %s %s", topic, sensor.to_json())
+                    published_sensors.add(sensor_key)
 
     def publish_plant_info(self):
         topic = MqttConfigurationParameters.build_info_plant_topic(self.plant_descriptor.plant_id)
