@@ -478,7 +478,7 @@ def get_all_plants():
         
         plant_info = {
             "id": plant_id,
-            "name": plant_data.get('plant_name', plant_id),
+            "name": plant_id,  # Usa sempre l'ID come nome per consistenza
             "type": plant_data.get('species', 'Unknown'),  # Use species instead of plant_type
             "species": plant_data.get('species', ''),
             "status": status,
@@ -502,7 +502,6 @@ def get_alerts():
     alert_id = 1
     
     for plant_id, plant_data in app.plants_data.items():
-        plant_name = plant_data.get('plant_name', plant_id)
         sensors = plant_data.get('sensors', [])
         
         # Get alerts from plant log file (if any)
@@ -511,7 +510,7 @@ def get_alerts():
             all_alerts.append({
                 "id": alert_id,
                 "type": alert.get('type', 'info'),
-                "plantName": plant_name,
+                "plantName": plant_id,  # Usa sempre l'ID per consistenza
                 "message": alert.get('message', ''),
                 "timestamp": format_timestamp(alert.get('timestamp', ''))
             })
@@ -524,7 +523,7 @@ def get_alerts():
                 all_alerts.append({
                     "id": alert_id,
                     "type": alert.get('type', 'warning'),
-                    "plantName": plant_name,
+                    "plantName": plant_id,  # Usa sempre l'ID per consistenza
                     "message": alert.get('message', ''),
                     "timestamp": "Ora",
                     "sensor": alert.get('sensor', ''),
@@ -593,7 +592,12 @@ def format_timestamp(timestamp_str):
         return "N/A"
     
     try:
-        # Parse ISO format timestamp
+        # Try to parse as Unix timestamp first
+        if timestamp_str.isdigit():
+            dt = datetime.fromtimestamp(int(timestamp_str))
+            return dt.strftime("%H:%M")
+        
+        # Try to parse ISO format timestamp
         dt = datetime.fromisoformat(timestamp_str.replace('Z', '+00:00'))
         return dt.strftime("%H:%M")
     except:

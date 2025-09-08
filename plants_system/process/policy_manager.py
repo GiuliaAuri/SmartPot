@@ -25,6 +25,7 @@ class PolicyManager:
 
     def evaluate(self, plant: PlantDescriptor):
         policies = self.plant_policies.get(plant.plant_id, [])
+        logging.info(f"Evaluating {len(policies)} policies for plant {plant.plant_id}")
         self.actions[plant.plant_id] = []
         self.alerts[plant.plant_id] = []
 
@@ -32,19 +33,29 @@ class PolicyManager:
             sensor = self._find_sensor(plant, policy["sensor"])
             actuator = self._find_actuator(plant, policy.get("actuator", ""))
 
+            logging.debug(f"Policy: {policy['sensor']} {policy['condition']} {policy['value']} -> {policy['action']}")
+            logging.debug(f"Found sensor: {sensor is not None}, Found actuator: {actuator is not None}")
+            if sensor:
+                logging.debug(f"Sensor value: {sensor.value}")
+
             op = self.OPERATORS.get(policy["condition"])
-            if sensor and op and actuator:
-                if op(sensor.value, policy["value"]):
-                    action_str = f"{policy['action'].capitalize()} {actuator.type}"
-                    # Evita duplicati
-                    if action_str not in self.actions[plant.plant_id]:
-                        self.actions[plant.plant_id].append(action_str)
-                elif policy["action"] == "alert":
-                    alert_msg = policy.get(
-                        "message",
-                        f"Alert: {sensor.type} value {sensor.value} for plant {plant.plant_id}"
-                    )
-                    self.alerts[plant.plant_id].append(alert_msg)
+            if sensor and op:
+                if policy["action"] == "alert":
+                    # Per gli alert, non serve l'attuatore
+                    if op(sensor.value, policy["value"]):
+                        alert_msg = policy.get(
+                            "message",
+                            f"Alert: {sensor.type} value {sensor.value} for plant {plant.plant_id}"
+                        )
+                        self.alerts[plant.plant_id].append(alert_msg)
+                        logging.info(f"Generated alert for {plant.plant_id}: {alert_msg}")
+                elif actuator:
+                    # Per le azioni, serve l'attuatore
+                    if op(sensor.value, policy["value"]):
+                        action_str = f"{policy['action'].capitalize()} {actuator.type}"
+                        # Evita duplicati
+                        if action_str not in self.actions[plant.plant_id]:
+                            self.actions[plant.plant_id].append(action_str)
 
     @staticmethod
     def _find_sensor(plant: PlantDescriptor, sensor_type: str):

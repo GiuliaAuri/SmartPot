@@ -56,10 +56,22 @@ class DataCollectorConsumer:
             logging.error(f"Error parsing message: {e}")
 
         # Rivaluta le policy
+        logging.info(f"Evaluating policies for plant {self.plant_descriptor.plant_id}")
         self.policy_manager.evaluate(self.plant_descriptor)
         alerts = self.policy_manager.alerts.get(self.plant_descriptor.plant_id, [])
+        actions = self.policy_manager.actions.get(self.plant_descriptor.plant_id, [])
+        
+        logging.info(f"Plant {self.plant_descriptor.plant_id} - Alerts: {len(alerts)}, Actions: {len(actions)}")
         for alert in alerts:
             print(f"ALERT: {alert}")
+            logging.info(f"ALERT: {alert}")
+        
+        # Salva gli alert nei file JSON
+        if alerts:
+            logging.info(f"Saving {len(alerts)} alerts to JSON file")
+            self.update_alerts_history(alerts)
+        else:
+            logging.debug(f"No alerts to save for plant {self.plant_descriptor.plant_id}")
 
         # Esegui solo le azioni relative al sensore appena aggiornato
         actions = self.policy_manager.actions.get(self.plant_descriptor.plant_id, [])
@@ -204,6 +216,53 @@ class DataCollectorConsumer:
                         "device": device_name,
                         "values": [{"value": value, "timestamp": str(timestamp)}]
                     })
+                break
+
+        with open(self.filename, "w") as f:
+            json.dump(plants, f, indent=2)
+
+    def update_alerts_history(self, alerts):
+        """Salva gli alert nei file JSON"""
+        timestamp = int(time.time())
+        
+        # Se il file non esiste, crea la struttura base
+        if not os.path.exists(self.filename):
+            plants = [{
+                "plant_id": self.plant_descriptor.plant_id,
+                "sensors": [],
+                "actuators": [],
+                "alerts": []
+            }]
+        else:
+            with open(self.filename, "r") as f:
+                plants = json.load(f)
+
+        for plant in plants:
+            if plant["plant_id"] == self.plant_descriptor.plant_id:
+                # Assicurati che la sezione alerts esista
+                if "alerts" not in plant:
+                    plant["alerts"] = []
+                
+                # Aggiungi i nuovi alert (evita duplicati)
+                for alert_message in alerts:
+                    # Controlla se questo alert esiste già negli ultimi 5 minuti
+                    recent_alerts = [
+                        alert for alert in plant["alerts"] 
+                        if alert.get("message") == alert_message and 
+                        (timestamp - int(alert.get("timestamp", 0))) < 300  # 5 minuti
+                    ]
+                    
+                    if not recent_alerts:  # Solo se non esiste già
+                        alert_entry = {
+                            "message": alert_message,
+                            "timestamp": str(timestamp),
+                            "type": "warning",  # Default type, può essere migliorato
+                            "plant_id": self.plant_descriptor.plant_id
+                        }
+                        plant["alerts"].append(alert_entry)
+                        logging.info(f"Stored alert: {alert_message}")
+                    else:
+                        logging.debug(f"Skipped duplicate alert: {alert_message}")
                 break
 
         with open(self.filename, "w") as f:

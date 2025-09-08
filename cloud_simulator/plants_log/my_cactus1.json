@@ -1,0 +1,149 @@
+[
+  {
+    "plant_id": "my_cactus1",
+    "sensors": [
+      {
+        "sensor": "battery_level",
+        "device": "environment_telemetry",
+        "values": [
+          {
+            "value": 15.2,
+            "timestamp": "1757325937"
+          },
+          {
+            "value": 95.5,
+            "timestamp": "1757328262"
+          },
+          {
+            "value": 91.0,
+            "timestamp": "1757328274"
+          },
+          {
+            "value": 90.9,
+            "timestamp": "1757328295"
+          }
+        ]
+      },
+      {
+        "sensor": "level_tank",
+        "device": "tank_monitoring",
+        "values": [
+          {
+            "value": 0.2,
+            "timestamp": "1757325937"
+          },
+          {
+            "value": 0.3,
+            "timestamp": "1757328265"
+          },
+          {
+            "value": 0.9,
+            "timestamp": "1757328269"
+          },
+          {
+            "value": 0.1,
+            "timestamp": "1757328285"
+          },
+          {
+            "value": 0.8,
+            "timestamp": "1757328307"
+          }
+        ]
+      },
+      {
+        "sensor": "humidity",
+        "device": "environment_telemetry",
+        "values": [
+          {
+            "value": 25.0,
+            "timestamp": "1757325937"
+          },
+          {
+            "value": 92.0,
+            "timestamp": "1757328263"
+          },
+          {
+            "value": 37.6,
+            "timestamp": "1757328276"
+          },
+          {
+            "value": 57.7,
+            "timestamp": "1757328298"
+          }
+        ]
+      },
+      {
+        "sensor": "temperature",
+        "device": "environment_telemetry",
+        "values": [
+          {
+            "value": 49.9,
+            "timestamp": "1757328263"
+          },
+          {
+            "value": 20.2,
+            "timestamp": "1757328275"
+          },
+          {
+            "value": 3.1,
+            "timestamp": "1757328297"
+          }
+        ]
+      },
+      {
+        "sensor": "lightness",
+        "device": "environment_telemetry",
+        "values": [
+          {
+            "value": 36041.5,
+            "timestamp": "1757328265"
+          },
+          {
+            "value": 565.4,
+            "timestamp": "1757328276"
+          },
+          {
+            "value": 29533.5,
+            "timestamp": "1757328299"
+          }
+        ]
+      },
+      {
+        "sensor": "water_flow",
+        "device": "water_metering",
+        "values": [
+          {
+            "value": 1.9,
+            "timestamp": "1757328266"
+          },
+          {
+            "value": 1.1,
+            "timestamp": "1757328274"
+          },
+          {
+            "value": 3.4,
+            "timestamp": "1757328294"
+          }
+        ]
+      }
+    ],
+    "actuators": [
+      {
+        "actuator": "irrigation",
+        "device": "irrigation_actuator",
+        "values": []
+      }
+    ],
+    "alerts": [
+      {
+        "message": "Tank level below 0.30 liters!",
+        "timestamp": "1757328286",
+        "type": "warning",
+        "plant_id": "my_cactus1"
+      }
+    ],
+    "plant_name": "my_cactus1",
+    "species": "cactus",
+    "timestamp": "2025-01-07T22:00:00"
+  }
+]

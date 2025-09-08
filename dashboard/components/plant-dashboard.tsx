@@ -24,12 +24,11 @@ interface Plant {
 }
 
 interface Alert {
-  id: string
+  id: number
   plantName: string
   type: "critical" | "warning" | "info"
   message: string
   timestamp: string
-  isActive: boolean
 }
 
 interface PlantDashboardProps {
@@ -123,8 +122,18 @@ export function PlantDashboard({ plants, setPlantsData, alerts }: PlantDashboard
     return "bg-blue-500"
   }
 
-  const getActiveAlertsForPlant = (plantName: string) => {
-    return alerts.filter((alert) => alert.plantName === plantName && alert.isActive)
+  const getActiveAlertsForPlant = (plantId: string) => {
+    // Gli alert hanno plantName come plant_id, quindi confrontiamo direttamente
+    // Filtra gli avvisi escludendo quelli relativi all'irrigazione automatica
+    return alerts.filter((alert) => {
+      if (alert.plantName !== plantId) return false
+      
+      // Escludi avvisi relativi all'irrigazione automatica
+      const irrigationKeywords = ['irrigation', 'irrigazione', 'should be activated', 'should be deactivated']
+      const message = alert.message.toLowerCase()
+      
+      return !irrigationKeywords.some(keyword => message.includes(keyword))
+    })
   }
 
   const getAlertIcon = (type: string) => {
@@ -156,7 +165,7 @@ export function PlantDashboard({ plants, setPlantsData, alerts }: PlantDashboard
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 sm:gap-6">
       {plants.map((plant) => {
-        const plantAlerts = getActiveAlertsForPlant(plant.name)
+        const plantAlerts = getActiveAlertsForPlant(plant.id)
 
         return (
           <Card key={plant.id} className="overflow-hidden">
@@ -180,26 +189,6 @@ export function PlantDashboard({ plants, setPlantsData, alerts }: PlantDashboard
             </CardHeader>
 
             <CardContent className="space-y-3 sm:space-y-4">
-              {plantAlerts.length > 0 && (
-                <div className="space-y-2">
-                  <h4 className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">Avvisi Attivi:</h4>
-                  <div className="space-y-1 sm:space-y-2 max-h-32 overflow-y-auto">
-                    {plantAlerts.map((alert) => (
-                      <div
-                        key={alert.id}
-                        className={`flex items-start gap-2 p-2 rounded-lg border ${getAlertColor(alert.type)}`}
-                      >
-                        <div className="flex-shrink-0 mt-0.5">{getAlertIcon(alert.type)}</div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-xs font-medium leading-tight">{alert.message}</p>
-                          <p className="text-xs opacity-75 mt-0.5">{alert.timestamp}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
               <div className="flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-950 rounded-lg">
                 <div className="flex items-center gap-2 min-w-0 flex-1">
                   <Droplets className="h-4 w-4 text-blue-600 flex-shrink-0" />
@@ -276,6 +265,27 @@ export function PlantDashboard({ plants, setPlantsData, alerts }: PlantDashboard
                 </div>
                 <div className="text-gray-600 dark:text-gray-400 text-xs">Ultima irrigazione: {plant.lastWatered}</div>
               </div>
+
+              {/* Avvisi Attivi - Solo quelli non relativi all'irrigazione automatica */}
+              {plantAlerts.length > 0 && (
+                <div className="space-y-2">
+                  <h4 className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">Avvisi Attivi:</h4>
+                  <div className="space-y-1 sm:space-y-2 max-h-32 overflow-y-auto">
+                    {plantAlerts.map((alert) => (
+                      <div
+                        key={alert.id}
+                        className={`flex items-start gap-2 p-2 rounded-lg border ${getAlertColor(alert.type)}`}
+                      >
+                        <div className="flex-shrink-0 mt-0.5">{getAlertIcon(alert.type)}</div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-medium leading-tight">{alert.message}</p>
+                          <p className="text-xs opacity-75 mt-0.5">{alert.timestamp}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
         )
