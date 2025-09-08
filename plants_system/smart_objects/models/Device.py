@@ -25,4 +25,16 @@ class Device(ABC):
         logging.info(f"Updated: {self.to_json()}")
 
     def to_json(self):
-        return json.dumps(self, default=lambda o: o.__dict__)
+        """
+        Converte il dispositivo in formato JSON.
+        
+        Returns:
+            Stringa JSON contenente le informazioni del dispositivo
+        """
+        return json.dumps({
+            "plant_id": self.plant_id,
+            "device": self.device,
+            "sensors": [sensor.type for sensor in self.sensors],
+            "actuators": [actuator.type for actuator in self.actuators],
+            "timestamp": getattr(self, 'timestamp', 0)
+        })

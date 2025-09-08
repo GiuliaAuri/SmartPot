@@ -2,31 +2,76 @@
   {
     "plant_id": "my_cactus1",
     "species": "cactus",
-    "sensors": [],
-    "actuators": []
+    "sensors": [
+      "battery_level",
+      "temperature",
+      "humidity",
+      "lightness",
+      "level_tank",
+      "water_flow"
+    ],
+    "actuators": [
+      "irrigation"
+    ]
   },
   {
     "plant_id": "my_fico1",
     "species": "fico",
-    "sensors": [],
-    "actuators": []
+    "sensors": [
+      "battery_level",
+      "temperature",
+      "humidity",
+      "lightness",
+      "level_tank",
+      "water_flow"
+    ],
+    "actuators": [
+      "irrigation"
+    ]
   },
   {
     "plant_id": "my_orchidea1",
     "species": "orchidea",
-    "sensors": [],
-    "actuators": []
+    "sensors": [
+      "battery_level",
+      "temperature",
+      "humidity",
+      "lightness",
+      "level_tank",
+      "water_flow"
+    ],
+    "actuators": [
+      "irrigation"
+    ]
   },
   {
     "plant_id": "my_felce1",
     "species": "felce",
-    "sensors": [],
-    "actuators": []
+    "sensors": [
+      "battery_level",
+      "temperature",
+      "humidity",
+      "lightness",
+      "level_tank",
+      "water_flow"
+    ],
+    "actuators": [
+      "irrigation"
+    ]
   },
   {
     "plant_id": "my_lavanda1",
     "species": "lavanda",
-    "sensors": [],
-    "actuators": []
+    "sensors": [
+      "battery_level",
+      "temperature",
+      "humidity",
+      "lightness",
+      "level_tank",
+      "water_flow"
+    ],
+    "actuators": [
+      "irrigation"
+    ]
   }
 ]

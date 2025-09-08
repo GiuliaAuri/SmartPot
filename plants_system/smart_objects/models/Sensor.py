@@ -21,7 +21,20 @@ class Sensor(ABC, Generic[T]):
         pass
 
     def to_json(self):
-        return json.dumps(self, default=lambda o: o.__dict__)
+        """
+        Converte il sensore in formato JSON.
+        
+        Returns:
+            Stringa JSON contenente tutte le proprietà del sensore
+        """
+        return json.dumps({
+            "type": self.type,
+            "value": self.value,
+            "device": self.device,
+            "unit": self.unit,
+            "timestamp": self.timestamp,
+            "plant_id": self.plant_id
+        })
     
     def _set_max(self, max_value: T):
         self.max_value = max_value
