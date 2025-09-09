@@ -12,6 +12,12 @@ FILENAME="cloud_simulator/plants.json"
 PATH="cloud_simulator/plants_log/"
 
 class Main:
+    """
+    Classe principale per la gestione dei consumer dei dati delle piante.
+    
+    Questa classe si occupa di eseguire la discovery delle piante,
+    creare i consumer per ogni pianta e avviare i thread per il consumo dei dati.
+    """
     def __init__(self, config_path):
         self.discover_plants(config_path, 10)
         self.plants = PlantFactory.create_plants_from_json(config_path)
@@ -31,6 +37,9 @@ class Main:
             logging.warning("PlantInfoConsumer has no stop method")
 
     def start(self):
+        """
+        Avvia i consumer per ogni pianta.
+        """
         for plant in self.plants:
             consumer = DataCollectorConsumer(plant, PATH)
             t = threading.Thread(target=consumer.run)
@@ -39,6 +48,9 @@ class Main:
             self.consumers.append(consumer)
 
     def stop(self):
+        """
+        Interrompe i consumer e attende la terminazione dei thread.
+        """
         for consumer in self.consumers:
             if hasattr(consumer, "stop"):
                 consumer.stop()
@@ -46,6 +58,13 @@ class Main:
             t.join()
 
 if __name__ == "__main__":
+    """
+    Entry point principale dell'applicazione data collector.
+    
+    Crea un'istanza della classe Main, avvia tutti i consumer e mantiene
+    l'applicazione in esecuzione fino a quando non viene ricevuto un
+    segnale di interruzione (Ctrl+C).
+    """
     manager = Main(FILENAME)
     # Avvio dei consumer
     manager.start()

@@ -1,23 +1,22 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, current_app
 from datetime import datetime
 import logging
-
 from processors.sensor_processor import SensorDataProcessor
 from processors.actuator_processor import ActuatorDataProcessor
 from processors.status_evaluator import PlantStatusEvaluator
-
+from utils.helpers import format_timestamp
 plants_bp = Blueprint('plants', __name__)
 
 
 @plants_bp.route('/api/plants/<plant_id>/telemetry', methods=['GET'])
 def get_plant_telemetry(plant_id):
     """Get telemetry data for a specific plant"""
-    from app import app
+
     
-    if plant_id not in app.plants_data:
+    if plant_id not in current_app.plants_data:
         return {"error": "Plant not found"}, 404
     
-    plant_data = app.plants_data[plant_id]
+    plant_data = current_app.plants_data[plant_id]
     sensors = plant_data.get('sensors', [])
     
     # Group sensors by device
@@ -53,12 +52,11 @@ def get_plant_telemetry(plant_id):
 @plants_bp.route('/api/plants/<plant_id>/actuators/<actuator_name>/command', methods=['POST'])
 def post_actuator_command(plant_id, actuator_name):
     """Send command to plant actuator"""
-    from app import app
     
-    if plant_id not in app.plants_data:
+    if plant_id not in current_app.plants_data:
         return {"error": "Plant not found"}, 404
 
-    plant_data = app.plants_data[plant_id]
+    plant_data = current_app.plants_data[plant_id]
     actuators = plant_data.get('actuators', [])
     
     command = request.json.get("command")
@@ -106,9 +104,7 @@ def post_actuator_command(plant_id, actuator_name):
             }]
         })
         logging.info(f"Created new actuator {actuator_name} with value {new_value}")
-    
-    # In a real implementation, this would also send to MQTT
-    # TODO: invocare la funzione inviare command all'attuatore via MQTT
+
     
     return {
         "status": "success",
@@ -122,12 +118,11 @@ def post_actuator_command(plant_id, actuator_name):
 @plants_bp.route('/api/plants', methods=['GET'])
 def get_all_plants():
     """Get list of all plants with current data"""
-    from app import app, status_evaluator
-    from utils.helpers import format_timestamp
+
     
     plants_list = []
     
-    for plant_id, plant_data in app.plants_data.items():
+    for plant_id, plant_data in current_app.plants_data.items():
         sensors = plant_data.get('sensors', [])
         actuators = plant_data.get('actuators', [])
         
@@ -167,8 +162,8 @@ def get_all_plants():
         
         # Determine overall status
         status = "unknown"
-        if status_evaluator:
-            status = status_evaluator.determine_plant_status(plant_id, sensors)
+        if current_app.status_evaluator:
+            status = current_app.status_evaluator.determine_plant_status(plant_id, sensors)
         
         plant_info = {
             "id": plant_id,

@@ -9,6 +9,13 @@ from plants_system.process.policy_manager import PolicyManager
 from plants_system.process.data_collector_producer import DataCollectorProducer
 
 class DataCollectorConsumer:
+    """
+    Consumer MQTT per la raccolta e elaborazione dei dati delle piante.
+    
+    Questa classe gestisce la ricezione di messaggi MQTT dai sensori delle piante,
+    l'elaborazione dei dati, la valutazione delle policy e la persistenza dei dati
+    nei file JSON. È responsabile dell'intero ciclo di vita dei dati IoT.
+    """
     def __init__(self, plant_descriptor: PlantDescriptor, path:str):
         self.plant_descriptor = plant_descriptor
         self.filename=path+self.plant_descriptor.plant_id+".json"
@@ -19,6 +26,11 @@ class DataCollectorConsumer:
         self.policy_manager = PolicyManager("plants_system/smart_objects/resources/policies_conf.json")
         self.running = False
  
+    """
+    Callback per la connessione MQTT.
+    
+    Questo metodo viene chiamato quando il consumer si connette al broker MQTT.
+    """
     def on_connect(self, client, userdata, flags, rc):
         logging.info("Connected with result code %s", str(rc))
         for device in self.plant_descriptor.devices:
@@ -30,6 +42,11 @@ class DataCollectorConsumer:
                     print(f"Subscribed to topic: {topic}")
         
 
+    """
+    Callback per la ricezione di messaggi MQTT.
+    
+    Questo metodo viene chiamato quando il consumer riceve un messaggio MQTT.
+    """
     def on_message(self, client, userdata, msg):
         message_payload = msg.payload.decode("utf-8")
         logging.info(f"Received message on topic {msg.topic}: {message_payload}")
@@ -103,7 +120,14 @@ class DataCollectorConsumer:
                                 break
                     break  # esegui solo una volta per questa azione
             
+    
     def run(self):
+        """
+        Avvia il consumer MQTT e mantiene la connessione attiva.
+        
+        Si connette al broker MQTT e inizia il loop di ricezione messaggi.
+        Il metodo rimane in esecuzione fino a quando non viene chiamato stop().
+        """
         self.client.connect(MqttConfigurationParameters.BROKER_ADDRESS, MqttConfigurationParameters.BROKER_PORT)
         self.client.loop_start()
         self.running = True
@@ -113,12 +137,24 @@ class DataCollectorConsumer:
         finally:
             self.client.loop_stop()
 
+    """
+    Interrompe il consumer MQTT e termina la connessione.
+    
+    Questo metodo chiude il loop di ricezione messaggi e si disconnette dal broker MQTT.
+    """
     def stop(self):
         self.running = False
         self.client.disconnect()
         logging.info("DataCollectorConsumer stopped...")
 
 
+    """
+        Aggiorna la cronologia dei valori dei sensori nel file JSON.
+        
+        Salva i nuovi valori dei sensori nel file JSON, evitando duplicati
+        consecutivi e mantenendo un timestamp per ogni misurazione.
+        
+    """
     def update_sensor_history(self, sensor_type, value, device_name):
         timestamp = int(time.time())
         # Se il file non esiste, crea la struttura base
@@ -158,8 +194,14 @@ class DataCollectorConsumer:
         with open(self.filename, "w") as f:
             json.dump(plants, f, indent=2)
 
-    #TODO da aggiungere alla chiamata
+    
     def update_actuator_history(self, action):
+        """
+        Aggiorna la cronologia degli attuatori nel file JSON.
+        
+        Salva i nuovi valori degli attuatori nel file JSON, evitando duplicati
+        consecutivi e mantenendo un timestamp per ogni azione.
+        """
         timestamp = int(time.time())
         action_parts = action.split()
         if len(action_parts) < 2:
@@ -222,7 +264,12 @@ class DataCollectorConsumer:
             json.dump(plants, f, indent=2)
 
     def update_alerts_history(self, alerts):
-        """Salva gli alert nei file JSON"""
+        """
+        Salva le cronologie degli alert nel file JSON.
+        
+        Salva le nuove alert nel file JSON, evitando duplicati consecutivi
+        e mantenendo un timestamp per ogni alert.
+        """
         timestamp = int(time.time())
         
         # Se il file non esiste, crea la struttura base

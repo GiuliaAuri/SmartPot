@@ -5,6 +5,15 @@ import { Leaf } from "lucide-react"
 import { PlantDashboard } from "@/components/plant-dashboard"
 import { apiService, type Plant, type Alert } from "@/lib/api"
 
+/**
+ * Componente principale del dashboard delle piante intelligenti.
+ * 
+ * Questo componente gestisce il caricamento e l'aggiornamento dei dati
+ * delle piante e degli alert, fornendo un'interfaccia utente completa
+ * per il monitoraggio del sistema IoT delle piante.
+ * 
+ * @returns JSX.Element - Il componente del dashboard principale
+ */
 export default function SmartPlantDashboard() {
   const [plants, setPlantsData] = useState<Plant[]>([])
   const [alerts, setAlerts] = useState<Alert[]>([])
@@ -15,6 +24,14 @@ export default function SmartPlantDashboard() {
   const [isInitialized, setIsInitialized] = useState(false)
 
   // Throttle requests to prevent consecutive calls
+  /**
+   * Funzione per controllare se è possibile effettuare una richiesta API.
+   * 
+   * Questa funzione controlla se è stato sufficientemente tempo dall'ultima richiesta
+   * per evitare richieste consecutive troppo frequenti.
+   * 
+   * @returns true se la richiesta può essere effettuata, false altrimenti
+   */
   const canMakeRequest = useCallback(() => {
     const now = Date.now()
     const timeSinceLastRequest = now - lastRequestTime
@@ -27,6 +44,13 @@ export default function SmartPlantDashboard() {
     return true
   }, [lastRequestTime])
 
+  /**
+   * Funzione per caricare i dati delle piante.
+   * 
+   * Questa funzione carica i dati delle piante dall'API e aggiorna lo stato locale.
+   * 
+   * @param isInitialLoad true se è la prima richiesta, false altrimenti
+   */
   const loadPlantsData = useCallback(async (isInitialLoad = false) => {
     // Prevent multiple simultaneous requests
     if (isUpdating && !isInitialLoad) {
@@ -77,6 +101,11 @@ export default function SmartPlantDashboard() {
     }
   }, [isUpdating, lastRequestTime, canMakeRequest])
 
+  /**
+   * Funzione per caricare i dati degli alert.
+   * 
+   * Questa funzione carica i dati degli alert dall'API e aggiorna lo stato locale.
+   */
   const loadAlertsData = useCallback(async () => {
     // Throttle requests to prevent consecutive calls
     if (!canMakeRequest()) {
@@ -95,6 +124,11 @@ export default function SmartPlantDashboard() {
     }
   }, [canMakeRequest])
 
+  /**
+   * Effetto per inizializzare e aggiornare i dati delle piante e degli alert.
+   * 
+   * Questo effetto si occupa di caricare i dati iniziali e di aggiornarli periodicamente.
+   */
   useEffect(() => {
     // Prevent multiple initializations
     if (isInitialized) {
@@ -120,6 +154,11 @@ export default function SmartPlantDashboard() {
     }
   }, [isInitialized, loadPlantsData, loadAlertsData])
 
+  /**
+   * Renderizza un componente di caricamento se i dati non sono ancora stati caricati.
+   * 
+   * @returns JSX.Element - Il componente di caricamento
+   */
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
@@ -131,6 +170,11 @@ export default function SmartPlantDashboard() {
     )
   }
 
+  /**
+   * Renderizza il componente principale del dashboard.
+   * 
+   * @returns JSX.Element - Il componente del dashboard principale
+   */
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
       <div className="container mx-auto p-4 sm:p-6 lg:p-8">

@@ -12,6 +12,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { Settings, Droplets, Thermometer, Sun, Clock, Save, RotateCcw } from "lucide-react"
 
+/**
+ * Interfaccia per rappresentare una pianta.
+ */
 interface Plant {
   id: string
   name: string
@@ -27,11 +30,17 @@ interface Plant {
   lastWatered: string
 }
 
+/**
+ * Interfaccia per rappresentare le props del componente PlantConfiguration.
+ */
 interface PlantConfigurationProps {
   plants: Plant[]
   setPlantsData: (plants: Plant[]) => void
 }
 
+/**
+ * Interfaccia per rappresentare una policy di irrigazione.
+ */
 interface IrrigationPolicy {
   id: number
   plantId: string
@@ -45,6 +54,15 @@ interface IrrigationPolicy {
   schedule: string[]
 }
 
+/**
+ * Componente per la configurazione delle piante.
+ * 
+ * Questo componente permette di configurare le policy di irrigazione e i parametri per ogni pianta.
+ * 
+ * @param plants - Array di oggetti Plant
+ * @param setPlantsData - Funzione per impostare i dati delle piante
+ * @returns JSX.Element - Il componente PlantConfiguration
+ */
 export function PlantConfiguration({ plants, setPlantsData }: PlantConfigurationProps) {
   const [selectedPlant, setSelectedPlant] = useState(plants[0]?.id || "1")
   const [policies, setPolicies] = useState<IrrigationPolicy[]>([
@@ -89,15 +107,26 @@ export function PlantConfiguration({ plants, setPlantsData }: PlantConfiguration
   const selectedPlantData = plants.find((p) => p.id === selectedPlant)
   const currentPolicy = policies.find((p) => p.plantId === selectedPlant)
 
+  /**
+   * Funzione per aggiornare una policy di irrigazione.
+   * 
+   * @param updates - Oggetto con le proprietà da aggiornare
+   */
   const updatePolicy = (updates: Partial<IrrigationPolicy>) => {
     setPolicies((prev) => prev.map((policy) => (policy.plantId === selectedPlant ? { ...policy, ...updates } : policy)))
   }
 
+  /**
+   * Funzione per salvare la configurazione.
+   */
   const saveConfiguration = () => {
     // Simula il salvataggio della configurazione
     alert("Configurazione salvata con successo!")
   }
 
+  /**
+   * Funzione per reimpostare la configurazione ai valori di default.
+   */
   const resetToDefaults = () => {
     if (currentPolicy) {
       const defaults = {
@@ -114,6 +143,11 @@ export function PlantConfiguration({ plants, setPlantsData }: PlantConfiguration
     }
   }
 
+  /**
+   * Renderizza il componente PlantConfiguration.
+   * 
+   * @returns JSX.Element - Il componente PlantConfiguration
+   */
   if (!selectedPlantData || !currentPolicy) return null
 
   return (

@@ -6,6 +6,14 @@ from plants_system.process.data_collector_producer import DataCollectorProducer
 
 
 class PolicyManager:
+    """
+    Gestore delle policy per la valutazione automatica delle condizioni delle piante.
+    
+    Questa classe gestisce la valutazione delle policy definite per ogni pianta,
+    generando alert e azioni basate sui valori dei sensori. Le policy definiscono
+    quando attivare/disattivare attuatori o generare alert in base alle condizioni
+    ambientali rilevate dai sensori.
+    """
     OPERATORS = {
         "<": operator.lt,
         ">": operator.gt,
@@ -24,6 +32,12 @@ class PolicyManager:
         self.alerts: dict[str, list[str]] = {}   # plant_id -> list of alerts
 
     def evaluate(self, plant: PlantDescriptor):
+        """
+        Valuta le policy per una pianta specifica.
+        
+        Questo metodo valuta tutte le policy definite per la pianta specificata,
+        generando alert e azioni in base ai valori dei sensori.
+        """
         policies = self.plant_policies.get(plant.plant_id, [])
         logging.info(f"Evaluating {len(policies)} policies for plant {plant.plant_id}")
         self.actions[plant.plant_id] = []
@@ -59,6 +73,11 @@ class PolicyManager:
 
     @staticmethod
     def _find_sensor(plant: PlantDescriptor, sensor_type: str):
+        """
+        Trova un sensore specifico in una pianta.
+        
+        Questo metodo cerca un sensore di un tipo specifico nella pianta.
+        """
         for device in plant.devices:
             for s in getattr(device, "sensors", []):
                 if s.type == sensor_type:
@@ -67,6 +86,11 @@ class PolicyManager:
 
     @staticmethod
     def _find_actuator(plant: PlantDescriptor, actuator_name: str):
+        """
+        Trova un attuatore specifico in una pianta.
+        
+        Questo metodo cerca un attuatore con un nome specifico nella pianta.
+        """
         for device in plant.devices:
             for a in getattr(device, "actuators", []):
                 if a.device == actuator_name:

@@ -7,6 +7,13 @@ from plants_system.smart_objects.models.Device import Device
 from plants_system.smart_objects.models.SwitchActuator import SwitchActuator
 
 class PlantConsumer():
+    """
+    Consumer MQTT per la ricezione di comandi destinati agli attuatori delle piante.
+    
+    Questa classe gestisce la ricezione di comandi MQTT inviati dal sistema di controllo
+    e li inoltra agli attuatori appropriati della pianta. È responsabile dell'esecuzione
+    dei comandi di controllo come l'attivazione/disattivazione dell'irrigazione.
+    """
     def __init__(self, plant_descriptor: PlantDescriptor):
         self.plant_descriptor = plant_descriptor
         client_id = f"{self.plant_descriptor.plant_id}-plant-consumer"
@@ -17,6 +24,12 @@ class PlantConsumer():
         
 
     def run(self):
+        """
+        Avvia il consumer MQTT e mantiene la connessione attiva.
+        
+        Si connette al broker MQTT e inizia il loop di ricezione messaggi.
+        Il metodo rimane in esecuzione fino a quando non viene chiamato stop().
+        """
         self.client.connect(MqttConfigurationParameters.BROKER_ADDRESS, MqttConfigurationParameters.BROKER_PORT)
         self.client.loop_start()
         self.running = True
@@ -27,16 +40,31 @@ class PlantConsumer():
             self.client.loop_stop()
 
     def stop(self):
+        """
+        Interrompe il consumer MQTT e termina la connessione.
+        
+        Questo metodo chiude il loop di ricezione messaggi e si disconnette dal broker MQTT.
+        """
         self.running = False
         self.client.disconnect()
         logging.info("PlantConsumer stopped...")
 
     def on_connect(self, client, userdata, flags, rc):
+        """
+        Callback per la connessione MQTT.
+        
+        Questo metodo viene chiamato quando il consumer si connette al broker MQTT.
+        """
         plant_topic = MqttConfigurationParameters.build_command_plant_topic(self.plant_descriptor.plant_id, "+")
         self.client.subscribe(plant_topic)
         logging.info(f"Subscribed to topic: {plant_topic}")
 
     def on_message(self, client, userdata, msg):
+        """
+        Callback per la ricezione di messaggi MQTT.
+        
+        Questo metodo viene chiamato quando il consumer riceve un messaggio MQTT.
+        """
         message_payload = str(msg.payload.decode("utf-8"))
         logging.info(f"Received message: {message_payload}")
         topic_parts = msg.topic.split('/')

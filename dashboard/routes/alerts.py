@@ -1,19 +1,17 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, current_app
 from processors.policy_evaluator import PolicyEvaluator
 from utils.helpers import format_timestamp
-
 alerts_bp = Blueprint('alerts', __name__)
 
 
 @alerts_bp.route('/api/alerts', methods=['GET'])
 def get_alerts():
     """Get current alerts from all plants based on policies"""
-    from app import app, policy_evaluator
     
     all_alerts = []
     alert_id = 1
     
-    for plant_id, plant_data in app.plants_data.items():
+    for plant_id, plant_data in current_app.plants_data.items():
         sensors = plant_data.get('sensors', [])
         
         # Get alerts from plant log file (if any)
@@ -29,8 +27,8 @@ def get_alerts():
             alert_id += 1
         
         # Generate alerts based on policies
-        if policy_evaluator:
-            policy_alerts = policy_evaluator.evaluate_policies(plant_id, sensors)
+        if current_app.policy_evaluator:
+            policy_alerts = current_app.policy_evaluator.evaluate_policies(plant_id, sensors)
             for alert in policy_alerts:
                 all_alerts.append({
                     "id": alert_id,

@@ -7,132 +7,64 @@
         "device": "environment_telemetry",
         "values": [
           {
-            "value": 95.1,
-            "timestamp": "1757327771"
+            "value": 94.7,
+            "timestamp": "1757415090"
           },
           {
-            "value": 90.3,
-            "timestamp": "1757327785"
+            "value": 92.7,
+            "timestamp": "1757415100"
+          },
+          {
+            "value": 89.3,
+            "timestamp": "1757415110"
           },
           {
             "value": 88.6,
-            "timestamp": "1757327796"
+            "timestamp": "1757415120"
           },
           {
-            "value": 85.8,
-            "timestamp": "1757327802"
+            "value": 85.4,
+            "timestamp": "1757415130"
           },
           {
-            "value": 84.8,
-            "timestamp": "1757327812"
+            "value": 82.7,
+            "timestamp": "1757415140"
           },
           {
-            "value": 80.9,
-            "timestamp": "1757327823"
+            "value": 78.7,
+            "timestamp": "1757415150"
           },
           {
-            "value": 76.5,
-            "timestamp": "1757327833"
+            "value": 77.9,
+            "timestamp": "1757415160"
           },
           {
-            "value": 75.3,
-            "timestamp": "1757327843"
+            "value": 73.7,
+            "timestamp": "1757415170"
           },
           {
-            "value": 94.8,
-            "timestamp": "1757328262"
+            "value": 72.2,
+            "timestamp": "1757415180"
           },
           {
-            "value": 93.7,
-            "timestamp": "1757328281"
-          },
-          {
-            "value": 90.5,
-            "timestamp": "1757328303"
-          },
-          {
-            "value": 83.4,
-            "timestamp": "1757364395"
-          },
-          {
-            "value": 80.7,
-            "timestamp": "1757364405"
-          },
-          {
-            "value": 76.7,
-            "timestamp": "1757364415"
-          },
-          {
-            "value": 74.0,
-            "timestamp": "1757364425"
-          },
-          {
-            "value": 71.4,
-            "timestamp": "1757364435"
+            "value": 68.4,
+            "timestamp": "1757415190"
           },
           {
             "value": 68.2,
-            "timestamp": "1757364445"
+            "timestamp": "1757415200"
           },
           {
-            "value": 68.0,
-            "timestamp": "1757364455"
+            "value": 65.7,
+            "timestamp": "1757415210"
           },
           {
-            "value": 66.6,
-            "timestamp": "1757364465"
+            "value": 64.6,
+            "timestamp": "1757415220"
           },
           {
-            "value": 64.4,
-            "timestamp": "1757364475"
-          },
-          {
-            "value": 7.8,
-            "timestamp": "1757364906"
-          },
-          {
-            "value": 98.4,
-            "timestamp": "1757365245"
-          },
-          {
-            "value": 97.1,
-            "timestamp": "1757365255"
-          },
-          {
-            "value": 92.4,
-            "timestamp": "1757365265"
-          },
-          {
-            "value": 97.3,
-            "timestamp": "1757365847"
-          },
-          {
-            "value": 94.0,
-            "timestamp": "1757365857"
-          },
-          {
-            "value": 92.4,
-            "timestamp": "1757365867"
-          },
-          {
-            "value": 91.0,
-            "timestamp": "1757365879"
-          },
-          {
-            "value": 94.5,
-            "timestamp": "1757366021"
-          },
-          {
-            "value": 89.9,
-            "timestamp": "1757366031"
-          },
-          {
-            "value": 87.7,
-            "timestamp": "1757366041"
-          },
-          {
-            "value": 86.3,
-            "timestamp": "1757366051"
+            "value": 60.0,
+            "timestamp": "1757415231"
           }
         ]
       },
@@ -141,132 +73,64 @@
         "device": "environment_telemetry",
         "values": [
           {
-            "value": 10.6,
-            "timestamp": "1757327771"
+            "value": 23.1,
+            "timestamp": "1757415091"
           },
           {
-            "value": 46.8,
-            "timestamp": "1757327785"
+            "value": 28.7,
+            "timestamp": "1757415102"
           },
           {
-            "value": 24.8,
-            "timestamp": "1757327796"
+            "value": 2.3,
+            "timestamp": "1757415111"
           },
           {
-            "value": 32.2,
-            "timestamp": "1757327802"
+            "value": 42.6,
+            "timestamp": "1757415121"
           },
           {
-            "value": 13.8,
-            "timestamp": "1757327813"
+            "value": 26.9,
+            "timestamp": "1757415131"
           },
           {
-            "value": 45.5,
-            "timestamp": "1757327824"
+            "value": 13.5,
+            "timestamp": "1757415142"
           },
           {
-            "value": 7.2,
-            "timestamp": "1757327833"
+            "value": 27.2,
+            "timestamp": "1757415151"
           },
           {
-            "value": 5.6,
-            "timestamp": "1757327843"
+            "value": 9.1,
+            "timestamp": "1757415161"
           },
           {
-            "value": 46.8,
-            "timestamp": "1757328263"
+            "value": 18.1,
+            "timestamp": "1757415171"
           },
           {
-            "value": 38.1,
-            "timestamp": "1757328283"
+            "value": 16.1,
+            "timestamp": "1757415181"
           },
           {
-            "value": 20.0,
-            "timestamp": "1757328303"
+            "value": 16.8,
+            "timestamp": "1757415191"
           },
           {
-            "value": 35.3,
-            "timestamp": "1757364396"
+            "value": 29.4,
+            "timestamp": "1757415202"
           },
           {
-            "value": 21.3,
-            "timestamp": "1757364406"
+            "value": 44.6,
+            "timestamp": "1757415212"
           },
           {
-            "value": 0.4,
-            "timestamp": "1757364416"
+            "value": 31.7,
+            "timestamp": "1757415222"
           },
           {
-            "value": 18.2,
-            "timestamp": "1757364426"
-          },
-          {
-            "value": 6.7,
-            "timestamp": "1757364436"
-          },
-          {
-            "value": 29.9,
-            "timestamp": "1757364446"
-          },
-          {
-            "value": 8.0,
-            "timestamp": "1757364456"
-          },
-          {
-            "value": 23.2,
-            "timestamp": "1757364466"
-          },
-          {
-            "value": 19.0,
-            "timestamp": "1757364476"
-          },
-          {
-            "value": 41.0,
-            "timestamp": "1757364908"
-          },
-          {
-            "value": 9.4,
-            "timestamp": "1757365247"
-          },
-          {
-            "value": 48.9,
-            "timestamp": "1757365257"
-          },
-          {
-            "value": 6.8,
-            "timestamp": "1757365266"
-          },
-          {
-            "value": 29.0,
-            "timestamp": "1757365848"
-          },
-          {
-            "value": 6.9,
-            "timestamp": "1757365859"
-          },
-          {
-            "value": 35.8,
-            "timestamp": "1757365869"
-          },
-          {
-            "value": 15.1,
-            "timestamp": "1757365882"
-          },
-          {
-            "value": 21.5,
-            "timestamp": "1757366022"
-          },
-          {
-            "value": 14.9,
-            "timestamp": "1757366032"
-          },
-          {
-            "value": 22.8,
-            "timestamp": "1757366042"
-          },
-          {
-            "value": 33.4,
-            "timestamp": "1757366051"
+            "value": 18.1,
+            "timestamp": "1757415231"
           }
         ]
       },
@@ -275,132 +139,60 @@
         "device": "environment_telemetry",
         "values": [
           {
-            "value": 32.0,
-            "timestamp": "1757327771"
-          },
-          {
-            "value": 25.9,
-            "timestamp": "1757327785"
-          },
-          {
-            "value": 85.4,
-            "timestamp": "1757327796"
-          },
-          {
-            "value": 0.5,
-            "timestamp": "1757327802"
-          },
-          {
-            "value": 16.4,
-            "timestamp": "1757327813"
-          },
-          {
-            "value": 76.2,
-            "timestamp": "1757327824"
-          },
-          {
-            "value": 64.5,
-            "timestamp": "1757327833"
-          },
-          {
-            "value": 51.8,
-            "timestamp": "1757327844"
-          },
-          {
-            "value": 68.5,
-            "timestamp": "1757328263"
-          },
-          {
-            "value": 70.5,
-            "timestamp": "1757328286"
-          },
-          {
-            "value": 42.4,
-            "timestamp": "1757328304"
-          },
-          {
-            "value": 85.8,
-            "timestamp": "1757364397"
-          },
-          {
-            "value": 58.4,
-            "timestamp": "1757364408"
-          },
-          {
-            "value": 23.3,
-            "timestamp": "1757364416"
-          },
-          {
-            "value": 8.5,
-            "timestamp": "1757364427"
-          },
-          {
-            "value": 83.4,
-            "timestamp": "1757364437"
-          },
-          {
             "value": 36.2,
-            "timestamp": "1757364447"
+            "timestamp": "1757415092"
           },
           {
-            "value": 33.5,
-            "timestamp": "1757364457"
+            "value": 46.9,
+            "timestamp": "1757415104"
           },
           {
-            "value": 75.0,
-            "timestamp": "1757364467"
+            "value": 70.9,
+            "timestamp": "1757415112"
           },
           {
-            "value": 95.7,
-            "timestamp": "1757364477"
+            "value": 42.9,
+            "timestamp": "1757415123"
           },
           {
-            "value": 39.1,
-            "timestamp": "1757364909"
+            "value": 95.6,
+            "timestamp": "1757415132"
           },
           {
-            "value": 92.6,
-            "timestamp": "1757365248"
+            "value": 80.9,
+            "timestamp": "1757415142"
           },
           {
-            "value": 60.7,
-            "timestamp": "1757365258"
+            "value": 57.6,
+            "timestamp": "1757415152"
           },
           {
-            "value": 81.6,
-            "timestamp": "1757365267"
+            "value": 85.3,
+            "timestamp": "1757415162"
           },
           {
-            "value": 9.3,
-            "timestamp": "1757365849"
+            "value": 22.9,
+            "timestamp": "1757415172"
           },
           {
-            "value": 93.6,
-            "timestamp": "1757365861"
+            "value": 83.6,
+            "timestamp": "1757415182"
           },
           {
-            "value": 72.9,
-            "timestamp": "1757365870"
+            "value": 62.0,
+            "timestamp": "1757415203"
           },
           {
-            "value": 96.3,
-            "timestamp": "1757365883"
+            "value": 38.8,
+            "timestamp": "1757415214"
           },
           {
-            "value": 94.9,
-            "timestamp": "1757366023"
+            "value": 29.0,
+            "timestamp": "1757415223"
           },
           {
-            "value": 58.8,
-            "timestamp": "1757366033"
-          },
-          {
-            "value": 98.2,
-            "timestamp": "1757366042"
-          },
-          {
-            "value": 72.3,
-            "timestamp": "1757366051"
+            "value": 85.1,
+            "timestamp": "1757415232"
           }
         ]
       },
@@ -409,128 +201,64 @@
         "device": "environment_telemetry",
         "values": [
           {
-            "value": 32573.0,
-            "timestamp": "1757327775"
+            "value": 5155.8,
+            "timestamp": "1757415096"
           },
           {
-            "value": 57273.2,
-            "timestamp": "1757327788"
+            "value": 29717.4,
+            "timestamp": "1757415108"
           },
           {
-            "value": 47382.7,
-            "timestamp": "1757327796"
+            "value": 23976.1,
+            "timestamp": "1757415113"
           },
           {
-            "value": 13953.3,
-            "timestamp": "1757327806"
+            "value": 35094.7,
+            "timestamp": "1757415127"
           },
           {
-            "value": 14055.4,
-            "timestamp": "1757327816"
+            "value": 56465.6,
+            "timestamp": "1757415133"
           },
           {
-            "value": 59434.6,
-            "timestamp": "1757327824"
+            "value": 8844.9,
+            "timestamp": "1757415143"
           },
           {
-            "value": 14943.7,
-            "timestamp": "1757327833"
+            "value": 42181.3,
+            "timestamp": "1757415153"
           },
           {
-            "value": 3175.4,
-            "timestamp": "1757327848"
+            "value": 1926.6,
+            "timestamp": "1757415163"
           },
           {
-            "value": 16809.5,
-            "timestamp": "1757328264"
+            "value": 5842.3,
+            "timestamp": "1757415177"
           },
           {
-            "value": 35037.3,
-            "timestamp": "1757328288"
+            "value": 5549.5,
+            "timestamp": "1757415183"
           },
           {
-            "value": 14932.3,
-            "timestamp": "1757328307"
+            "value": 55389.5,
+            "timestamp": "1757415196"
           },
           {
-            "value": 58230.9,
-            "timestamp": "1757364398"
+            "value": 12836.1,
+            "timestamp": "1757415205"
           },
           {
-            "value": 46443.4,
-            "timestamp": "1757364409"
+            "value": 34597.0,
+            "timestamp": "1757415218"
           },
           {
-            "value": 41097.5,
-            "timestamp": "1757364421"
+            "value": 51933.7,
+            "timestamp": "1757415228"
           },
           {
-            "value": 56513.2,
-            "timestamp": "1757364430"
-          },
-          {
-            "value": 36098.4,
-            "timestamp": "1757364439"
-          },
-          {
-            "value": 45127.2,
-            "timestamp": "1757364450"
-          },
-          {
-            "value": 18111.1,
-            "timestamp": "1757364461"
-          },
-          {
-            "value": 44176.8,
-            "timestamp": "1757364468"
-          },
-          {
-            "value": 357.4,
-            "timestamp": "1757364478"
-          },
-          {
-            "value": 11767.1,
-            "timestamp": "1757365249"
-          },
-          {
-            "value": 20882.7,
-            "timestamp": "1757365259"
-          },
-          {
-            "value": 34192.2,
-            "timestamp": "1757365269"
-          },
-          {
-            "value": 42041.8,
-            "timestamp": "1757365853"
-          },
-          {
-            "value": 31279.5,
-            "timestamp": "1757365862"
-          },
-          {
-            "value": 18221.3,
-            "timestamp": "1757365871"
-          },
-          {
-            "value": 34073.6,
-            "timestamp": "1757365884"
-          },
-          {
-            "value": 47458.5,
-            "timestamp": "1757366024"
-          },
-          {
-            "value": 38632.8,
-            "timestamp": "1757366035"
-          },
-          {
-            "value": 23068.6,
-            "timestamp": "1757366042"
-          },
-          {
-            "value": 2897.3,
-            "timestamp": "1757366052"
+            "value": 49390.7,
+            "timestamp": "1757415233"
           }
         ]
       },
@@ -539,128 +267,52 @@
         "device": "tank_monitoring",
         "values": [
           {
-            "value": 0.9,
-            "timestamp": "1757327776"
+            "value": 0.2,
+            "timestamp": "1757415096"
           },
           {
-            "value": 0.4,
-            "timestamp": "1757327780"
-          },
-          {
-            "value": 0.7,
-            "timestamp": "1757327791"
+            "value": 0.3,
+            "timestamp": "1757415109"
           },
           {
             "value": 0.6,
-            "timestamp": "1757327797"
-          },
-          {
-            "value": 0.2,
-            "timestamp": "1757327809"
+            "timestamp": "1757415114"
           },
           {
             "value": 0.5,
-            "timestamp": "1757327820"
+            "timestamp": "1757415127"
           },
           {
-            "value": 1.0,
-            "timestamp": "1757327827"
+            "value": 0.6,
+            "timestamp": "1757415134"
           },
           {
             "value": 0.5,
-            "timestamp": "1757327835"
+            "timestamp": "1757415154"
+          },
+          {
+            "value": 0.6,
+            "timestamp": "1757415164"
           },
           {
             "value": 0.9,
-            "timestamp": "1757328265"
-          },
-          {
-            "value": 0.2,
-            "timestamp": "1757328269"
-          },
-          {
-            "value": 0.4,
-            "timestamp": "1757328298"
-          },
-          {
-            "value": 0.2,
-            "timestamp": "1757364398"
-          },
-          {
-            "value": 0.7,
-            "timestamp": "1757364410"
+            "timestamp": "1757415177"
           },
           {
             "value": 0.5,
-            "timestamp": "1757364421"
+            "timestamp": "1757415184"
           },
           {
             "value": 0.1,
-            "timestamp": "1757364431"
-          },
-          {
-            "value": 0.4,
-            "timestamp": "1757364440"
-          },
-          {
-            "value": 0.8,
-            "timestamp": "1757364450"
-          },
-          {
-            "value": 0.5,
-            "timestamp": "1757364461"
-          },
-          {
-            "value": 0.4,
-            "timestamp": "1757364469"
-          },
-          {
-            "value": 0.5,
-            "timestamp": "1757364479"
-          },
-          {
-            "value": 0.9,
-            "timestamp": "1757365249"
-          },
-          {
-            "value": 0.6,
-            "timestamp": "1757365260"
-          },
-          {
-            "value": 0.7,
-            "timestamp": "1757365269"
-          },
-          {
-            "value": 0.2,
-            "timestamp": "1757365853"
-          },
-          {
-            "value": 0.9,
-            "timestamp": "1757365863"
-          },
-          {
-            "value": 0.4,
-            "timestamp": "1757365872"
-          },
-          {
-            "value": 0.8,
-            "timestamp": "1757365884"
-          },
-          {
-            "value": 0.0,
-            "timestamp": "1757366024"
-          },
-          {
-            "value": 0.7,
-            "timestamp": "1757366036"
+            "timestamp": "1757415197"
           },
           {
             "value": 1.0,
-            "timestamp": "1757366043"
+            "timestamp": "1757415228"
           },
           {
             "value": 0.6,
-            "timestamp": "1757366052"
+            "timestamp": "1757415234"
           }
         ]
       },
@@ -669,128 +321,64 @@
         "device": "water_metering",
         "values": [
           {
-            "value": 3.5,
-            "timestamp": "1757327776"
+            "value": 4.5,
+            "timestamp": "1757415097"
           },
           {
-            "value": 1.0,
-            "timestamp": "1757327784"
-          },
-          {
-            "value": 3.1,
-            "timestamp": "1757327795"
-          },
-          {
-            "value": 3.8,
-            "timestamp": "1757327798"
-          },
-          {
-            "value": 1.2,
-            "timestamp": "1757327812"
+            "value": 3.4,
+            "timestamp": "1757415109"
           },
           {
             "value": 4.7,
-            "timestamp": "1757327823"
-          },
-          {
-            "value": 4.0,
-            "timestamp": "1757327830"
-          },
-          {
-            "value": 2.3,
-            "timestamp": "1757327836"
-          },
-          {
-            "value": 1.3,
-            "timestamp": "1757328266"
-          },
-          {
-            "value": 0.4,
-            "timestamp": "1757328279"
-          },
-          {
-            "value": 2.1,
-            "timestamp": "1757328302"
-          },
-          {
-            "value": 4.2,
-            "timestamp": "1757364400"
-          },
-          {
-            "value": 0.5,
-            "timestamp": "1757364410"
-          },
-          {
-            "value": 5.0,
-            "timestamp": "1757364422"
-          },
-          {
-            "value": 3.7,
-            "timestamp": "1757364431"
+            "timestamp": "1757415115"
           },
           {
             "value": 4.6,
-            "timestamp": "1757364440"
+            "timestamp": "1757415128"
           },
           {
-            "value": 2.8,
-            "timestamp": "1757364451"
+            "value": 1.3,
+            "timestamp": "1757415135"
           },
           {
-            "value": 0.5,
-            "timestamp": "1757364462"
+            "value": 0.1,
+            "timestamp": "1757415145"
           },
           {
-            "value": 3.1,
-            "timestamp": "1757364470"
-          },
-          {
-            "value": 2.8,
-            "timestamp": "1757364479"
-          },
-          {
-            "value": 0.8,
-            "timestamp": "1757365250"
-          },
-          {
-            "value": 2.1,
-            "timestamp": "1757365261"
+            "value": 0.6,
+            "timestamp": "1757415154"
           },
           {
             "value": 1.6,
-            "timestamp": "1757365270"
+            "timestamp": "1757415165"
           },
           {
-            "value": 2.8,
-            "timestamp": "1757365853"
+            "value": 3.7,
+            "timestamp": "1757415177"
           },
           {
-            "value": 1.1,
-            "timestamp": "1757365863"
+            "value": 4.7,
+            "timestamp": "1757415185"
           },
           {
-            "value": 4.5,
-            "timestamp": "1757365872"
+            "value": 3.2,
+            "timestamp": "1757415197"
           },
           {
-            "value": 3.8,
-            "timestamp": "1757365884"
+            "value": 2.5,
+            "timestamp": "1757415206"
           },
           {
-            "value": 2.7,
-            "timestamp": "1757366025"
+            "value": 0.9,
+            "timestamp": "1757415219"
           },
           {
-            "value": 3.5,
-            "timestamp": "1757366036"
+            "value": 2.9,
+            "timestamp": "1757415229"
           },
           {
-            "value": 0.8,
-            "timestamp": "1757366046"
-          },
-          {
-            "value": 3.9,
-            "timestamp": "1757366052"
+            "value": 2.1,
+            "timestamp": "1757415234"
           }
         ]
       }
@@ -802,7 +390,7 @@
         "values": [
           {
             "value": true,
-            "timestamp": "1757327772"
+            "timestamp": "1757415093"
           }
         ]
       }
@@ -810,25 +398,7 @@
     "alerts": [
       {
         "message": "Tank level below 0.30 liters!",
-        "timestamp": "1757328270",
-        "type": "warning",
-        "plant_id": "my_felce1"
-      },
-      {
-        "message": "Tank level below 0.30 liters!",
-        "timestamp": "1757364399",
-        "type": "warning",
-        "plant_id": "my_felce1"
-      },
-      {
-        "message": "Battery level below 20%!",
-        "timestamp": "1757364907",
-        "type": "warning",
-        "plant_id": "my_felce1"
-      },
-      {
-        "message": "Tank level below 0.30 liters!",
-        "timestamp": "1757365853",
+        "timestamp": "1757415097",
         "type": "warning",
         "plant_id": "my_felce1"
       }

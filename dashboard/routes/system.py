@@ -1,34 +1,31 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, current_app
 from datetime import datetime
 from managers.config_manager import ConfigManager
 from managers.plant_data_manager import PlantDataManager
-
 system_bp = Blueprint('system', __name__)
-
 
 @system_bp.route('/api/refresh', methods=['POST'])
 def refresh_data():
     """Refresh plants data from JSON files"""
-    from app import app
+    
     
     data_manager = PlantDataManager()
-    app.plants_data = data_manager.load_plants_data()
+    current_app.plants_data = data_manager.load_plants_data()
     return jsonify({"message": "Data refreshed successfully"}), 200
 
 
 @system_bp.route('/api/status', methods=['GET'])
 def get_status():
     """Get application status and data loading info"""
-    from app import app, policy_evaluator
     
     config_manager = ConfigManager()
-    plants_count = len(app.plants_data)
+    plants_count = len(current_app.plants_data)
     update_freq = config_manager.get_update_frequency()
     return jsonify({
         "status": "running",
         "plants_loaded": plants_count,
         "data_source": "cloud_simulator JSON files",
-        "policies_loaded": policy_evaluator is not None,
+        "policies_loaded": current_app.policy_evaluator is not None,
         "update_frequency": f"{update_freq} seconds",
         "last_update": datetime.now().isoformat()
     }), 200

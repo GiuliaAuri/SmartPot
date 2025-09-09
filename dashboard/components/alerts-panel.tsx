@@ -9,6 +9,9 @@ import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { AlertTriangle, AlertCircle, Info, CheckCircle, X, Bell, BellOff, Trash2 } from "lucide-react"
 
+/**
+ * Interfaccia per rappresentare un singolo alert.
+ */
 interface AlertItem {
   id: number
   type: "info" | "warning" | "critical"
@@ -17,15 +20,34 @@ interface AlertItem {
   timestamp: string
 }
 
+/**
+ * Interfaccia per rappresentare le props del componente AlertsPanel.
+ */
 interface AlertsPanelProps {
   alerts: AlertItem[]
   setAlerts: (alerts: AlertItem[]) => void
 }
 
+/**
+ * Componente per la gestione degli avvisi.
+ * 
+ * Questo componente permette di gestire gli avvisi attivi e di configurare
+ * le impostazioni per la gestione degli avvisi.
+ * 
+ * @param alerts - Array di oggetti AlertItem
+ * @param setAlerts - Funzione per impostare gli avvisi
+ * @returns JSX.Element - Il componente AlertsPanel
+ */
 export function AlertsPanel({ alerts, setAlerts }: AlertsPanelProps) {
   const [notificationsEnabled, setNotificationsEnabled] = useState(true)
   const [autoResolve, setAutoResolve] = useState(true)
 
+  /**
+   * Funzione per ottenere l'icona dell'alert in base al tipo.
+   * 
+   * @param type - Tipo dell'alert
+   * @returns JSX.Element - L'icona dell'alert
+   */
   const getAlertIcon = (type: string) => {
     switch (type) {
       case "critical":
@@ -39,6 +61,12 @@ export function AlertsPanel({ alerts, setAlerts }: AlertsPanelProps) {
     }
   }
 
+  /**
+   * Funzione per ottenere il colore dell'alert in base al tipo.
+   * 
+   * @param type - Tipo dell'alert
+   * @returns Stringa con il colore dell'alert
+   */
   const getAlertColor = (type: string) => {
     switch (type) {
       case "critical":
@@ -52,6 +80,12 @@ export function AlertsPanel({ alerts, setAlerts }: AlertsPanelProps) {
     }
   }
 
+  /**
+   * Funzione per ottenere il colore del testo dell'alert in base al tipo.
+   * 
+   * @param type - Tipo dell'alert
+   * @returns Stringa con il colore del testo dell'alert
+   */
   const getAlertTextColor = (type: string) => {
     switch (type) {
       case "critical":
@@ -65,14 +99,27 @@ export function AlertsPanel({ alerts, setAlerts }: AlertsPanelProps) {
     }
   }
 
+  /**
+   * Funzione per eliminare un alert.
+   * 
+   * @param alertId - ID dell'alert da eliminare
+   */
   const dismissAlert = (alertId: number) => {
     setAlerts(alerts.filter((alert) => alert.id !== alertId))
   }
 
+  /**
+   * Funzione per eliminare tutti gli alert.
+   */
   const clearAllAlerts = () => {
     setAlerts([])
   }
 
+  /**
+   * Funzione per marcare un alert come risolto.
+   * 
+   * @param alertId - ID dell'alert da marcare come risolto
+   */
   const markAsResolved = (alertId: number) => {
     // In un'implementazione reale, questo potrebbe cambiare lo stato dell'alert
     dismissAlert(alertId)

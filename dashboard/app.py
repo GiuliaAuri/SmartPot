@@ -32,6 +32,18 @@ logging.basicConfig(level=logging.INFO)
 # Gestione CORS preflight
 @app.before_request
 def handle_preflight():
+    """
+    Gestisce le richieste CORS preflight per permettere chiamate cross-origin.
+    
+    Questa funzione intercetta le richieste OPTIONS che i browser inviano
+    automaticamente prima delle richieste CORS per verificare se il server
+    supporta le chiamate cross-origin.
+    
+    Returns:
+        Response: Risposta HTTP con headers CORS appropriati se la richiesta
+                 è di tipo OPTIONS, altrimenti None per continuare il normale
+                 flusso di elaborazione della richiesta.
+    """
     if request.method == "OPTIONS":
         response = jsonify({})
         response.headers.add("Access-Control-Allow-Origin", request.headers.get('Origin', '*'))
@@ -50,10 +62,14 @@ if data_manager.load_configurations():
     app.plants_data = data_manager.load_plants_data()
     policy_evaluator = PolicyEvaluator(data_manager.policies_config)
     status_evaluator = PlantStatusEvaluator(policy_evaluator)
+    app.status_evaluator = status_evaluator
+    app.policy_evaluator = policy_evaluator
 else:
     app.plants_data = {}
     policy_evaluator = None
     status_evaluator = None
+    app.status_evaluator = None
+    app.policy_evaluator = None
 
 # Registrazione blueprint
 app.register_blueprint(plants_bp)
