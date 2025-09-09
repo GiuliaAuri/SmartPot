@@ -28,10 +28,17 @@ class DataCollectorConsumer:
         self.client.on_message = self.on_message
         self.policy_manager = PolicyManager("plants_system/smart_objects/resources/policies_conf.json")
         self.running = False
+        #TODO
+        
+        # Controllo frequenza aggiornamenti (minimo 1 secondo tra aggiornamenti)
+        self.last_update_time = 0
+        self.min_update_interval = 1.0  # secondi
         
         # Thread pool per operazioni async
         self.executor = concurrent.futures.ThreadPoolExecutor(max_workers=2)
         self.loop = None
+        self.pending_tasks = set()  # Traccia le task in esecuzione
+        self.last_cleanup = time.time()  # Timestamp dell'ultima pulizia
  
     """
     Callback per la connessione MQTT.
@@ -63,6 +70,11 @@ class DataCollectorConsumer:
         - Esecuzione asincrona dell'elaborazione
         - Nessuna operazione I/O sincrona
         """
+        # Controlla se il sistema è ancora attivo
+        if not self.running:
+            logging.debug("Skipping message - system is shutting down")
+            return
+            
         try:
             message_payload = msg.payload.decode("utf-8")
             logging.debug(f"Received message on topic {msg.topic}")
@@ -80,13 +92,39 @@ class DataCollectorConsumer:
             
             # Esegui l'elaborazione in modo asincrono
             if self.loop and not self.loop.is_closed():
-                asyncio.run_coroutine_threadsafe(
+                task = asyncio.run_coroutine_threadsafe(
                     self._process_message_async(message_data), 
                     self.loop
                 )
+                # Traccia la task per poterla cancellare in seguito
+                self.pending_tasks.add(task)
+                
+                # Pulisci le task completate ogni 30 secondi
+                current_time = time.time()
+                if current_time - self.last_cleanup > 30:
+                    self._cleanup_completed_tasks()
+                    self.last_cleanup = current_time
             
         except Exception as e:
             logging.error(f"Error in on_message: {e}")
+    
+    def _cleanup_completed_tasks(self):
+        """
+        Pulisce le task completate dal set delle task pendenti.
+        
+        Questo metodo rimuove le task che sono state completate o cancellate
+        per evitare memory leaks e mantenere il set delle task pulito.
+        """
+        completed_tasks = set()
+        for task in self.pending_tasks:
+            if task.done():
+                completed_tasks.add(task)
+        
+        # Rimuovi le task completate
+        self.pending_tasks -= completed_tasks
+        
+        if completed_tasks:
+            logging.debug(f"Cleaned up {len(completed_tasks)} completed tasks")
     
     async def _process_message_async(self, message_data):
         """
@@ -98,6 +136,11 @@ class DataCollectorConsumer:
         - Valutazione policy (async)
         - Gestione alert e azioni (async)
         """
+        # Controlla se il sistema è ancora attivo
+        if not self.running:
+            logging.debug("Skipping message processing - system is shutting down")
+            return
+            
         try:
             sensor_type = message_data['sensor_type']
             value = message_data['value']
@@ -140,6 +183,10 @@ class DataCollectorConsumer:
                         
         except Exception as e:
             logging.error(f"Error processing message: {e}")
+        finally:
+            # Rimuovi la task completata dal set delle task pendenti
+            # Nota: questo viene fatto automaticamente quando la task completa
+            pass
     
     async def _update_sensor_history_async(self, sensor_type, value, device_name):
         """Aggiorna la storia del sensore in modo asincrono."""
@@ -278,10 +325,45 @@ class DataCollectorConsumer:
         
         # Ferma l'event loop asyncio
         if self.loop and not self.loop.is_closed():
+            # Cancella tutte le task pendenti e aspetta che finiscano
+            if self.pending_tasks:
+                logging.info(f"Cancelling {len(self.pending_tasks)} pending tasks...")
+                for task in self.pending_tasks.copy():
+                    if not task.done():
+                        task.cancel()
+                        logging.debug(f"Cancelled pending task: {task}")
+                
+                # Aspetta che tutte le task vengano cancellate
+                import asyncio
+                try:
+                    # Filtra solo le task valide (non cancellate e non completate)
+                    valid_tasks = [task for task in self.pending_tasks if not task.done() and not task.cancelled()]
+                    
+                    if valid_tasks:
+                        # Crea una task per aspettare tutte le cancellazioni
+                        async def wait_for_cancellation():
+                            await asyncio.gather(*valid_tasks, return_exceptions=True)
+                        
+                        # Esegui l'attesa in modo sincrono con timeout
+                        future = asyncio.run_coroutine_threadsafe(wait_for_cancellation(), self.loop)
+                        future.result(timeout=2.0)  # Timeout di 2 secondi
+                    else:
+                        logging.debug("No valid tasks to wait for")
+                        
+                except Exception as e:
+                    logging.warning(f"Error waiting for task cancellation: {e}")
+            
+            # Pulisci il set delle task
+            self.pending_tasks.clear()
+            
+            # Ferma l'event loop
             self.loop.call_soon_threadsafe(self.loop.stop)
         
-        # Chiudi il thread pool
-        self.executor.shutdown(wait=True)
+        # Chiudi il thread pool con timeout
+        try:
+            self.executor.shutdown(wait=False)  # Non aspettare indefinitamente
+        except Exception as e:
+            logging.warning(f"Error shutting down executor: {e}")
             
         logging.info("DataCollectorConsumer stopped...")
 
@@ -293,44 +375,121 @@ class DataCollectorConsumer:
         consecutivi e mantenendo un timestamp per ogni misurazione.
         
     """
+    def _safe_write_json(self, data):
+        """
+        Scrive i dati in modo sicuro nel file JSON con gestione degli errori.
+        
+        Args:
+            data: Dati da scrivere nel file JSON
+            
+        Returns:
+            bool: True se la scrittura è riuscita, False altrimenti
+        """
+        try:
+            with open(self.filename, "w") as f:
+                json.dump(data, f, indent=2)
+            return True
+        except Exception as e:
+            logging.error(f"Error writing JSON file {self.filename}: {e}")
+            return False
+    
+    def _safe_read_json(self):
+        """
+        Legge i dati dal file JSON in modo sicuro con gestione degli errori.
+        
+        Returns:
+            list: Lista dei dati delle piante o lista vuota se errore
+        """
+        try:
+            if not os.path.exists(self.filename):
+                return []
+            
+            with open(self.filename, "r") as f:
+                data = json.load(f)
+                return data if isinstance(data, list) else []
+                
+        except json.JSONDecodeError as e:
+            logging.error(f"JSON decode error in {self.filename}: {e}")
+            return []
+        except Exception as e:
+            logging.error(f"Error reading JSON file {self.filename}: {e}")
+            return []
     def update_sensor_history(self, sensor_type, value, device_name):
+        """
+        Aggiorna la cronologia dei sensori nel file JSON.
+        
+        Salva i nuovi valori dei sensori nel file JSON, evitando duplicati
+        consecutivi e mantenendo un timestamp per ogni misurazione.
+        """
+        # Controllo frequenza aggiornamenti
+        current_time = time.time()
+        if current_time - self.last_update_time < self.min_update_interval:
+            logging.debug(f"Skipping sensor update for {sensor_type} - too frequent")
+            return
+        
+        self.last_update_time = current_time
         timestamp = int(time.time())
-        # Se il file non esiste, crea la struttura base
-        if not os.path.exists(self.filename):
+        
+        # Leggi i dati esistenti in modo sicuro
+        plants = self._safe_read_json()
+        
+        # Se il file non esiste o è vuoto, crea la struttura base
+        if not plants:
             plants = [{
                 "plant_id": self.plant_descriptor.plant_id,
                 "sensors": [],
-                "actuators": []
+                "actuators": [],
+                "alerts": []
             }]
-        else:
-            with open(self.filename, "r") as f:
-                plants = json.load(f)
 
+        # Trova o crea la pianta
+        plant_found = False
         for plant in plants:
             if plant["plant_id"] == self.plant_descriptor.plant_id:
-                found = False
-                for s in plant["sensors"]:
-                    if s.get("sensor") == sensor_type and s.get("device") == device_name:
-                        found = True
-                        if "values" not in s:
-                            s["values"] = []
-                        # Solo memorizzare se il valore è cambiato
-                        if not s["values"] or s["values"][-1]["value"] != value:
-                            s["values"].append({"value": value, "timestamp": str(timestamp)})
-                            logging.info(f"Stored new sensor value: {sensor_type} = {value}")
-                        else:
-                            logging.debug(f"Skipped duplicate sensor value: {sensor_type} = {value}")
-                        break
-                if not found:
-                    plant["sensors"].append({
-                        "sensor": sensor_type,
-                        "device": device_name,
-                        "values": [{"value": value, "timestamp": str(timestamp)}]
-                    })
+                plant_found = True
                 break
+        
+        if not plant_found:
+            plants.append({
+                "plant_id": self.plant_descriptor.plant_id,
+                "sensors": [],
+                "actuators": [],
+                "alerts": []
+            })
+            plant = plants[-1]
+        else:
+            plant = next(p for p in plants if p["plant_id"] == self.plant_descriptor.plant_id)
 
-        with open(self.filename, "w") as f:
-            json.dump(plants, f, indent=2)
+        # Assicurati che la sezione sensors esista
+        if "sensors" not in plant:
+            plant["sensors"] = []
+
+        # Trova o crea il sensore
+        sensor_found = False
+        for s in plant["sensors"]:
+            if s.get("sensor") == sensor_type and s.get("device") == device_name:
+                sensor_found = True
+                if "values" not in s:
+                    s["values"] = []
+                # Solo memorizzare se il valore è cambiato
+                if not s["values"] or s["values"][-1]["value"] != value:
+                    s["values"].append({"value": value, "timestamp": str(timestamp)})
+                    logging.info(f"Stored new sensor value: {sensor_type} = {value}")
+                else:
+                    logging.debug(f"Skipped duplicate sensor value: {sensor_type} = {value}")
+                break
+        
+        if not sensor_found:
+            plant["sensors"].append({
+                "sensor": sensor_type,
+                "device": device_name,
+                "values": [{"value": value, "timestamp": str(timestamp)}]
+            })
+            logging.info(f"Created new sensor entry: {sensor_type} = {value}")
+
+        # Scrivi i dati in modo sicuro
+        if not self._safe_write_json(plants):
+            logging.error(f"Failed to write sensor data for {sensor_type}")
 
     
     def update_actuator_history(self, action):
@@ -340,6 +499,13 @@ class DataCollectorConsumer:
         Salva i nuovi valori degli attuatori nel file JSON, evitando duplicati
         consecutivi e mantenendo un timestamp per ogni azione.
         """
+        # Controllo frequenza aggiornamenti
+        current_time = time.time()
+        if current_time - self.last_update_time < self.min_update_interval:
+            logging.debug(f"Skipping actuator update for {action} - too frequent")
+            return
+        
+        self.last_update_time = current_time
         timestamp = int(time.time())
         action_parts = action.split()
         if len(action_parts) < 2:
@@ -364,42 +530,66 @@ class DataCollectorConsumer:
         if device_name is None:
             device_name = actuator_type  # fallback
 
-        # Carica o crea il file
-        if not os.path.exists(self.filename):
+        # Leggi i dati esistenti in modo sicuro
+        plants = self._safe_read_json()
+        
+        # Se il file non esiste o è vuoto, crea la struttura base
+        if not plants:
             plants = [{
                 "plant_id": self.plant_descriptor.plant_id,
                 "sensors": [],
-                "actuators": []
+                "actuators": [],
+                "alerts": []
             }]
-        else:
-            with open(self.filename, "r") as f:
-                plants = json.load(f)
 
+        # Trova o crea la pianta
+        plant_found = False
         for plant in plants:
             if plant["plant_id"] == self.plant_descriptor.plant_id:
-                found = False
-                for a in plant["actuators"]:
-                    if a.get("actuator") == actuator_type and a.get("device") == device_name:
-                        found = True
-                        if "values" not in a:
-                            a["values"] = []
-                        # Solo memorizzare se il valore è cambiato
-                        if not a["values"] or a["values"][-1]["value"] != value:
-                            a["values"].append({"value": value, "timestamp": str(timestamp)})
-                            logging.info(f"Stored new actuator value: {actuator_type} = {value}")
-                        else:
-                            logging.debug(f"Skipped duplicate actuator value: {actuator_type} = {value}")
-                        break
-                if not found:
-                    plant["actuators"].append({
-                        "actuator": actuator_type,
-                        "device": device_name,
-                        "values": [{"value": value, "timestamp": str(timestamp)}]
-                    })
+                plant_found = True
                 break
+        
+        if not plant_found:
+            plants.append({
+                "plant_id": self.plant_descriptor.plant_id,
+                "sensors": [],
+                "actuators": [],
+                "alerts": []
+            })
+            plant = plants[-1]
+        else:
+            plant = next(p for p in plants if p["plant_id"] == self.plant_descriptor.plant_id)
 
-        with open(self.filename, "w") as f:
-            json.dump(plants, f, indent=2)
+        # Assicurati che la sezione actuators esista
+        if "actuators" not in plant:
+            plant["actuators"] = []
+
+        # Trova o crea l'attuatore
+        actuator_found = False
+        for a in plant["actuators"]:
+            if a.get("actuator") == actuator_type and a.get("device") == device_name:
+                actuator_found = True
+                if "values" not in a:
+                    a["values"] = []
+                # Solo memorizzare se il valore è cambiato
+                if not a["values"] or a["values"][-1]["value"] != value:
+                    a["values"].append({"value": value, "timestamp": str(timestamp)})
+                    logging.info(f"Stored new actuator value: {actuator_type} = {value}")
+                else:
+                    logging.debug(f"Skipped duplicate actuator value: {actuator_type} = {value}")
+                break
+        
+        if not actuator_found:
+            plant["actuators"].append({
+                "actuator": actuator_type,
+                "device": device_name,
+                "values": [{"value": value, "timestamp": str(timestamp)}]
+            })
+            logging.info(f"Created new actuator entry: {actuator_type} = {value}")
+
+        # Scrivi i dati in modo sicuro
+        if not self._safe_write_json(plants):
+            logging.error(f"Failed to write actuator data for {actuator_type}")
 
     def update_alerts_history(self, alerts):
         """
@@ -408,50 +598,73 @@ class DataCollectorConsumer:
         Salva le nuove alert nel file JSON, evitando duplicati consecutivi
         e mantenendo un timestamp per ogni alert.
         """
+        # Controllo frequenza aggiornamenti
+        current_time = time.time()
+        if current_time - self.last_update_time < self.min_update_interval:
+            logging.debug(f"Skipping alerts update - too frequent")
+            return
+        
+        self.last_update_time = current_time
         timestamp = int(time.time())
         
-        # Se il file non esiste, crea la struttura base
-        if not os.path.exists(self.filename):
+        # Leggi i dati esistenti in modo sicuro
+        plants = self._safe_read_json()
+        
+        # Se il file non esiste o è vuoto, crea la struttura base
+        if not plants:
             plants = [{
                 "plant_id": self.plant_descriptor.plant_id,
                 "sensors": [],
                 "actuators": [],
                 "alerts": []
             }]
-        else:
-            with open(self.filename, "r") as f:
-                plants = json.load(f)
 
+        # Trova o crea la pianta
+        plant_found = False
         for plant in plants:
             if plant["plant_id"] == self.plant_descriptor.plant_id:
-                # Assicurati che la sezione alerts esista
-                if "alerts" not in plant:
-                    plant["alerts"] = []
-                
-                # Aggiungi i nuovi alert (evita duplicati)
-                for alert_message in alerts:
-                    # Controlla se questo alert esiste già negli ultimi 5 minuti
-                    recent_alerts = [
-                        alert for alert in plant["alerts"] 
-                        if alert.get("message") == alert_message and 
-                        (timestamp - int(alert.get("timestamp", 0))) < 300  # 5 minuti
-                    ]
-                    
-                    if not recent_alerts:  # Solo se non esiste già
-                        alert_entry = {
-                            "message": alert_message,
-                            "timestamp": str(timestamp),
-                            "type": "warning",  # Default type, può essere migliorato
-                            "plant_id": self.plant_descriptor.plant_id
-                        }
-                        plant["alerts"].append(alert_entry)
-                        logging.info(f"Stored alert: {alert_message}")
-                    else:
-                        logging.debug(f"Skipped duplicate alert: {alert_message}")
+                plant_found = True
                 break
+        
+        if not plant_found:
+            plants.append({
+                "plant_id": self.plant_descriptor.plant_id,
+                "sensors": [],
+                "actuators": [],
+                "alerts": []
+            })
+            plant = plants[-1]
+        else:
+            plant = next(p for p in plants if p["plant_id"] == self.plant_descriptor.plant_id)
 
-        with open(self.filename, "w") as f:
-            json.dump(plants, f, indent=2)
+        # Assicurati che la sezione alerts esista
+        if "alerts" not in plant:
+            plant["alerts"] = []
+        
+        # Aggiungi i nuovi alert (evita duplicati)
+        for alert_message in alerts:
+            # Controlla se questo alert esiste già negli ultimi 5 minuti
+            recent_alerts = [
+                alert for alert in plant["alerts"] 
+                if alert.get("message") == alert_message and 
+                (timestamp - int(alert.get("timestamp", 0))) < 300  # 5 minuti
+            ]
+            
+            if not recent_alerts:  # Solo se non esiste già
+                alert_entry = {
+                    "message": alert_message,
+                    "timestamp": str(timestamp),
+                    "type": "warning",  # Default type, può essere migliorato
+                    "plant_id": self.plant_descriptor.plant_id
+                }
+                plant["alerts"].append(alert_entry)
+                logging.info(f"Stored alert: {alert_message}")
+            else:
+                logging.debug(f"Skipped duplicate alert: {alert_message}")
+
+        # Scrivi i dati in modo sicuro
+        if not self._safe_write_json(plants):
+            logging.error(f"Failed to write alerts data")
 
     def _get_current_actuator_state(self, actuator_type):
         """

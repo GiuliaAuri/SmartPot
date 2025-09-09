@@ -118,11 +118,55 @@ def post_actuator_command(plant_id, actuator_name):
 @plants_bp.route('/api/plants', methods=['GET'])
 def get_all_plants():
     """Get list of all plants with current data"""
-
+    
+    # Ricarica i dati dai file JSON ad ogni richiesta
+    import json
+    import os
+    import glob
+    import logging
+    
+    # Usa il percorso assoluto
+    log_dir = r"C:\Users\giuli\Documents\unimore\internet of things\Plants-System\cloud_simulator\plants_log"
+    
+    logging.info(f"Loading plants from: {log_dir}")
+    
+    # Carica direttamente i file JSON
+    plants_data = {}
+    
+    for json_file in glob.glob(os.path.join(log_dir, '*.json')):
+        try:
+            logging.info(f"Loading file: {json_file}")
+            with open(json_file, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+                logging.info(f"Loaded data: {len(data) if data else 0} items")
+                if data and isinstance(data, list) and len(data) > 0:
+                    plant_id = data[0].get('plant_id')
+                    logging.info(f"Found plant_id: {plant_id}")
+                    if plant_id:
+                        plants_data[plant_id] = data[0]
+        except Exception as e:
+            logging.error(f"Error loading {json_file}: {e}")
+            continue
+    
+    logging.info(f"Total plants loaded: {len(plants_data)}")
+    
+    # Carica la configurazione delle piante per ottenere le specie
+    plants_config = {}
+    config_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'cloud_simulator', 'plants.json')
+    try:
+        with open(config_file, 'r', encoding='utf-8') as f:
+            config_data = json.load(f)
+            for plant_config in config_data:
+                plant_id = plant_config.get('plant_id')
+                if plant_id:
+                    plants_config[plant_id] = plant_config
+        logging.info(f"Loaded {len(plants_config)} plant configurations")
+    except Exception as e:
+        logging.error(f"Error loading plants config: {e}")
     
     plants_list = []
     
-    for plant_id, plant_data in current_app.plants_data.items():
+    for plant_id, plant_data in plants_data.items():
         sensors = plant_data.get('sensors', [])
         actuators = plant_data.get('actuators', [])
         
@@ -168,8 +212,8 @@ def get_all_plants():
         plant_info = {
             "id": plant_id,
             "name": plant_id,  # Usa sempre l'ID come nome per consistenza
-            "type": plant_data.get('species', 'Unknown'),  # Use species instead of plant_type
-            "species": plant_data.get('species', ''),
+            "type": plants_config.get(plant_id, {}).get('species', 'Unknown'),  # Usa la specie dalla configurazione
+            "species": plants_config.get(plant_id, {}).get('species', ''),
             "status": status,
             "waterLevel": tank_level,
             "temperature": temperature,

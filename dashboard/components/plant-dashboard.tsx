@@ -97,6 +97,8 @@ export function PlantDashboard({ plants, setPlantsData, alerts }: PlantDashboard
       return !irrigationKeywords.some(keyword => message.includes(keyword))
     })
 
+    console.log(`Alerts for plant ${plantId}:`, filteredAlerts)
+
     // Raggruppa gli avvisi per sensore e mantieni solo il più recente per ogni sensore
     const sensorAlertsMap = new Map<string, Alert>()
     

@@ -118,6 +118,7 @@ export default function SmartPlantDashboard() {
     try {
       setLastRequestTime(Date.now())
       const alertsData = await apiService.getAllAlerts()
+      console.log('Loaded alerts:', alertsData)
       setAlerts(alertsData)
     } catch (err) {
       console.error("Failed to load alerts data:", err)
@@ -203,12 +204,6 @@ export default function SmartPlantDashboard() {
                     Sistema intelligente per la gestione e monitoraggio dei tuoi vasi
                   </p>
                   {error && <p className="text-red-500 text-xs sm:text-sm mt-1">{error} - Usando dati di fallback</p>}
-                  {isUpdating && (
-                    <div className="text-blue-500 text-xs sm:text-sm mt-1 flex items-center gap-1">
-                      <div className="w-3 h-3 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                      Aggiornamento dati...
-                    </div>
-                  )}
               </div>
             </div>
           </div>

@@ -3,46 +3,56 @@
     "plant_id": "my_lavanda1",
     "sensors": [
       {
-        "sensor": "battery_level",
-        "device": "environment_telemetry",
+        "sensor": "water_flow",
+        "device": "water_metering",
         "values": [
           {
-            "value": 94.6,
-            "timestamp": "1757428036"
+            "value": 2.7,
+            "timestamp": "1757446513"
           },
           {
-            "value": 84.7,
-            "timestamp": "1757428066"
+            "value": 3.5,
+            "timestamp": "1757446554"
           },
           {
-            "value": 81.4,
-            "timestamp": "1757428076"
+            "value": 2.3,
+            "timestamp": "1757447517"
           },
           {
-            "value": 75.4,
-            "timestamp": "1757428095"
-          }
-        ]
-      },
-      {
-        "sensor": "temperature",
-        "device": "environment_telemetry",
-        "values": [
-          {
-            "value": 24.3,
-            "timestamp": "1757428036"
+            "value": 1.5,
+            "timestamp": "1757447531"
           },
           {
-            "value": 44.5,
-            "timestamp": "1757428046"
+            "value": 2.6,
+            "timestamp": "1757447620"
           },
           {
-            "value": 45.0,
-            "timestamp": "1757428056"
+            "value": 2.8,
+            "timestamp": "1757447651"
           },
           {
-            "value": 13.3,
-            "timestamp": "1757428086"
+            "value": 4.5,
+            "timestamp": "1757447692"
+          },
+          {
+            "value": 4.4,
+            "timestamp": "1757447722"
+          },
+          {
+            "value": 0.3,
+            "timestamp": "1757447743"
+          },
+          {
+            "value": 4.1,
+            "timestamp": "1757447774"
+          },
+          {
+            "value": 3.5,
+            "timestamp": "1757447783"
+          },
+          {
+            "value": 2.1,
+            "timestamp": "1757447803"
           }
         ]
       },
@@ -51,50 +61,178 @@
         "device": "environment_telemetry",
         "values": [
           {
-            "value": 95.2,
-            "timestamp": "1757428036"
+            "value": 71.1,
+            "timestamp": "1757446542"
           },
           {
-            "value": 8.8,
-            "timestamp": "1757428057"
-          },
-          {
-            "value": 88.2,
-            "timestamp": "1757428067"
-          },
-          {
-            "value": 65.9,
-            "timestamp": "1757428076"
-          },
-          {
-            "value": 45.7,
-            "timestamp": "1757428086"
+            "value": 31.2,
+            "timestamp": "1757447530"
           }
         ]
       },
       {
-        "sensor": "lightness",
+        "sensor": "battery_level",
         "device": "environment_telemetry",
         "values": [
           {
-            "value": 24561.3,
-            "timestamp": "1757428037"
+            "value": 83.6,
+            "timestamp": "1757446553"
           },
           {
-            "value": 1570.7,
-            "timestamp": "1757428047"
+            "value": 79.7,
+            "timestamp": "1757446574"
           },
           {
-            "value": 46423.9,
-            "timestamp": "1757428057"
+            "value": 76.6,
+            "timestamp": "1757446584"
           },
           {
-            "value": 32845.8,
-            "timestamp": "1757428086"
+            "value": 95.7,
+            "timestamp": "1757447480"
           },
           {
-            "value": 26792.4,
-            "timestamp": "1757428096"
+            "value": 85.5,
+            "timestamp": "1757447516"
+          },
+          {
+            "value": 81.8,
+            "timestamp": "1757447539"
+          },
+          {
+            "value": 78.9,
+            "timestamp": "1757447548"
+          },
+          {
+            "value": 74.6,
+            "timestamp": "1757447558"
+          },
+          {
+            "value": 71.7,
+            "timestamp": "1757447569"
+          },
+          {
+            "value": 67.6,
+            "timestamp": "1757447579"
+          },
+          {
+            "value": 65.3,
+            "timestamp": "1757447589"
+          },
+          {
+            "value": 64.0,
+            "timestamp": "1757447599"
+          },
+          {
+            "value": 62.1,
+            "timestamp": "1757447609"
+          },
+          {
+            "value": 60.2,
+            "timestamp": "1757447619"
+          },
+          {
+            "value": 58.9,
+            "timestamp": "1757447629"
+          },
+          {
+            "value": 54.0,
+            "timestamp": "1757447639"
+          },
+          {
+            "value": 51.0,
+            "timestamp": "1757447650"
+          },
+          {
+            "value": 49.6,
+            "timestamp": "1757447660"
+          },
+          {
+            "value": 45.9,
+            "timestamp": "1757447670"
+          },
+          {
+            "value": 45.8,
+            "timestamp": "1757447680"
+          },
+          {
+            "value": 41.8,
+            "timestamp": "1757447690"
+          },
+          {
+            "value": 39.7,
+            "timestamp": "1757447700"
+          },
+          {
+            "value": 35.8,
+            "timestamp": "1757447710"
+          },
+          {
+            "value": 32.1,
+            "timestamp": "1757447721"
+          },
+          {
+            "value": 28.1,
+            "timestamp": "1757447731"
+          },
+          {
+            "value": 26.4,
+            "timestamp": "1757447741"
+          },
+          {
+            "value": 24.5,
+            "timestamp": "1757447751"
+          },
+          {
+            "value": 23.3,
+            "timestamp": "1757447761"
+          },
+          {
+            "value": 23.2,
+            "timestamp": "1757447773"
+          },
+          {
+            "value": 21.5,
+            "timestamp": "1757447782"
+          },
+          {
+            "value": 20.7,
+            "timestamp": "1757447792"
+          },
+          {
+            "value": 19.6,
+            "timestamp": "1757447802"
+          },
+          {
+            "value": 19.4,
+            "timestamp": "1757447812"
+          },
+          {
+            "value": 16.9,
+            "timestamp": "1757447822"
+          },
+          {
+            "value": 12.5,
+            "timestamp": "1757447832"
+          },
+          {
+            "value": 8.7,
+            "timestamp": "1757447842"
+          },
+          {
+            "value": 6.2,
+            "timestamp": "1757447852"
+          },
+          {
+            "value": 4.6,
+            "timestamp": "1757447863"
+          },
+          {
+            "value": 2.9,
+            "timestamp": "1757447873"
+          },
+          {
+            "value": 0,
+            "timestamp": "1757447883"
           }
         ]
       },
@@ -103,42 +241,80 @@
         "device": "tank_monitoring",
         "values": [
           {
-            "value": 0.9,
-            "timestamp": "1757428037"
+            "value": 0.1,
+            "timestamp": "1757446563"
           },
           {
-            "value": 0.7,
-            "timestamp": "1757428077"
+            "value": 0.2,
+            "timestamp": "1757447540"
+          },
+          {
+            "value": 0.0,
+            "timestamp": "1757447610"
+          },
+          {
+            "value": 0.1,
+            "timestamp": "1757447702"
+          },
+          {
+            "value": 0.2,
+            "timestamp": "1757447793"
+          },
+          {
+            "value": 0.0,
+            "timestamp": "1757447813"
           },
           {
             "value": 0.8,
-            "timestamp": "1757428097"
+            "timestamp": "1757447843"
+          },
+          {
+            "value": 0.3,
+            "timestamp": "1757447894"
+          },
+          {
+            "value": 0.0,
+            "timestamp": "1757447924"
+          },
+          {
+            "value": 0.6,
+            "timestamp": "1757447965"
           }
         ]
       },
       {
-        "sensor": "water_flow",
-        "device": "water_metering",
+        "sensor": "temperature",
+        "device": "environment_telemetry",
         "values": [
           {
-            "value": 3.8,
-            "timestamp": "1757428038"
+            "value": 40.0,
+            "timestamp": "1757447496"
+          }
+        ]
+      },
+      {
+        "sensor": "lightness",
+        "device": "environment_telemetry",
+        "values": [
+          {
+            "value": 3926.4,
+            "timestamp": "1757447497"
           },
           {
-            "value": 2.9,
-            "timestamp": "1757428047"
+            "value": 39731.7,
+            "timestamp": "1757447742"
           },
           {
-            "value": 3.7,
-            "timestamp": "1757428057"
+            "value": 26670.5,
+            "timestamp": "1757447752"
           },
           {
-            "value": 3.0,
-            "timestamp": "1757428068"
+            "value": 50001.1,
+            "timestamp": "1757447864"
           },
           {
-            "value": 2.9,
-            "timestamp": "1757428087"
+            "value": 18198.7,
+            "timestamp": "1757447944"
           }
         ]
       }
@@ -150,11 +326,35 @@
         "values": [
           {
             "value": true,
-            "timestamp": "1757428062"
+            "timestamp": "1757446585"
           },
           {
             "value": false,
-            "timestamp": "1757428072"
+            "timestamp": "1757447485"
+          },
+          {
+            "value": true,
+            "timestamp": "1757447543"
+          },
+          {
+            "value": false,
+            "timestamp": "1757447581"
+          },
+          {
+            "value": true,
+            "timestamp": "1757447601"
+          },
+          {
+            "value": false,
+            "timestamp": "1757447663"
+          },
+          {
+            "value": true,
+            "timestamp": "1757447713"
+          },
+          {
+            "value": false,
+            "timestamp": "1757447789"
           }
         ]
       }
@@ -162,7 +362,25 @@
     "alerts": [
       {
         "message": "Tank level below 0.30 liters!",
-        "timestamp": "1757428051",
+        "timestamp": "1757446533",
+        "type": "warning",
+        "plant_id": "my_lavanda1"
+      },
+      {
+        "message": "Tank level below 0.30 liters!",
+        "timestamp": "1757447505",
+        "type": "warning",
+        "plant_id": "my_lavanda1"
+      },
+      {
+        "message": "Battery level below 20%!",
+        "timestamp": "1757447805",
+        "type": "warning",
+        "plant_id": "my_lavanda1"
+      },
+      {
+        "message": "Tank level below 0.30 liters!",
+        "timestamp": "1757447815",
         "type": "warning",
         "plant_id": "my_lavanda1"
       }
