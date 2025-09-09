@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import { Leaf } from "lucide-react"
 import { PlantDashboard } from "@/components/plant-dashboard"
 import { apiService, type Plant, type Alert } from "@/lib/api"
@@ -21,7 +21,9 @@ export default function SmartPlantDashboard() {
   const [error, setError] = useState<string | null>(null)
   const [isUpdating, setIsUpdating] = useState(false)
   const [lastRequestTime, setLastRequestTime] = useState<number>(0)
-  const [isInitialized, setIsInitialized] = useState(false)
+  const intervalRef = useRef<NodeJS.Timeout | null>(null)
+  const loadPlantsDataRef = useRef<typeof loadPlantsData | null>(null)
+  const loadAlertsDataRef = useRef<typeof loadAlertsData | null>(null)
 
   // Throttle requests to prevent consecutive calls
   /**
@@ -99,7 +101,7 @@ export default function SmartPlantDashboard() {
       setLoading(false)
       setIsUpdating(false)
     }
-  }, [isUpdating, lastRequestTime, canMakeRequest])
+  }, [isUpdating, canMakeRequest])
 
   /**
    * Funzione per caricare i dati degli alert.
@@ -124,35 +126,43 @@ export default function SmartPlantDashboard() {
     }
   }, [canMakeRequest])
 
+  // Update refs when functions change
+  useEffect(() => {
+    loadPlantsDataRef.current = loadPlantsData
+    loadAlertsDataRef.current = loadAlertsData
+  }, [loadPlantsData, loadAlertsData])
+
   /**
    * Effetto per inizializzare e aggiornare i dati delle piante e degli alert.
    * 
    * Questo effetto si occupa di caricare i dati iniziali e di aggiornarli periodicamente.
    */
   useEffect(() => {
-    // Prevent multiple initializations
-    if (isInitialized) {
-      return
-    }
-    
     console.log('Initializing app...')
-    setIsInitialized(true)
     
-    loadPlantsData(true) // Initial load
-    loadAlertsData()
+    // Initial load
+    if (loadPlantsDataRef.current) loadPlantsDataRef.current(true)
+    if (loadAlertsDataRef.current) loadAlertsDataRef.current()
 
-    // Poll for updates every 60 seconds
-    const interval = setInterval(() => {
+    // Poll for updates every 30 seconds
+    intervalRef.current = setInterval(async () => {
       console.log('Scheduled update...')
-      loadPlantsData(false) // Refresh without loading state
-      loadAlertsData()
-    }, 60000)
+      try {
+        if (loadPlantsDataRef.current) await loadPlantsDataRef.current(false)
+        if (loadAlertsDataRef.current) await loadAlertsDataRef.current()
+      } catch (error) {
+        console.error('Error during scheduled update:', error)
+      }
+    }, 30000)
 
     return () => {
       console.log('Cleaning up interval...')
-      clearInterval(interval)
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current)
+        intervalRef.current = null
+      }
     }
-  }, [isInitialized, loadPlantsData, loadAlertsData])
+  }, []) // Empty dependency array - stable
 
   /**
    * Renderizza un componente di caricamento se i dati non sono ancora stati caricati.
@@ -194,10 +204,10 @@ export default function SmartPlantDashboard() {
                   </p>
                   {error && <p className="text-red-500 text-xs sm:text-sm mt-1">{error} - Usando dati di fallback</p>}
                   {isUpdating && (
-                    <p className="text-blue-500 text-xs sm:text-sm mt-1 flex items-center gap-1">
+                    <div className="text-blue-500 text-xs sm:text-sm mt-1 flex items-center gap-1">
                       <div className="w-3 h-3 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
                       Aggiornamento dati...
-                    </p>
+                    </div>
                   )}
               </div>
             </div>

@@ -3,6 +3,9 @@ import time
 import paho.mqtt.client as mqtt
 import json
 import os
+import asyncio
+import threading
+import concurrent.futures
 from conf.mqtt_conf_params import MqttConfigurationParameters
 from plants_system.smart_objects.models.plant_descriptor import PlantDescriptor
 from plants_system.process.policy_manager import PolicyManager
@@ -25,6 +28,10 @@ class DataCollectorConsumer:
         self.client.on_message = self.on_message
         self.policy_manager = PolicyManager("plants_system/smart_objects/resources/policies_conf.json")
         self.running = False
+        
+        # Thread pool per operazioni async
+        self.executor = concurrent.futures.ThreadPoolExecutor(max_workers=2)
+        self.loop = None
  
     """
     Callback per la connessione MQTT.
@@ -48,16 +55,57 @@ class DataCollectorConsumer:
     Questo metodo viene chiamato quando il consumer riceve un messaggio MQTT.
     """
     def on_message(self, client, userdata, msg):
-        message_payload = msg.payload.decode("utf-8")
-        logging.info(f"Received message on topic {msg.topic}: {message_payload}")
-
+        """
+        Callback ottimizzato per la ricezione di messaggi MQTT.
+        
+        Questo metodo è stato ottimizzato per essere il più veloce possibile:
+        - Parsing minimo del messaggio
+        - Esecuzione asincrona dell'elaborazione
+        - Nessuna operazione I/O sincrona
+        """
         try:
+            message_payload = msg.payload.decode("utf-8")
+            logging.debug(f"Received message on topic {msg.topic}")
+            
+            # Parsing veloce solo dei campi essenziali
             data = json.loads(message_payload)
-            sensor_type = data.get("type")
-            value = data.get("value")
-            device_name = data.get("device")
+            message_data = {
+                'topic': msg.topic,
+                'payload': message_payload,
+                'sensor_type': data.get("type"),
+                'value': data.get("value"),
+                'device_name': data.get("device"),
+                'timestamp': data.get("timestamp", int(time.time()))
+            }
+            
+            # Esegui l'elaborazione in modo asincrono
+            if self.loop and not self.loop.is_closed():
+                asyncio.run_coroutine_threadsafe(
+                    self._process_message_async(message_data), 
+                    self.loop
+                )
+            
+        except Exception as e:
+            logging.error(f"Error in on_message: {e}")
+    
+    async def _process_message_async(self, message_data):
+        """
+        Processa un messaggio MQTT in modo asincrono.
+        
+        Questo metodo contiene tutta la logica di elaborazione che prima era nel callback on_message:
+        - Aggiornamento PlantDescriptor
+        - Scrittura su file JSON (async)
+        - Valutazione policy (async)
+        - Gestione alert e azioni (async)
+        """
+        try:
+            sensor_type = message_data['sensor_type']
+            value = message_data['value']
+            device_name = message_data['device_name']
+            
+            logging.info(f"Processing message: {sensor_type}={value} from {device_name}")
 
-            # aggiorna il sensore corrispondente nel plant_descriptor
+            # Aggiorna il sensore corrispondente nel plant_descriptor
             for device in self.plant_descriptor.devices:
                 if device.device == device_name:
                     for sensor in device.sensors:
@@ -66,32 +114,62 @@ class DataCollectorConsumer:
                             logging.debug(f"Updated sensor {sensor.type} of {device.device} to {sensor.value}")
                             break
 
-            # Aggiorna la storia del sensore nel file json
-            self.update_sensor_history(sensor_type, value, device_name)
+            # Aggiorna la storia del sensore nel file json (async)
+            await self._update_sensor_history_async(sensor_type, value, device_name)
 
+            # Rivaluta le policy (async)
+            logging.info(f"Evaluating policies for plant {self.plant_descriptor.plant_id}")
+            await self._evaluate_policies_async()
+            alerts = self.policy_manager.alerts.get(self.plant_descriptor.plant_id, [])
+            actions = self.policy_manager.actions.get(self.plant_descriptor.plant_id, [])
+            
+            logging.info(f"Plant {self.plant_descriptor.plant_id} - Alerts: {len(alerts)}, Actions: {len(actions)}")
+            for alert in alerts:
+                print(f"ALERT: {alert}")
+                logging.info(f"ALERT: {alert}")
+            
+            # Salva gli alert nei file JSON (async)
+            if alerts:
+                logging.info(f"Saving {len(alerts)} alerts to JSON file")
+                await self._update_alerts_history_async(alerts)
+            else:
+                logging.debug(f"No alerts to save for plant {self.plant_descriptor.plant_id}")
+
+            # Esegui solo le azioni relative al sensore appena aggiornato (async)
+            await self._process_actions_async(actions, sensor_type)
+                        
         except Exception as e:
-            logging.error(f"Error parsing message: {e}")
-
-        # Rivaluta le policy
-        logging.info(f"Evaluating policies for plant {self.plant_descriptor.plant_id}")
-        self.policy_manager.evaluate(self.plant_descriptor)
-        alerts = self.policy_manager.alerts.get(self.plant_descriptor.plant_id, [])
-        actions = self.policy_manager.actions.get(self.plant_descriptor.plant_id, [])
-        
-        logging.info(f"Plant {self.plant_descriptor.plant_id} - Alerts: {len(alerts)}, Actions: {len(actions)}")
-        for alert in alerts:
-            print(f"ALERT: {alert}")
-            logging.info(f"ALERT: {alert}")
-        
-        # Salva gli alert nei file JSON
-        if alerts:
-            logging.info(f"Saving {len(alerts)} alerts to JSON file")
-            self.update_alerts_history(alerts)
-        else:
-            logging.debug(f"No alerts to save for plant {self.plant_descriptor.plant_id}")
-
-        # Esegui solo le azioni relative al sensore appena aggiornato
-        actions = self.policy_manager.actions.get(self.plant_descriptor.plant_id, [])
+            logging.error(f"Error processing message: {e}")
+    
+    async def _update_sensor_history_async(self, sensor_type, value, device_name):
+        """Aggiorna la storia del sensore in modo asincrono."""
+        loop = asyncio.get_event_loop()
+        await loop.run_in_executor(
+            self.executor, 
+            self.update_sensor_history, 
+            sensor_type, value, device_name
+        )
+    
+    async def _evaluate_policies_async(self):
+        """Valuta le policy in modo asincrono."""
+        loop = asyncio.get_event_loop()
+        await loop.run_in_executor(
+            self.executor,
+            self.policy_manager.evaluate,
+            self.plant_descriptor
+        )
+    
+    async def _update_alerts_history_async(self, alerts):
+        """Aggiorna la storia degli alert in modo asincrono."""
+        loop = asyncio.get_event_loop()
+        await loop.run_in_executor(
+            self.executor,
+            self.update_alerts_history,
+            alerts
+        )
+    
+    async def _process_actions_async(self, actions, sensor_type):
+        """Processa le azioni in modo asincrono."""
         for action in actions:
             action_parts = action.split()
             if len(action_parts) < 2:
@@ -106,34 +184,82 @@ class DataCollectorConsumer:
                     and policy.get("sensor", "") == sensor_type
                 ):
                     # Controlla lo stato attuale dell'attuatore dal file JSON
-                    current_actuator_state = self._get_current_actuator_state(actuator_type)
+                    current_actuator_state = await self._get_current_actuator_state_async(actuator_type)
                     
                     # Solo se lo stato deve cambiare
                     if current_actuator_state != desired_value:
                         print(f"ACTION: {action} (current: {current_actuator_state}, desired: {desired_value})")
-                        self.update_actuator_history(action)
-                        data_collector_producer = DataCollectorProducer(self.plant_descriptor, action)
-                        data_collector_producer.run()
+                        await self._update_actuator_history_async(action)
+                        await self._send_command_async(action)
                     else:
                         logging.info(f"No ACTION: {action} (actuator already in desired state: {current_actuator_state})")
                     break  # esegui solo una volta per questa azione
-            
+    
+    async def _get_current_actuator_state_async(self, actuator_type):
+        """Ottiene lo stato attuale di un attuatore in modo asincrono."""
+        loop = asyncio.get_event_loop()
+        return await loop.run_in_executor(
+            self.executor,
+            self._get_current_actuator_state,
+            actuator_type
+        )
+    
+    async def _update_actuator_history_async(self, action):
+        """Aggiorna la storia dell'attuatore in modo asincrono."""
+        loop = asyncio.get_event_loop()
+        await loop.run_in_executor(
+            self.executor,
+            self.update_actuator_history,
+            action
+        )
+    
+    async def _send_command_async(self, action):
+        """Invia un comando in modo asincrono."""
+        loop = asyncio.get_event_loop()
+        await loop.run_in_executor(
+            self.executor,
+            self._send_command_sync,
+            action
+        )
+    
+    def _send_command_sync(self, action):
+        """Invia un comando in modo sincrono (per il thread pool)."""
+        data_collector_producer = DataCollectorProducer(self.plant_descriptor, action)
+        data_collector_producer.run()
     
     def run(self):
         """
         Avvia il consumer MQTT e mantiene la connessione attiva.
         
         Si connette al broker MQTT e inizia il loop di ricezione messaggi.
+        Avvia anche l'event loop asyncio per gestire le operazioni asincrone.
         Il metodo rimane in esecuzione fino a quando non viene chiamato stop().
         """
+        # Avvia l'event loop asyncio in un thread separato
+        def run_async_loop():
+            self.loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(self.loop)
+            self.loop.run_forever()
+        
+        async_thread = threading.Thread(target=run_async_loop, daemon=True)
+        async_thread.start()
+        
+        # Attendi che l'event loop sia pronto
+        time.sleep(0.1)
+        
         self.client.connect(MqttConfigurationParameters.BROKER_ADDRESS, MqttConfigurationParameters.BROKER_PORT)
         self.client.loop_start()
         self.running = True
+        
         try:
             while self.running:
                 time.sleep(1)
         finally:
             self.client.loop_stop()
+            # Ferma l'event loop asyncio
+            if self.loop and not self.loop.is_closed():
+                self.loop.call_soon_threadsafe(self.loop.stop)
+            async_thread.join(timeout=5.0)
 
     """
     Interrompe il consumer MQTT e termina la connessione.
@@ -141,8 +267,22 @@ class DataCollectorConsumer:
     Questo metodo chiude il loop di ricezione messaggi e si disconnette dal broker MQTT.
     """
     def stop(self):
+        """
+        Interrompe il consumer MQTT e termina la connessione.
+        
+        Questo metodo chiude il loop di ricezione messaggi, si disconnette dal broker MQTT
+        e ferma l'event loop asyncio.
+        """
         self.running = False
         self.client.disconnect()
+        
+        # Ferma l'event loop asyncio
+        if self.loop and not self.loop.is_closed():
+            self.loop.call_soon_threadsafe(self.loop.stop)
+        
+        # Chiudi il thread pool
+        self.executor.shutdown(wait=True)
+            
         logging.info("DataCollectorConsumer stopped...")
 
 

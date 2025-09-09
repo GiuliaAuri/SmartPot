@@ -62,12 +62,26 @@
         "value": 0.3,
         "action": "alert",
         "message": "Tank level below 0.30 liters!"
+      },
+      {
+        "sensor": "level_tank",
+        "condition": "<",
+        "value": 0.1,
+        "actuator": "irrigation",
+        "action": "deactivate"
       }
     ]
   },
   {
     "plant_id": "my_orchidea1",
     "policies": [
+      {
+        "sensor": "level_tank",
+        "condition": "<",
+        "value": 0.1,
+        "actuator": "irrigation",
+        "action": "deactivate"
+      },
       {
         "sensor": "humidity",
         "condition": "<",

@@ -56,13 +56,20 @@ class PolicyManager:
             if sensor and op:
                 if policy["action"] == "alert":
                     # Per gli alert, non serve l'attuatore
+                    alert_msg = policy.get(
+                        "message",
+                        f"Alert: {sensor.type} value {sensor.value} for plant {plant.plant_id}"
+                    )
                     if op(sensor.value, policy["value"]):
-                        alert_msg = policy.get(
-                            "message",
-                            f"Alert: {sensor.type} value {sensor.value} for plant {plant.plant_id}"
-                        )
-                        self.alerts[plant.plant_id].append(alert_msg)
-                        logging.info(f"Generated alert for {plant.plant_id}: {alert_msg}")
+                        # Condizione soddisfatta: aggiungi alert se non esiste già
+                        if alert_msg not in self.alerts[plant.plant_id]:
+                            self.alerts[plant.plant_id].append(alert_msg)
+                            logging.info(f"Generated alert for {plant.plant_id}: {alert_msg}")
+                    else:
+                        # Condizione non più soddisfatta: rimuovi alert se esiste
+                        if alert_msg in self.alerts[plant.plant_id]:
+                            self.alerts[plant.plant_id].remove(alert_msg)
+                            logging.info(f"Resolved alert for {plant.plant_id}: {alert_msg}")
                 elif actuator:
                     # Per le azioni, serve l'attuatore
                     if op(sensor.value, policy["value"]):
