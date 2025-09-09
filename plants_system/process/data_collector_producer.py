@@ -35,11 +35,19 @@ class DataCollectorProducer:
         
         Questo metodo pubblica un comando MQTT agli attuatori delle piante.
         """
-        for device in self.plant_descriptor.devices:
-            for actuator in device.actuators:
-                topic=MqttConfigurationParameters.build_command_plant_topic(self.plant_descriptor.plant_id,device.device)
-                self.client.publish(topic, command)
-                logging.info("Published command: %s to topic: %s", command, topic)
+        # Estrai il tipo di attuatore dal comando (es. "Deactivate irrigation" -> "irrigation")
+        command_parts = command.split()
+        if len(command_parts) >= 2:
+            actuator_type = command_parts[1]
+            
+            # Trova il dispositivo che contiene questo tipo di attuatore
+            for device in self.plant_descriptor.devices:
+                for actuator in device.actuators:
+                    if actuator.type == actuator_type:
+                        topic = MqttConfigurationParameters.build_command_plant_topic(self.plant_descriptor.plant_id, device.device)
+                        self.client.publish(topic, command)
+                        logging.info("Published command: %s to topic: %s", command, topic)
+                        return  # Pubblica solo per il dispositivo corretto
     
     def run(self):
         """

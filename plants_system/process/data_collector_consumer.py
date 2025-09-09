@@ -105,19 +105,17 @@ class DataCollectorConsumer:
                     policy.get("action", "").capitalize() + " " + policy.get("actuator", "") == action
                     and policy.get("sensor", "") == sensor_type
                 ):
-                    # Trova l'attuatore
-                    for device in self.plant_descriptor.devices:
-                        for actuator in getattr(device, "actuators", []):
-                            if getattr(actuator, "type", None) == actuator_type:
-                                # Solo se lo stato deve cambiare
-                                if getattr(actuator, "status", None) != desired_value:
-                                    print(f"ACTION: {action}")
-                                    self.update_actuator_history(action)
-                                    data_collector_producer = DataCollectorProducer(self.plant_descriptor, action)
-                                    data_collector_producer.run()
-                                else:
-                                    logging.info(f"No ACTION: {action} (actuator already in desired state)")
-                                break
+                    # Controlla lo stato attuale dell'attuatore dal file JSON
+                    current_actuator_state = self._get_current_actuator_state(actuator_type)
+                    
+                    # Solo se lo stato deve cambiare
+                    if current_actuator_state != desired_value:
+                        print(f"ACTION: {action} (current: {current_actuator_state}, desired: {desired_value})")
+                        self.update_actuator_history(action)
+                        data_collector_producer = DataCollectorProducer(self.plant_descriptor, action)
+                        data_collector_producer.run()
+                    else:
+                        logging.info(f"No ACTION: {action} (actuator already in desired state: {current_actuator_state})")
                     break  # esegui solo una volta per questa azione
             
     
@@ -314,4 +312,35 @@ class DataCollectorConsumer:
 
         with open(self.filename, "w") as f:
             json.dump(plants, f, indent=2)
+
+    def _get_current_actuator_state(self, actuator_type):
+        """
+        Ottiene lo stato attuale di un attuatore dal file JSON.
+        
+        Args:
+            actuator_type (str): Tipo di attuatore (es. 'irrigation')
+            
+        Returns:
+            bool: Stato attuale dell'attuatore (True/False) o False se non trovato
+        """
+        try:
+            if not os.path.exists(self.filename):
+                return False
+                
+            with open(self.filename, "r") as f:
+                plants = json.load(f)
+                
+            for plant in plants:
+                if plant["plant_id"] == self.plant_descriptor.plant_id:
+                    actuators = plant.get("actuators", [])
+                    for actuator in actuators:
+                        if actuator.get("actuator") == actuator_type:
+                            values = actuator.get("values", [])
+                            if values:
+                                return values[-1].get("value", False)
+                    break
+        except Exception as e:
+            logging.error(f"Error reading actuator state: {e}")
+            
+        return False
 
