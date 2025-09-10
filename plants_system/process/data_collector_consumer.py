@@ -28,7 +28,7 @@ class DataCollectorConsumer:
         self.client.on_message = self.on_message
         self.policy_manager = PolicyManager("plants_system/smart_objects/resources/policies_conf.json")
         self.running = False
-        #TODO
+        
         
         # Controllo frequenza aggiornamenti (minimo 1 secondo tra aggiornamenti)
         self.last_update_time = 0
@@ -39,13 +39,14 @@ class DataCollectorConsumer:
         self.loop = None
         self.pending_tasks = set()  # Traccia le task in esecuzione
         self.last_cleanup = time.time()  # Timestamp dell'ultima pulizia
- 
-    """
-    Callback per la connessione MQTT.
-    
-    Questo metodo viene chiamato quando il consumer si connette al broker MQTT.
-    """
+        self.max_pending_tasks = 50  # Limite massimo task pendenti
+
     def on_connect(self, client, userdata, flags, rc):
+        """
+        Callback per la connessione MQTT.
+        
+        Questo metodo viene chiamato quando il consumer si connette al broker MQTT.
+        """
         logging.info("Connected with result code %s", str(rc))
         for device in self.plant_descriptor.devices:
             for sensor in device.sensors:
@@ -56,11 +57,7 @@ class DataCollectorConsumer:
                     print(f"Subscribed to topic: {topic}")
         
 
-    """
-    Callback per la ricezione di messaggi MQTT.
-    
-    Questo metodo viene chiamato quando il consumer riceve un messaggio MQTT.
-    """
+
     def on_message(self, client, userdata, msg):
         """
         Callback ottimizzato per la ricezione di messaggi MQTT.
@@ -92,6 +89,11 @@ class DataCollectorConsumer:
             
             # Esegui l'elaborazione in modo asincrono
             if self.loop and not self.loop.is_closed():
+                # Controlla se abbiamo troppe task pendenti
+                if len(self.pending_tasks) >= self.max_pending_tasks:
+                    logging.warning(f"Too many pending tasks ({len(self.pending_tasks)}), skipping message")
+                    return
+                
                 task = asyncio.run_coroutine_threadsafe(
                     self._process_message_async(message_data), 
                     self.loop
@@ -99,9 +101,9 @@ class DataCollectorConsumer:
                 # Traccia la task per poterla cancellare in seguito
                 self.pending_tasks.add(task)
                 
-                # Pulisci le task completate ogni 30 secondi
+                # Pulisci le task completate ogni 10 secondi (più frequente)
                 current_time = time.time()
-                if current_time - self.last_cleanup > 30:
+                if current_time - self.last_cleanup > 10:
                     self._cleanup_completed_tasks()
                     self.last_cleanup = current_time
             
@@ -115,16 +117,22 @@ class DataCollectorConsumer:
         Questo metodo rimuove le task che sono state completate o cancellate
         per evitare memory leaks e mantenere il set delle task pulito.
         """
-        completed_tasks = set()
-        for task in self.pending_tasks:
-            if task.done():
-                completed_tasks.add(task)
-        
-        # Rimuovi le task completate
-        self.pending_tasks -= completed_tasks
-        
-        if completed_tasks:
-            logging.debug(f"Cleaned up {len(completed_tasks)} completed tasks")
+        try:
+            completed_tasks = set()
+            for task in self.pending_tasks.copy():
+                if task.done() or task.cancelled():
+                    completed_tasks.add(task)
+            
+            # Rimuovi le task completate/cancellate
+            self.pending_tasks -= completed_tasks
+            
+            if completed_tasks:
+                logging.debug(f"Cleaned up {len(completed_tasks)} completed/cancelled tasks")
+                
+        except Exception as e:
+            logging.warning(f"Error during task cleanup: {e}")
+            # In caso di errore, forza la pulizia completa
+            self.pending_tasks.clear()
     
     async def _process_message_async(self, message_data):
         """
@@ -184,8 +192,8 @@ class DataCollectorConsumer:
         except Exception as e:
             logging.error(f"Error processing message: {e}")
         finally:
-            # Rimuovi la task completata dal set delle task pendenti
-            # Nota: questo viene fatto automaticamente quando la task completa
+            # La task viene automaticamente rimossa dal set quando completa
+            # Non è necessario fare nulla qui
             pass
     
     async def _update_sensor_history_async(self, sensor_type, value, device_name):
@@ -308,83 +316,79 @@ class DataCollectorConsumer:
                 self.loop.call_soon_threadsafe(self.loop.stop)
             async_thread.join(timeout=5.0)
 
-    """
-    Interrompe il consumer MQTT e termina la connessione.
     
-    Questo metodo chiude il loop di ricezione messaggi e si disconnette dal broker MQTT.
-    """
     def stop(self):
         """
         Interrompe il consumer MQTT e termina la connessione.
         
         Questo metodo chiude il loop di ricezione messaggi, si disconnette dal broker MQTT
-        e ferma l'event loop asyncio.
+        e ferma l'event loop asyncio in modo sicuro.
         """
+        logging.info("Stopping DataCollectorConsumer...")
         self.running = False
-        self.client.disconnect()
         
-        # Ferma l'event loop asyncio
-        if self.loop and not self.loop.is_closed():
-            # Cancella tutte le task pendenti e aspetta che finiscano
-            if self.pending_tasks:
-                logging.info(f"Cancelling {len(self.pending_tasks)} pending tasks...")
-                for task in self.pending_tasks.copy():
-                    if not task.done():
-                        task.cancel()
-                        logging.debug(f"Cancelled pending task: {task}")
-                
-                # Aspetta che tutte le task vengano cancellate
-                import asyncio
-                try:
-                    # Filtra solo le task valide (non cancellate e non completate)
-                    valid_tasks = [task for task in self.pending_tasks if not task.done() and not task.cancelled()]
-                    
-                    if valid_tasks:
-                        # Crea una task per aspettare tutte le cancellazioni
-                        async def wait_for_cancellation():
-                            await asyncio.gather(*valid_tasks, return_exceptions=True)
-                        
-                        # Esegui l'attesa in modo sincrono con timeout
-                        future = asyncio.run_coroutine_threadsafe(wait_for_cancellation(), self.loop)
-                        future.result(timeout=2.0)  # Timeout di 2 secondi
-                    else:
-                        logging.debug("No valid tasks to wait for")
-                        
-                except Exception as e:
-                    logging.warning(f"Error waiting for task cancellation: {e}")
-            
-            # Pulisci il set delle task
-            self.pending_tasks.clear()
-            
-            # Ferma l'event loop
-            self.loop.call_soon_threadsafe(self.loop.stop)
-        
-        # Chiudi il thread pool con timeout
+        # Disconnetti il client MQTT
         try:
-            self.executor.shutdown(wait=False)  # Non aspettare indefinitamente
+            self.client.disconnect()
+        except Exception as e:
+            logging.warning(f"Error disconnecting MQTT client: {e}")
+        
+        # Gestisci le task asincrone pendenti
+        if self.loop and not self.loop.is_closed():
+            try:
+                # Cancella tutte le task pendenti
+                if self.pending_tasks:
+                    logging.info(f"Cancelling {len(self.pending_tasks)} pending tasks...")
+                    
+                    # Cancella tutte le task in una volta
+                    for task in self.pending_tasks.copy():
+                        if not task.done():
+                            task.cancel()
+                    
+                    # Aspetta un breve momento per le cancellazioni
+                    time.sleep(0.1)
+                    
+                    # Pulisci le task completate/cancellate
+                    completed_tasks = set()
+                    for task in self.pending_tasks:
+                        if task.done() or task.cancelled():
+                            completed_tasks.add(task)
+                    
+                    self.pending_tasks -= completed_tasks
+                    logging.info(f"Cleaned up {len(completed_tasks)} completed/cancelled tasks")
+                    
+                    # Se ci sono ancora task pendenti, forza la pulizia
+                    if self.pending_tasks:
+                        logging.warning(f"Force clearing {len(self.pending_tasks)} remaining tasks")
+                        self.pending_tasks.clear()
+                
+                # Ferma l'event loop
+                self.loop.call_soon_threadsafe(self.loop.stop)
+                
+            except Exception as e:
+                logging.warning(f"Error stopping event loop: {e}")
+                # Forza la pulizia in caso di errore
+                self.pending_tasks.clear()
+        
+        # Chiudi il thread pool
+        try:
+            self.executor.shutdown(wait=False)
         except Exception as e:
             logging.warning(f"Error shutting down executor: {e}")
             
-        logging.info("DataCollectorConsumer stopped...")
+        logging.info("DataCollectorConsumer stopped successfully")
 
 
-    """
+    
+    def _safe_write_json(self, data):
+        """
         Aggiorna la cronologia dei valori dei sensori nel file JSON.
         
         Salva i nuovi valori dei sensori nel file JSON, evitando duplicati
         consecutivi e mantenendo un timestamp per ogni misurazione.
         
-    """
-    def _safe_write_json(self, data):
         """
-        Scrive i dati in modo sicuro nel file JSON con gestione degli errori.
         
-        Args:
-            data: Dati da scrivere nel file JSON
-            
-        Returns:
-            bool: True se la scrittura è riuscita, False altrimenti
-        """
         try:
             with open(self.filename, "w") as f:
                 json.dump(data, f, indent=2)
