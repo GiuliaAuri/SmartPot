@@ -64,10 +64,13 @@ class Bridge():
 	# The callback for when a PUBLISH message is received from the server.
 	def on_message(self, client, userdata, msg):
 		print(msg.topic + " " + str(msg.payload))
-		if int(msg.payload)>100:
-			self.ser.write (b'A')
+		if self.ser is not None:
+			if int(msg.payload) > 100:
+				self.ser.write(b'A')
+			else:
+				self.ser.write(b'S')
 		else:
-			self.ser.write(b'S')
+			print("Serial port not available!")
 
 	def loop(self):
 		# infinite loop for serial managing
@@ -75,7 +78,6 @@ class Bridge():
 		while (True):
 			#look for a byte from serial
 			if not self.ser is None:
-
 				if self.ser.in_waiting>0:
 					# data available from the serial port
 					lastchar=self.ser.read(1)
