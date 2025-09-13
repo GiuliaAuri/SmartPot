@@ -22,9 +22,11 @@ const uint32_t animation_drop[][8] = {
 const int NUM_FRAMES = sizeof(animation_drop) / sizeof(animation_drop[0]);
 
 
-const int SENSORPIN = A0;
+const int SENSOR_PIN = A0;
+const char SENSOR_TYPE = 'H';
 unsigned long timestamp;
 const int RELAY_PIN=7;
+const char ACTUATOR_TYPE = 'I';
 
 void setup() {
 
@@ -43,12 +45,13 @@ void loop() {
   int val;
   if (millis() - timestamp > 2000){
     // sensore
-    val = analogRead(SENSORPIN);
+    val = analogRead(SENSOR_PIN);
 
     // pacchetto dati
-    // FF  1 dato  FE
+    // FF  numero type dato  FE
     Serial.write(0xFF);
     Serial.write(1);
+    Serial.write(SENSOR_TYPE);
     
     Serial.write(map(val,0,1023,0,253));
 
@@ -57,10 +60,13 @@ void loop() {
     // attuatore
     if (Serial.available()>0)
     { int val;
+      char type;
+      type = Serial.read();
       val = Serial.read();
-      if (val=='A') digitalWrite(RELAY_PIN, LOW); //acceso
-      if (val=='S') digitalWrite(RELAY_PIN, HIGH); //spento
-      
+      if (type==ACTUATOR_TYPE) {
+        if (val=='A') digitalWrite(RELAY_PIN, LOW); //acceso
+        if (val=='S') digitalWrite(RELAY_PIN, HIGH); //spento
+      }
     }
     
     timestamp = millis();

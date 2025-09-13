@@ -37,6 +37,10 @@
           {
             "value": 60.6,
             "timestamp": "1757759439"
+          },
+          {
+            "value": 9.6,
+            "timestamp": "1757774994"
           }
         ]
       },
@@ -63,6 +67,70 @@
           {
             "value": 3.8,
             "timestamp": "1757765448"
+          },
+          {
+            "value": 2.3,
+            "timestamp": "1757769231"
+          },
+          {
+            "value": 0.8,
+            "timestamp": "1757769264"
+          },
+          {
+            "value": 4.7,
+            "timestamp": "1757774965"
+          },
+          {
+            "value": 4.0,
+            "timestamp": "1757774975"
+          },
+          {
+            "value": 1.8,
+            "timestamp": "1757775025"
+          },
+          {
+            "value": 1.6,
+            "timestamp": "1757775035"
+          },
+          {
+            "value": 2.8,
+            "timestamp": "1757775045"
+          },
+          {
+            "value": 3.7,
+            "timestamp": "1757775054"
+          },
+          {
+            "value": 0.1,
+            "timestamp": "1757775065"
+          },
+          {
+            "value": 0.3,
+            "timestamp": "1757775074"
+          },
+          {
+            "value": 3.0,
+            "timestamp": "1757775085"
+          },
+          {
+            "value": 4.7,
+            "timestamp": "1757775115"
+          },
+          {
+            "value": 5.0,
+            "timestamp": "1757775155"
+          },
+          {
+            "value": 3.9,
+            "timestamp": "1757775205"
+          },
+          {
+            "value": 2.1,
+            "timestamp": "1757775235"
+          },
+          {
+            "value": 2.2,
+            "timestamp": "1757775255"
           }
         ]
       },
@@ -117,6 +185,54 @@
           {
             "value": 0.3,
             "timestamp": "1757765437"
+          },
+          {
+            "value": 0.1,
+            "timestamp": "1757769251"
+          },
+          {
+            "value": 1.4,
+            "timestamp": "1757769263"
+          },
+          {
+            "value": 0.3,
+            "timestamp": "1757769277"
+          },
+          {
+            "value": 0.4,
+            "timestamp": "1757774954"
+          },
+          {
+            "value": 0.2,
+            "timestamp": "1757774985"
+          },
+          {
+            "value": 0.5,
+            "timestamp": "1757775005"
+          },
+          {
+            "value": 1.5,
+            "timestamp": "1757775105"
+          },
+          {
+            "value": 0.2,
+            "timestamp": "1757775125"
+          },
+          {
+            "value": 1.9,
+            "timestamp": "1757775134"
+          },
+          {
+            "value": 1.5,
+            "timestamp": "1757775165"
+          },
+          {
+            "value": 0.6,
+            "timestamp": "1757775194"
+          },
+          {
+            "value": 0.7,
+            "timestamp": "1757775245"
           }
         ]
       },
@@ -153,6 +269,22 @@
           {
             "value": -0.5,
             "timestamp": "1757764851"
+          },
+          {
+            "value": 41.1,
+            "timestamp": "1757775004"
+          },
+          {
+            "value": 46.4,
+            "timestamp": "1757775033"
+          },
+          {
+            "value": 20.4,
+            "timestamp": "1757775064"
+          },
+          {
+            "value": -4.5,
+            "timestamp": "1757775143"
           }
         ]
       },
@@ -163,6 +295,14 @@
           {
             "value": 55088.8,
             "timestamp": "1757764870"
+          },
+          {
+            "value": 17298.4,
+            "timestamp": "1757775095"
+          },
+          {
+            "value": 33493.5,
+            "timestamp": "1757775145"
           }
         ]
       }
@@ -190,6 +330,36 @@
       {
         "message": "Battery level below 20%!",
         "timestamp": "1757765409",
+        "type": "warning",
+        "plant_id": "my_fico1"
+      },
+      {
+        "message": "Battery level below 20%!",
+        "timestamp": "1757769234",
+        "type": "warning",
+        "plant_id": "my_fico1"
+      },
+      {
+        "message": "Tank level below 0.30 liters!",
+        "timestamp": "1757769255",
+        "type": "warning",
+        "plant_id": "my_fico1"
+      },
+      {
+        "message": "Battery level below 20%!",
+        "timestamp": "1757774959",
+        "type": "warning",
+        "plant_id": "my_fico1"
+      },
+      {
+        "message": "Tank level below 0.30 liters!",
+        "timestamp": "1757774989",
+        "type": "warning",
+        "plant_id": "my_fico1"
+      },
+      {
+        "message": "Battery level below 20%!",
+        "timestamp": "1757775259",
         "type": "warning",
         "plant_id": "my_fico1"
       }
