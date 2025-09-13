@@ -4,10 +4,10 @@
       "plant_id": "my_cactus1",
       "species": "cactus",
       "sensors": [
-        "humidity",
-        "temperature",
-        "lightness",
         "battery_level",
+        "temperature",
+        "humidity",
+        "lightness",
         "level_tank",
         "water_flow"
       ],
@@ -19,10 +19,10 @@
       "plant_id": "my_fico1",
       "species": "fico",
       "sensors": [
-        "humidity",
-        "temperature",
-        "lightness",
         "battery_level",
+        "temperature",
+        "humidity",
+        "lightness",
         "level_tank",
         "water_flow"
       ],
@@ -34,8 +34,9 @@
       "plant_id": "my_orchidea1",
       "species": "orchidea",
       "sensors": [
-        "humidity",
+        "battery_level",
         "temperature",
+        "humidity",
         "lightness",
         "level_tank",
         "water_flow"
@@ -48,10 +49,10 @@
       "plant_id": "my_felce1",
       "species": "felce",
       "sensors": [
-        "humidity",
-        "temperature",
-        "lightness",
         "battery_level",
+        "temperature",
+        "humidity",
+        "lightness",
         "level_tank",
         "water_flow"
       ],
@@ -63,10 +64,10 @@
       "plant_id": "my_lavanda1",
       "species": "lavanda",
       "sensors": [
-        "humidity",
-        "temperature",
-        "lightness",
         "battery_level",
+        "temperature",
+        "humidity",
+        "lightness",
         "level_tank",
         "water_flow"
       ],
