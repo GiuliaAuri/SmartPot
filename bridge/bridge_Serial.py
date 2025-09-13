@@ -3,7 +3,7 @@ import serial.tools.list_ports
 
 import configparser
 
-import paho.mqtt.client as mqtt
+
 
 class Bridge():
 
@@ -11,7 +11,6 @@ class Bridge():
 		self.config = configparser.ConfigParser()
 		self.config.read('config.ini')
 		self.setupSerial()
-		self.setupMQTT()
 
 	def setupSerial(self):
 		# open serial port
@@ -42,26 +41,10 @@ class Bridge():
 		# internal input buffer from serial
 		self.inbuffer = []
 
-	def setupMQTT(self):
-		self.clientMQTT = mqtt.Client()
-		self.clientMQTT.on_connect = self.on_connect
-		self.clientMQTT.on_message = self.on_message
-		print("connecting to MQTT broker...")
-		self.clientMQTT.connect(
-			self.config.get("MQTT","Server", fallback= "localhost"),
-			self.config.getint("MQTT","Port", fallback= 7883),
-			60)
+	
+	
 
-		self.clientMQTT.loop_start()
-
-	def on_connect(self, client, userdata, flags, rc):
-		print("Connected with result code " + str(rc))
-
-		# Subscribing in on_connect() means that if we lose the connection and
-		# reconnect then subscriptions will be renewed.
-		self.clientMQTT.subscribe("RVactuator/0")
-
-	# The callback for when a PUBLISH message is received from the server.
+	# TODO update the actuator
 	def on_message(self, client, userdata, msg):
 		print(msg.topic + " " + str(msg.payload))
 		if self.ser is not None:
@@ -104,7 +87,7 @@ class Bridge():
 			val = int.from_bytes(self.inbuffer[i+2], byteorder='little')
 			strval = "Sensor %d: %d " % (i, val)
 			print(strval)
-			self.clientMQTT.publish('RVsensor/{:d}'.format(i),'{:d}'.format(val))
+			#TODO: update the sensor
 
 if __name__ == '__main__':
 	br=Bridge()
