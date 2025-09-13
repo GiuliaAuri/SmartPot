@@ -1,77 +1,78 @@
-[
-  {
-    "plant_id": "my_cactus1",
-    "species": "cactus",
-    "sensors": [
-      "battery_level",
-      "temperature",
-      "humidity",
-      "lightness",
-      "level_tank",
-      "water_flow"
-    ],
-    "actuators": [
-      "irrigation"
-    ]
-  },
-  {
-    "plant_id": "my_fico1",
-    "species": "fico",
-    "sensors": [
-      "battery_level",
-      "temperature",
-      "humidity",
-      "lightness",
-      "level_tank",
-      "water_flow"
-    ],
-    "actuators": [
-      "irrigation"
-    ]
-  },
-  {
-    "plant_id": "my_orchidea1",
-    "species": "orchidea",
-    "sensors": [
-      "battery_level",
-      "temperature",
-      "humidity",
-      "lightness",
-      "level_tank",
-      "water_flow"
-    ],
-    "actuators": [
-      "irrigation"
-    ]
-  },
-  {
-    "plant_id": "my_felce1",
-    "species": "felce",
-    "sensors": [
-      "battery_level",
-      "temperature",
-      "humidity",
-      "lightness",
-      "level_tank",
-      "water_flow"
-    ],
-    "actuators": [
-      "irrigation"
-    ]
-  },
-  {
-    "plant_id": "my_lavanda1",
-    "species": "lavanda",
-    "sensors": [
-      "battery_level",
-      "temperature",
-      "humidity",
-      "lightness",
-      "level_tank",
-      "water_flow"
-    ],
-    "actuators": [
-      "irrigation"
-    ]
-  }
-]
+{
+  "plants": [
+    {
+      "plant_id": "my_cactus1",
+      "species": "cactus",
+      "sensors": [
+        "humidity",
+        "temperature",
+        "lightness",
+        "battery_level",
+        "level_tank",
+        "water_flow"
+      ],
+      "actuators": [
+        "irrigation"
+      ]
+    },
+    {
+      "plant_id": "my_fico1",
+      "species": "fico",
+      "sensors": [
+        "humidity",
+        "temperature",
+        "lightness",
+        "battery_level",
+        "level_tank",
+        "water_flow"
+      ],
+      "actuators": [
+        "irrigation"
+      ]
+    },
+    {
+      "plant_id": "my_orchidea1",
+      "species": "orchidea",
+      "sensors": [
+        "humidity",
+        "temperature",
+        "lightness",
+        "level_tank",
+        "water_flow"
+      ],
+      "actuators": [
+        "irrigation"
+      ]
+    },
+    {
+      "plant_id": "my_felce1",
+      "species": "felce",
+      "sensors": [
+        "humidity",
+        "temperature",
+        "lightness",
+        "battery_level",
+        "level_tank",
+        "water_flow"
+      ],
+      "actuators": [
+        "irrigation"
+      ]
+    },
+    {
+      "plant_id": "my_lavanda1",
+      "species": "lavanda",
+      "sensors": [
+        "humidity",
+        "temperature",
+        "lightness",
+        "battery_level",
+        "level_tank",
+        "water_flow"
+      ],
+      "actuators": [
+        "irrigation"
+      ]
+    }
+  ]
+}

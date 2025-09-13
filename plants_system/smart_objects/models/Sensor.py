@@ -6,7 +6,7 @@ T = TypeVar('T')
 
 
 class Sensor(ABC, Generic[T]):
-    def __init__(self, plant_id: str, initial_value: T, unit:str, min_value: T, max_value: T, type:str, device:str):
+    def __init__(self, plant_id: str, initial_value: T, unit:str, min_value: T, max_value: T, type:str, device:str, is_real: bool):
         self.plant_id = plant_id
         self.value = initial_value
         self.unit = unit
@@ -15,6 +15,7 @@ class Sensor(ABC, Generic[T]):
         self.type = type
         self.device = device
         self.timestamp = 0
+        self.is_real = is_real
 
     @abstractmethod
     def update(self):

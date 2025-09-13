@@ -23,7 +23,12 @@ class DataCollectorConsumer:
         self.plant_descriptor = plant_descriptor
         self.filename=path+self.plant_descriptor.plant_id+".json"
         client_id = f"{self.plant_descriptor.plant_id}-data-collector-consumer"
-        self.client = mqtt.Client(client_id)
+        # Compatibilità con versioni vecchie e nuove di paho-mqtt
+        try:
+            self.client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION1, client_id)
+        except AttributeError:
+            # Versione vecchia di paho-mqtt
+            self.client = mqtt.Client(client_id)
         self.client.on_connect = self.on_connect
         self.client.on_message = self.on_message
         self.policy_manager = PolicyManager("plants_system/smart_objects/resources/policies_conf.json")

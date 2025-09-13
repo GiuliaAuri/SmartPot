@@ -3,64 +3,40 @@
     "plant_id": "my_felce1",
     "sensors": [
       {
-        "sensor": "battery_level",
+        "sensor": "humidity",
         "device": "environment_telemetry",
         "values": [
           {
-            "value": 96.4,
-            "timestamp": "1757448336"
+            "value": 29.5,
+            "timestamp": "1757759369"
           },
           {
-            "value": 93.9,
-            "timestamp": "1757448346"
+            "value": 90.6,
+            "timestamp": "1757759379"
           },
           {
-            "value": 92.7,
-            "timestamp": "1757448356"
+            "value": 38.5,
+            "timestamp": "1757759389"
           },
           {
-            "value": 91.4,
-            "timestamp": "1757448366"
+            "value": 56.8,
+            "timestamp": "1757759399"
           },
           {
-            "value": 90.2,
-            "timestamp": "1757448377"
+            "value": 27.9,
+            "timestamp": "1757759409"
           },
           {
-            "value": 85.8,
-            "timestamp": "1757448386"
+            "value": 44.3,
+            "timestamp": "1757759419"
           },
           {
-            "value": 82.3,
-            "timestamp": "1757448396"
+            "value": 84.2,
+            "timestamp": "1757759429"
           },
           {
-            "value": 81.5,
-            "timestamp": "1757448407"
-          },
-          {
-            "value": 77.7,
-            "timestamp": "1757448417"
-          },
-          {
-            "value": 73.7,
-            "timestamp": "1757448427"
-          },
-          {
-            "value": 71.5,
-            "timestamp": "1757448436"
-          },
-          {
-            "value": 68.9,
-            "timestamp": "1757448447"
-          },
-          {
-            "value": 64.1,
-            "timestamp": "1757448457"
-          },
-          {
-            "value": 62.0,
-            "timestamp": "1757448467"
+            "value": 39.3,
+            "timestamp": "1757759439"
           }
         ]
       },
@@ -69,38 +45,8 @@
         "device": "water_metering",
         "values": [
           {
-            "value": 4.9,
-            "timestamp": "1757448357"
-          },
-          {
-            "value": 4.0,
-            "timestamp": "1757448397"
-          },
-          {
-            "value": 1.8,
-            "timestamp": "1757448408"
-          },
-          {
-            "value": 3.2,
-            "timestamp": "1757448418"
-          },
-          {
-            "value": 3.0,
-            "timestamp": "1757448438"
-          },
-          {
-            "value": 3.5,
-            "timestamp": "1757448458"
-          }
-        ]
-      },
-      {
-        "sensor": "humidity",
-        "device": "environment_telemetry",
-        "values": [
-          {
-            "value": 45.3,
-            "timestamp": "1757448367"
+            "value": 0.5,
+            "timestamp": "1757759370"
           }
         ]
       },
@@ -109,48 +55,53 @@
         "device": "tank_monitoring",
         "values": [
           {
-            "value": 0.6,
-            "timestamp": "1757448428"
+            "value": 1.5,
+            "timestamp": "1757759380"
           },
           {
-            "value": 0.9,
-            "timestamp": "1757448448"
+            "value": 1.8,
+            "timestamp": "1757759390"
+          },
+          {
+            "value": 1.4,
+            "timestamp": "1757759400"
+          },
+          {
+            "value": 1.8,
+            "timestamp": "1757759410"
+          },
+          {
+            "value": 0.0,
+            "timestamp": "1757759420"
+          },
+          {
+            "value": 0.6,
+            "timestamp": "1757759430"
           }
         ]
-      }
-    ],
-    "actuators": [
+      },
       {
-        "actuator": "irrigation",
-        "device": "water_metering",
+        "sensor": "battery_level",
+        "device": "environment_telemetry",
         "values": [
           {
-            "value": true,
-            "timestamp": "1757448349"
-          },
-          {
-            "value": false,
-            "timestamp": "1757448401"
-          },
-          {
-            "value": true,
-            "timestamp": "1757448431"
-          },
-          {
-            "value": false,
-            "timestamp": "1757448452"
-          },
-          {
-            "value": true,
-            "timestamp": "1757448461"
+            "value": 0,
+            "timestamp": "1757759440"
           }
         ]
       }
     ],
+    "actuators": [],
     "alerts": [
       {
+        "message": "Battery level below 20%!",
+        "timestamp": "1757759373",
+        "type": "warning",
+        "plant_id": "my_felce1"
+      },
+      {
         "message": "Tank level below 0.30 liters!",
-        "timestamp": "1757448339",
+        "timestamp": "1757759424",
         "type": "warning",
         "plant_id": "my_felce1"
       }

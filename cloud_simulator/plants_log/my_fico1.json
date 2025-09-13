@@ -3,64 +3,40 @@
     "plant_id": "my_fico1",
     "sensors": [
       {
-        "sensor": "battery_level",
+        "sensor": "humidity",
         "device": "environment_telemetry",
         "values": [
           {
-            "value": 92.2,
-            "timestamp": "1757448336"
+            "value": 6.3,
+            "timestamp": "1757759369"
           },
           {
-            "value": 91.6,
-            "timestamp": "1757448346"
+            "value": 24.2,
+            "timestamp": "1757759379"
           },
           {
-            "value": 91.4,
-            "timestamp": "1757448356"
+            "value": 85.4,
+            "timestamp": "1757759389"
           },
           {
-            "value": 91.2,
-            "timestamp": "1757448366"
+            "value": 77.8,
+            "timestamp": "1757759399"
           },
           {
-            "value": 86.7,
-            "timestamp": "1757448376"
+            "value": 57.8,
+            "timestamp": "1757759409"
           },
           {
-            "value": 82.5,
-            "timestamp": "1757448386"
+            "value": 14.5,
+            "timestamp": "1757759419"
           },
           {
-            "value": 80.8,
-            "timestamp": "1757448396"
+            "value": 68.1,
+            "timestamp": "1757759429"
           },
           {
-            "value": 77.2,
-            "timestamp": "1757448406"
-          },
-          {
-            "value": 74.2,
-            "timestamp": "1757448416"
-          },
-          {
-            "value": 70.0,
-            "timestamp": "1757448426"
-          },
-          {
-            "value": 67.6,
-            "timestamp": "1757448436"
-          },
-          {
-            "value": 66.1,
-            "timestamp": "1757448446"
-          },
-          {
-            "value": 63.1,
-            "timestamp": "1757448456"
-          },
-          {
-            "value": 59.0,
-            "timestamp": "1757448466"
+            "value": 60.6,
+            "timestamp": "1757759439"
           }
         ]
       },
@@ -69,40 +45,16 @@
         "device": "water_metering",
         "values": [
           {
-            "value": 1.9,
-            "timestamp": "1757448357"
-          },
-          {
-            "value": 2.7,
-            "timestamp": "1757448367"
-          },
-          {
-            "value": 1.0,
-            "timestamp": "1757448387"
-          },
-          {
-            "value": 0.8,
-            "timestamp": "1757448397"
-          },
-          {
-            "value": 3.6,
-            "timestamp": "1757448407"
-          },
-          {
-            "value": 2.6,
-            "timestamp": "1757448417"
-          },
-          {
-            "value": 2.0,
-            "timestamp": "1757448427"
+            "value": 4.4,
+            "timestamp": "1757759370"
           },
           {
             "value": 1.7,
-            "timestamp": "1757448438"
+            "timestamp": "1757759390"
           },
           {
-            "value": 0.6,
-            "timestamp": "1757448458"
+            "value": 3.1,
+            "timestamp": "1757759410"
           }
         ]
       },
@@ -111,48 +63,33 @@
         "device": "tank_monitoring",
         "values": [
           {
-            "value": 0.4,
-            "timestamp": "1757448448"
+            "value": 0.7,
+            "timestamp": "1757759380"
+          },
+          {
+            "value": 1.4,
+            "timestamp": "1757759400"
+          },
+          {
+            "value": 0.8,
+            "timestamp": "1757759420"
+          },
+          {
+            "value": 0.3,
+            "timestamp": "1757759430"
+          },
+          {
+            "value": 0.9,
+            "timestamp": "1757759440"
           }
         ]
       }
     ],
-    "actuators": [
-      {
-        "actuator": "irrigation",
-        "device": "water_metering",
-        "values": [
-          {
-            "value": true,
-            "timestamp": "1757448340"
-          },
-          {
-            "value": false,
-            "timestamp": "1757448390"
-          },
-          {
-            "value": true,
-            "timestamp": "1757448400"
-          },
-          {
-            "value": false,
-            "timestamp": "1757448421"
-          },
-          {
-            "value": true,
-            "timestamp": "1757448451"
-          },
-          {
-            "value": false,
-            "timestamp": "1757448461"
-          }
-        ]
-      }
-    ],
+    "actuators": [],
     "alerts": [
       {
-        "message": "Tank level below 0.30 liters!",
-        "timestamp": "1757448409",
+        "message": "Battery level below 20%!",
+        "timestamp": "1757759374",
         "type": "warning",
         "plant_id": "my_fico1"
       }

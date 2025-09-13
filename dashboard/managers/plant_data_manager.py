@@ -37,7 +37,9 @@ class PlantDataManager:
             return {}
         
         plants_data = {}
-        for plant_config in self.plants_config:
+        # Handle both old format (list) and new format ({"plants": [...]})
+        plant_configs = self.plants_config if isinstance(self.plants_config, list) else self.plants_config.get("plants", [])
+        for plant_config in plant_configs:
             plant_id = plant_config['plant_id']
             
             # Load plant-specific data

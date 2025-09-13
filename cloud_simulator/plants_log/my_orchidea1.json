@@ -3,92 +3,40 @@
     "plant_id": "my_orchidea1",
     "sensors": [
       {
-        "sensor": "battery_level",
-        "device": "environment_telemetry",
-        "values": [
-          {
-            "value": 95.1,
-            "timestamp": "1757448336"
-          },
-          {
-            "value": 94.2,
-            "timestamp": "1757448346"
-          },
-          {
-            "value": 90.3,
-            "timestamp": "1757448356"
-          },
-          {
-            "value": 85.7,
-            "timestamp": "1757448366"
-          },
-          {
-            "value": 83.9,
-            "timestamp": "1757448378"
-          },
-          {
-            "value": 82.8,
-            "timestamp": "1757448386"
-          },
-          {
-            "value": 80.8,
-            "timestamp": "1757448396"
-          },
-          {
-            "value": 79.6,
-            "timestamp": "1757448406"
-          },
-          {
-            "value": 77.3,
-            "timestamp": "1757448416"
-          },
-          {
-            "value": 74.6,
-            "timestamp": "1757448426"
-          },
-          {
-            "value": 74.4,
-            "timestamp": "1757448436"
-          },
-          {
-            "value": 72.7,
-            "timestamp": "1757448446"
-          },
-          {
-            "value": 72.1,
-            "timestamp": "1757448457"
-          }
-        ]
-      },
-      {
-        "sensor": "level_tank",
-        "device": "tank_monitoring",
-        "values": [
-          {
-            "value": 0.5,
-            "timestamp": "1757448357"
-          },
-          {
-            "value": 0.7,
-            "timestamp": "1757448379"
-          },
-          {
-            "value": 0.1,
-            "timestamp": "1757448407"
-          },
-          {
-            "value": 0.6,
-            "timestamp": "1757448427"
-          }
-        ]
-      },
-      {
         "sensor": "humidity",
         "device": "environment_telemetry",
         "values": [
           {
-            "value": 9.9,
-            "timestamp": "1757448388"
+            "value": 5.7,
+            "timestamp": "1757759369"
+          },
+          {
+            "value": 10.8,
+            "timestamp": "1757759379"
+          },
+          {
+            "value": 31.1,
+            "timestamp": "1757759389"
+          },
+          {
+            "value": 32.5,
+            "timestamp": "1757759399"
+          },
+          {
+            "value": 31.8,
+            "timestamp": "1757759409"
+          },
+          {
+            "value": 9.8,
+            "timestamp": "1757759419"
+          },
+          {
+            "value": 62.0,
+            "timestamp": "1757759429"
+          },
+          {
+            "value": 22.8,
+            "timestamp": "1757759439"
           }
         ]
       },
@@ -97,52 +45,37 @@
         "device": "water_metering",
         "values": [
           {
-            "value": 4.9,
-            "timestamp": "1757448437"
+            "value": 0.1,
+            "timestamp": "1757759390"
+          },
+          {
+            "value": 1.1,
+            "timestamp": "1757759400"
+          },
+          {
+            "value": 0.3,
+            "timestamp": "1757759410"
           },
           {
             "value": 3.0,
-            "timestamp": "1757448448"
+            "timestamp": "1757759420"
           },
           {
-            "value": 2.7,
-            "timestamp": "1757448458"
+            "value": 0.1,
+            "timestamp": "1757759430"
+          },
+          {
+            "value": 1.7,
+            "timestamp": "1757759440"
           }
         ]
       }
     ],
-    "actuators": [
-      {
-        "actuator": "irrigation",
-        "device": "water_metering",
-        "values": [
-          {
-            "value": true,
-            "timestamp": "1757448340"
-          },
-          {
-            "value": false,
-            "timestamp": "1757448349"
-          },
-          {
-            "value": true,
-            "timestamp": "1757448392"
-          },
-          {
-            "value": false,
-            "timestamp": "1757448421"
-          },
-          {
-            "value": true,
-            "timestamp": "1757448461"
-          }
-        ]
-      }
-    ],
+    "actuators": [],
     "alerts": [
       {
         "message": "Tank level below 0.30 liters!",
-        "timestamp": "1757448368",
+        "timestamp": "1757759433",
         "type": "warning",
         "plant_id": "my_orchidea1"
       }

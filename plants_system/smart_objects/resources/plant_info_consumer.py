@@ -15,7 +15,12 @@ class PlantInfoConsumer:
     """
     def __init__(self, filename):
         client_id = "plant-info-consumer"
-        self.client = mqtt.Client(client_id)
+        # Compatibilità con versioni vecchie e nuove di paho-mqtt
+        try:
+            self.client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION1, client_id)
+        except AttributeError:
+            # Versione vecchia di paho-mqtt
+            self.client = mqtt.Client(client_id)
         self.filename = filename
         self.running = True
         
@@ -43,29 +48,32 @@ class PlantInfoConsumer:
             logging.error(f"Errore nel parsing del messaggio: {e}")
             return
 
-        # Se il file non esiste, crea una lista vuota
+        # Se il file non esiste, crea una struttura vuota
         if not os.path.exists(self.filename):
-            plants = []
+            data = {"plants": []}
         else:
             with open(self.filename, "r") as f:
                 try:
-                    plants = json.load(f)
+                    data = json.load(f)
+                    # Se è il vecchio formato (lista diretta), converti
+                    if isinstance(data, list):
+                        data = {"plants": data}
                 except Exception:
-                    plants = []
+                    data = {"plants": []}
 
         # Aggiorna o aggiungi la pianta
         updated = False
-        for i, p in enumerate(plants):
+        for i, p in enumerate(data["plants"]):
             if p.get("plant_id") == payload.get("plant_id"):
-                plants[i] = payload
+                data["plants"][i] = payload
                 updated = True
                 break
         if not updated:
-            plants.append(payload)
+            data["plants"].append(payload)
 
-        # Salva la lista aggiornata nel file
+        # Salva la struttura aggiornata nel file
         with open(self.filename, "w") as f:
-            json.dump(plants, f, indent=2)
+            json.dump(data, f, indent=2)
         logging.info(f"Saved/updated plant {payload.get('plant_id')} into {self.filename}")
 
     def run(self):

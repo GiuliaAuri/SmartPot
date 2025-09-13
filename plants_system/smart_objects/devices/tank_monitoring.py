@@ -12,6 +12,6 @@ class TankMonitoring(Device):
         super().__init__(
             plant_id, 
             "tank_monitoring", 
-            sensors=[LevelTankSensor(plant_id, initial_value=1.0, unit="l", min_value=0.0, max_value=1.0, device="tank_monitoring")]
+            sensors=[LevelTankSensor(plant_id, initial_value=1.0, unit="l", min_value=0.0, max_value=1.0, device="tank_monitoring", is_real=False)]
             )
         

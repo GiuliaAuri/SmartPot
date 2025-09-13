@@ -3,76 +3,40 @@
     "plant_id": "my_cactus1",
     "sensors": [
       {
-        "sensor": "battery_level",
+        "sensor": "humidity",
         "device": "environment_telemetry",
         "values": [
           {
-            "value": 96.2,
-            "timestamp": "1757448336"
+            "value": 79.9,
+            "timestamp": "1757759369"
           },
           {
-            "value": 92.9,
-            "timestamp": "1757448356"
+            "value": 42.4,
+            "timestamp": "1757759379"
           },
           {
-            "value": 90.5,
-            "timestamp": "1757448366"
+            "value": 4.5,
+            "timestamp": "1757759389"
           },
           {
-            "value": 83.1,
-            "timestamp": "1757448386"
+            "value": 10.1,
+            "timestamp": "1757759399"
           },
           {
-            "value": 82.7,
-            "timestamp": "1757448396"
+            "value": 56.0,
+            "timestamp": "1757759409"
           },
           {
-            "value": 81.6,
-            "timestamp": "1757448406"
+            "value": 33.4,
+            "timestamp": "1757759419"
           },
           {
-            "value": 78.5,
-            "timestamp": "1757448416"
+            "value": 68.9,
+            "timestamp": "1757759429"
           },
           {
-            "value": 76.9,
-            "timestamp": "1757448427"
-          },
-          {
-            "value": 73.1,
-            "timestamp": "1757448436"
-          },
-          {
-            "value": 69.3,
-            "timestamp": "1757448446"
-          },
-          {
-            "value": 68.6,
-            "timestamp": "1757448457"
-          },
-          {
-            "value": 65.3,
-            "timestamp": "1757448467"
-          }
-        ]
-      },
-      {
-        "sensor": "lightness",
-        "device": "environment_telemetry",
-        "values": [
-          {
-            "value": 31834.3,
-            "timestamp": "1757448367"
-          }
-        ]
-      },
-      {
-        "sensor": "temperature",
-        "device": "environment_telemetry",
-        "values": [
-          {
-            "value": 33.1,
-            "timestamp": "1757448376"
+            "value": 58.1,
+            "timestamp": "1757759439"
           }
         ]
       },
@@ -81,20 +45,12 @@
         "device": "water_metering",
         "values": [
           {
-            "value": 4.7,
-            "timestamp": "1757448397"
+            "value": 2.5,
+            "timestamp": "1757759370"
           },
           {
-            "value": 1.2,
-            "timestamp": "1757448408"
-          },
-          {
-            "value": 3.3,
-            "timestamp": "1757448439"
-          },
-          {
-            "value": 2.3,
-            "timestamp": "1757448458"
+            "value": 4.6,
+            "timestamp": "1757759430"
           }
         ]
       },
@@ -103,40 +59,39 @@
         "device": "tank_monitoring",
         "values": [
           {
-            "value": 0.3,
-            "timestamp": "1757448428"
+            "value": 0.9,
+            "timestamp": "1757759380"
           },
           {
-            "value": 0.6,
-            "timestamp": "1757448437"
+            "value": 0.2,
+            "timestamp": "1757759390"
           },
           {
-            "value": 0.3,
-            "timestamp": "1757448448"
+            "value": 2.0,
+            "timestamp": "1757759400"
+          },
+          {
+            "value": 0.7,
+            "timestamp": "1757759420"
+          },
+          {
+            "value": 1.1,
+            "timestamp": "1757759440"
           }
         ]
       }
     ],
-    "actuators": [
-      {
-        "actuator": "irrigation",
-        "device": "water_metering",
-        "values": [
-          {
-            "value": true,
-            "timestamp": "1757448400"
-          },
-          {
-            "value": false,
-            "timestamp": "1757448461"
-          }
-        ]
-      }
-    ],
+    "actuators": [],
     "alerts": [
       {
+        "message": "Battery level below 20%!",
+        "timestamp": "1757759373",
+        "type": "warning",
+        "plant_id": "my_cactus1"
+      },
+      {
         "message": "Tank level below 0.30 liters!",
-        "timestamp": "1757448359",
+        "timestamp": "1757759394",
         "type": "warning",
         "plant_id": "my_cactus1"
       }

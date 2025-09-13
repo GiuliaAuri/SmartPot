@@ -13,7 +13,7 @@ class WaterMetering(Device):
         super().__init__(
             plant_id,
             "water_metering",
-            sensors=[WaterFlowSensor(plant_id, initial_value=0.0, unit="l/s", min_value=0, max_value=5, device="water_metering")],
-            actuators=[IrrigationActuator(plant_id)]
+            sensors=[WaterFlowSensor(plant_id, initial_value=0.0, unit="l/s", min_value=0, max_value=5, device="water_metering", is_real=False)],
+            actuators=[IrrigationActuator(plant_id, device="water_metering", is_real=False)]
         )
         

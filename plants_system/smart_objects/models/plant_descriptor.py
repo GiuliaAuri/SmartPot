@@ -4,14 +4,18 @@ from plants_system.smart_objects.devices.tank_monitoring import TankMonitoring
 from plants_system.smart_objects.devices.water_metering import WaterMetering
 
 class PlantDescriptor:
-    def __init__(self, species, plant_id):
+    def __init__(self, species, plant_id, devices=None):
         self.plant_id = plant_id
         self.species = species
-        self.devices = [
-            EnvironmentTelemetryData(self.plant_id),
-            TankMonitoring(self.plant_id),
-            WaterMetering(self.plant_id)
-        ]
+        
+        if devices is not None:
+            self.devices = devices
+        else:
+            self.devices = [
+                EnvironmentTelemetryData(self.plant_id),
+                TankMonitoring(self.plant_id),
+                WaterMetering(self.plant_id)
+            ]
     
         
     def to_json(self):

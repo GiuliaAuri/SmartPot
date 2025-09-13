@@ -3,12 +3,13 @@ import logging
 
 class SwitchActuator(ABC):
 
-    def __init__(self, plant_id:str, type:str, device:str):
+    def __init__(self, plant_id:str, type:str, device:str, is_real: bool):
         self.plant_id = plant_id
         self.status = False
         self.type = type
         self.device = device
-
+        self.is_real = is_real
+        
     def change_status(self):
         self.status = not self.status
         

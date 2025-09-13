@@ -3,70 +3,40 @@
     "plant_id": "my_lavanda1",
     "sensors": [
       {
-        "sensor": "battery_level",
+        "sensor": "humidity",
         "device": "environment_telemetry",
         "values": [
           {
-            "value": 85.1,
-            "timestamp": "1757448387"
-          },
-          {
-            "value": 85.0,
-            "timestamp": "1757448396"
-          },
-          {
-            "value": 81.8,
-            "timestamp": "1757448407"
-          },
-          {
-            "value": 80.3,
-            "timestamp": "1757448416"
-          },
-          {
-            "value": 78.7,
-            "timestamp": "1757448426"
-          },
-          {
-            "value": 75.0,
-            "timestamp": "1757448437"
-          },
-          {
-            "value": 71.4,
-            "timestamp": "1757448447"
-          },
-          {
-            "value": 66.8,
-            "timestamp": "1757448456"
-          },
-          {
             "value": 66.4,
-            "timestamp": "1757448467"
-          }
-        ]
-      },
-      {
-        "sensor": "water_flow",
-        "device": "water_metering",
-        "values": [
-          {
-            "value": 1.1,
-            "timestamp": "1757448390"
+            "timestamp": "1757759369"
           },
           {
-            "value": 0.4,
-            "timestamp": "1757448408"
+            "value": 51.6,
+            "timestamp": "1757759379"
           },
           {
-            "value": 2.1,
-            "timestamp": "1757448428"
+            "value": 77.8,
+            "timestamp": "1757759389"
           },
           {
-            "value": 0.1,
-            "timestamp": "1757448438"
+            "value": 39.4,
+            "timestamp": "1757759399"
           },
           {
-            "value": 3.8,
-            "timestamp": "1757448448"
+            "value": 58.0,
+            "timestamp": "1757759409"
+          },
+          {
+            "value": 71.8,
+            "timestamp": "1757759419"
+          },
+          {
+            "value": 60.6,
+            "timestamp": "1757759429"
+          },
+          {
+            "value": 19.0,
+            "timestamp": "1757759439"
           }
         ]
       },
@@ -75,44 +45,63 @@
         "device": "tank_monitoring",
         "values": [
           {
-            "value": 0.7,
-            "timestamp": "1757448457"
+            "value": 1.0,
+            "timestamp": "1757759370"
+          },
+          {
+            "value": 0.0,
+            "timestamp": "1757759380"
+          },
+          {
+            "value": 0.2,
+            "timestamp": "1757759390"
+          },
+          {
+            "value": 1.4,
+            "timestamp": "1757759400"
+          },
+          {
+            "value": 1.8,
+            "timestamp": "1757759420"
           }
         ]
-      }
-    ],
-    "actuators": [
+      },
       {
-        "actuator": "irrigation",
+        "sensor": "water_flow",
         "device": "water_metering",
         "values": [
           {
-            "value": true,
-            "timestamp": "1757448380"
+            "value": 2.0,
+            "timestamp": "1757759410"
           },
           {
-            "value": false,
-            "timestamp": "1757448392"
-          },
+            "value": 3.6,
+            "timestamp": "1757759430"
+          }
+        ]
+      },
+      {
+        "sensor": "battery_level",
+        "device": "environment_telemetry",
+        "values": [
           {
-            "value": true,
-            "timestamp": "1757448421"
-          },
-          {
-            "value": false,
-            "timestamp": "1757448431"
-          },
-          {
-            "value": true,
-            "timestamp": "1757448461"
+            "value": 0,
+            "timestamp": "1757759440"
           }
         ]
       }
     ],
+    "actuators": [],
     "alerts": [
       {
+        "message": "Battery level below 20%!",
+        "timestamp": "1757759373",
+        "type": "warning",
+        "plant_id": "my_lavanda1"
+      },
+      {
         "message": "Tank level below 0.30 liters!",
-        "timestamp": "1757448411",
+        "timestamp": "1757759384",
         "type": "warning",
         "plant_id": "my_lavanda1"
       }

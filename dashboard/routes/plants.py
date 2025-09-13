@@ -156,7 +156,9 @@ def get_all_plants():
     try:
         with open(config_file, 'r', encoding='utf-8') as f:
             config_data = json.load(f)
-            for plant_config in config_data:
+            # Handle both old format (list) and new format ({"plants": [...]})
+            plant_configs = config_data if isinstance(config_data, list) else config_data.get("plants", [])
+            for plant_config in plant_configs:
                 plant_id = plant_config.get('plant_id')
                 if plant_id:
                     plants_config[plant_id] = plant_config
@@ -191,9 +193,11 @@ def get_all_plants():
         
         # Format last watered time
         last_watered = "N/A"
-        if time_since_watering is not None:
+        if is_watering:
+            last_watered = "Ora"
+        elif time_since_watering is not None:
             # If irrigation is currently active, show "Ora"
-            if is_watering and time_since_watering.total_seconds() == 0:
+            if time_since_watering.total_seconds() == 0:
                 last_watered = "Ora"
             elif time_since_watering.days > 0:
                 last_watered = f"{time_since_watering.days} giorni fa"

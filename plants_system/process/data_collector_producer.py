@@ -16,7 +16,12 @@ class DataCollectorProducer:
         self.plant_descriptor = plant_descriptor
         self.command=command
         client_id = f"{self.plant_descriptor.plant_id}-data-collector-producer"
-        self.client = mqtt.Client(client_id)
+        # Compatibilità con versioni vecchie e nuove di paho-mqtt
+        try:
+            self.client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION1, client_id)
+        except AttributeError:
+            # Versione vecchia di paho-mqtt
+            self.client = mqtt.Client(client_id)
         self.client.on_connect = self.on_connect
         self.running = True
         

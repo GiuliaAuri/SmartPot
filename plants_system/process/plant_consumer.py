@@ -17,7 +17,12 @@ class PlantConsumer():
     def __init__(self, plant_descriptor: PlantDescriptor):
         self.plant_descriptor = plant_descriptor
         client_id = f"{self.plant_descriptor.plant_id}-plant-consumer"
-        self.client = mqtt.Client(client_id)
+        # Compatibilità con versioni vecchie e nuove di paho-mqtt
+        try:
+            self.client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION1, client_id)
+        except AttributeError:
+            # Versione vecchia di paho-mqtt
+            self.client = mqtt.Client(client_id)
         self.client.on_connect = self.on_connect
         self.client.on_message = self.on_message
         self.running = False
