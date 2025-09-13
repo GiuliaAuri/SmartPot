@@ -14,6 +14,17 @@ class SwitchActuator(ABC):
         self.status = not self.status
         
     def handle_command(self, command: str):
+        if self.is_real:
+            self.handle_command_real(command)
+        else:
+            self.handle_command_simulated(command)
+
+    def handle_command_real(self, command: str):
+        pass
+    #TODO: Implementare il comportamento reale
+
+    
+    def handle_command_simulated(self, command: str):
         if command.upper().startswith("ACTIVATE"):
             self.status = True
             logging.info(f"{self.device} -> switched ON")

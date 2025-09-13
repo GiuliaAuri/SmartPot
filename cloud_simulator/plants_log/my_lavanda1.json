@@ -63,6 +63,18 @@
           {
             "value": 1.8,
             "timestamp": "1757759420"
+          },
+          {
+            "value": 0.9,
+            "timestamp": "1757765397"
+          },
+          {
+            "value": 1.1,
+            "timestamp": "1757765437"
+          },
+          {
+            "value": 1.8,
+            "timestamp": "1757765457"
           }
         ]
       },
@@ -77,6 +89,14 @@
           {
             "value": 3.6,
             "timestamp": "1757759430"
+          },
+          {
+            "value": 3.8,
+            "timestamp": "1757764881"
+          },
+          {
+            "value": 0.4,
+            "timestamp": "1757765417"
           }
         ]
       },
@@ -87,6 +107,34 @@
           {
             "value": 0,
             "timestamp": "1757759440"
+          },
+          {
+            "value": 21.8,
+            "timestamp": "1757764851"
+          },
+          {
+            "value": 0,
+            "timestamp": "1757764859"
+          }
+        ]
+      },
+      {
+        "sensor": "lightness",
+        "device": "environment_telemetry",
+        "values": [
+          {
+            "value": 34906.3,
+            "timestamp": "1757764852"
+          }
+        ]
+      },
+      {
+        "sensor": "temperature",
+        "device": "environment_telemetry",
+        "values": [
+          {
+            "value": -4.7,
+            "timestamp": "1757765456"
           }
         ]
       }
@@ -102,6 +150,24 @@
       {
         "message": "Tank level below 0.30 liters!",
         "timestamp": "1757759384",
+        "type": "warning",
+        "plant_id": "my_lavanda1"
+      },
+      {
+        "message": "Battery level below 20%!",
+        "timestamp": "1757764863",
+        "type": "warning",
+        "plant_id": "my_lavanda1"
+      },
+      {
+        "message": "Battery level below 20%!",
+        "timestamp": "1757765400",
+        "type": "warning",
+        "plant_id": "my_lavanda1"
+      },
+      {
+        "message": "Tank level below 0.30 liters!",
+        "timestamp": "1757765410",
         "type": "warning",
         "plant_id": "my_lavanda1"
       }

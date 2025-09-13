@@ -37,6 +37,10 @@
           {
             "value": 39.3,
             "timestamp": "1757759439"
+          },
+          {
+            "value": 78.9,
+            "timestamp": "1757764852"
           }
         ]
       },
@@ -47,6 +51,14 @@
           {
             "value": 0.5,
             "timestamp": "1757759370"
+          },
+          {
+            "value": 3.9,
+            "timestamp": "1757764880"
+          },
+          {
+            "value": 2.4,
+            "timestamp": "1757765407"
           }
         ]
       },
@@ -77,6 +89,14 @@
           {
             "value": 0.6,
             "timestamp": "1757759430"
+          },
+          {
+            "value": 1.4,
+            "timestamp": "1757764871"
+          },
+          {
+            "value": 0.8,
+            "timestamp": "1757764891"
           }
         ]
       },
@@ -87,6 +107,24 @@
           {
             "value": 0,
             "timestamp": "1757759440"
+          },
+          {
+            "value": 5.5,
+            "timestamp": "1757764851"
+          },
+          {
+            "value": 0,
+            "timestamp": "1757764859"
+          }
+        ]
+      },
+      {
+        "sensor": "lightness",
+        "device": "environment_telemetry",
+        "values": [
+          {
+            "value": 74702.6,
+            "timestamp": "1757765447"
           }
         ]
       }
@@ -102,6 +140,18 @@
       {
         "message": "Tank level below 0.30 liters!",
         "timestamp": "1757759424",
+        "type": "warning",
+        "plant_id": "my_felce1"
+      },
+      {
+        "message": "Battery level below 20%!",
+        "timestamp": "1757764856",
+        "type": "warning",
+        "plant_id": "my_felce1"
+      },
+      {
+        "message": "Battery level below 20%!",
+        "timestamp": "1757765399",
         "type": "warning",
         "plant_id": "my_felce1"
       }

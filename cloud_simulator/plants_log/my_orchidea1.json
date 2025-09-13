@@ -37,6 +37,10 @@
           {
             "value": 22.8,
             "timestamp": "1757759439"
+          },
+          {
+            "value": 55.3,
+            "timestamp": "1757764860"
           }
         ]
       },
@@ -67,6 +71,58 @@
           {
             "value": 1.7,
             "timestamp": "1757759440"
+          },
+          {
+            "value": 3.0,
+            "timestamp": "1757764861"
+          }
+        ]
+      },
+      {
+        "sensor": "battery_level",
+        "device": "environment_telemetry",
+        "values": [
+          {
+            "value": 0,
+            "timestamp": "1757764851"
+          }
+        ]
+      },
+      {
+        "sensor": "level_tank",
+        "device": "tank_monitoring",
+        "values": [
+          {
+            "value": 0.7,
+            "timestamp": "1757764890"
+          },
+          {
+            "value": 0.2,
+            "timestamp": "1757765449"
+          }
+        ]
+      },
+      {
+        "sensor": "lightness",
+        "device": "environment_telemetry",
+        "values": [
+          {
+            "value": 85868.0,
+            "timestamp": "1757765437"
+          },
+          {
+            "value": 94012.4,
+            "timestamp": "1757765447"
+          }
+        ]
+      },
+      {
+        "sensor": "temperature",
+        "device": "environment_telemetry",
+        "values": [
+          {
+            "value": 31.4,
+            "timestamp": "1757765456"
           }
         ]
       }
@@ -76,6 +132,30 @@
       {
         "message": "Tank level below 0.30 liters!",
         "timestamp": "1757759433",
+        "type": "warning",
+        "plant_id": "my_orchidea1"
+      },
+      {
+        "message": "Battery level below 20%!",
+        "timestamp": "1757764856",
+        "type": "warning",
+        "plant_id": "my_orchidea1"
+      },
+      {
+        "message": "Tank level below 0.30 liters!",
+        "timestamp": "1757764856",
+        "type": "warning",
+        "plant_id": "my_orchidea1"
+      },
+      {
+        "message": "Battery level below 20%!",
+        "timestamp": "1757765400",
+        "type": "warning",
+        "plant_id": "my_orchidea1"
+      },
+      {
+        "message": "Tank level below 0.30 liters!",
+        "timestamp": "1757765411",
         "type": "warning",
         "plant_id": "my_orchidea1"
       }

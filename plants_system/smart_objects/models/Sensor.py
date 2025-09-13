@@ -1,4 +1,7 @@
 from abc import ABC, abstractmethod
+import logging
+import random
+import time
 from typing import Generic, TypeVar
 import json
 
@@ -17,9 +20,20 @@ class Sensor(ABC, Generic[T]):
         self.timestamp = 0
         self.is_real = is_real
 
-    @abstractmethod
     def update(self):
+        if self.is_real:
+            self.update_real()
+        else:
+            self.update_simulated()
+
+    def update_real(self):
         pass
+    #TODO: Implementare il comportamento reale
+
+    def update_simulated(self):
+        self.value = round(random.uniform(self.min_value, self.max_value),1)
+        self.timestamp = int(time.time())
+        logging.info(f"Updated {self.type} measurement: {self.value} {self.unit} at {self.timestamp} - plant: {self.plant_id}")
 
     def to_json(self):
         """

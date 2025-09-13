@@ -51,6 +51,22 @@
           {
             "value": 4.6,
             "timestamp": "1757759430"
+          },
+          {
+            "value": 1.7,
+            "timestamp": "1757764854"
+          },
+          {
+            "value": 0.0,
+            "timestamp": "1757764871"
+          },
+          {
+            "value": 2.3,
+            "timestamp": "1757764892"
+          },
+          {
+            "value": 3.2,
+            "timestamp": "1757764901"
           }
         ]
       },
@@ -77,6 +93,76 @@
           {
             "value": 1.1,
             "timestamp": "1757759440"
+          },
+          {
+            "value": 1.3,
+            "timestamp": "1757764881"
+          },
+          {
+            "value": 0.9,
+            "timestamp": "1757765397"
+          },
+          {
+            "value": 0.3,
+            "timestamp": "1757765407"
+          }
+        ]
+      },
+      {
+        "sensor": "battery_level",
+        "device": "environment_telemetry",
+        "values": [
+          {
+            "value": 0,
+            "timestamp": "1757764850"
+          },
+          {
+            "value": 54.3,
+            "timestamp": "1757765396"
+          },
+          {
+            "value": 44.3,
+            "timestamp": "1757765406"
+          },
+          {
+            "value": 3.5,
+            "timestamp": "1757765416"
+          },
+          {
+            "value": 0,
+            "timestamp": "1757765436"
+          }
+        ]
+      },
+      {
+        "sensor": "temperature",
+        "device": "environment_telemetry",
+        "values": [
+          {
+            "value": 25.1,
+            "timestamp": "1757764851"
+          },
+          {
+            "value": 29.3,
+            "timestamp": "1757764859"
+          },
+          {
+            "value": 0.6,
+            "timestamp": "1757765456"
+          }
+        ]
+      },
+      {
+        "sensor": "lightness",
+        "device": "environment_telemetry",
+        "values": [
+          {
+            "value": 72332.6,
+            "timestamp": "1757764890"
+          },
+          {
+            "value": 28998.5,
+            "timestamp": "1757765437"
           }
         ]
       }
@@ -92,6 +178,24 @@
       {
         "message": "Tank level below 0.30 liters!",
         "timestamp": "1757759394",
+        "type": "warning",
+        "plant_id": "my_cactus1"
+      },
+      {
+        "message": "Battery level below 20%!",
+        "timestamp": "1757764857",
+        "type": "warning",
+        "plant_id": "my_cactus1"
+      },
+      {
+        "message": "Battery level below 20%!",
+        "timestamp": "1757765441",
+        "type": "warning",
+        "plant_id": "my_cactus1"
+      },
+      {
+        "message": "Tank level below 0.30 liters!",
+        "timestamp": "1757765441",
         "type": "warning",
         "plant_id": "my_cactus1"
       }
