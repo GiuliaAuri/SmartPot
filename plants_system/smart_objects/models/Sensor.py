@@ -37,13 +37,19 @@ class Sensor(ABC, Generic[T]):
                 logging.warning(f"Impossibile inizializzare Bridge per sensore {self.type}: {e}")
                 return
         
+        # Debug: mostra tutti i valori disponibili nel Bridge
+        all_values = self.bridge_serial.get_sensor_value(None)
+        logging.debug(f"Bridge values disponibili per {self.plant_id}: {all_values}")
+        
         sensor_value = self.bridge_serial.get_sensor_value(self.type)
+        logging.debug(f"Valore richiesto per {self.type}: {sensor_value}")
+        
         if sensor_value is not None:
             self.value = sensor_value
             self.timestamp = int(time.time())
             logging.info(f"Updated real {self.type} measurement: {self.value} {self.unit} at {self.timestamp} - plant: {self.plant_id}")
         else:
-            logging.warning(f"Nessun valore disponibile per sensore {self.type}")
+            logging.warning(f"Nessun valore disponibile per sensore {self.type} - plant: {self.plant_id}")
 
     def update_simulated(self):
         self.value = round(random.uniform(self.min_value, self.max_value),1)

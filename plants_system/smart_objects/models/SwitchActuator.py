@@ -26,10 +26,12 @@ class SwitchActuator(ABC):
         if self.bridge_serial is None:
             try:
                 self.bridge_serial = Bridge()
+                logging.info(f"Bridge inizializzato per attuatore {self.type}")
             except Exception as e:
                 logging.warning(f"Impossibile inizializzare Bridge per attuatore {self.type}: {e}")
                 return
         
+        logging.info(f"Invio comando reale per {self.type}: {command}")
         self.bridge_serial.send_actuator_command(self.type, command)
         logging.info(f"Comando reale inviato per {self.type}: {command}")
 

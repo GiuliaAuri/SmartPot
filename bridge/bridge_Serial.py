@@ -108,6 +108,7 @@ class Bridge(threading.Thread):
 				if self.ser.in_waiting>0:
 					# data available from the serial port
 					lastchar=self.ser.read(1)
+					print(f"ARDUINO: Byte ricevuto: {lastchar}")
 
 					if lastchar==b'\xfe': #EOL
 						print("\nARDUINO: Value received")
@@ -117,6 +118,12 @@ class Bridge(threading.Thread):
 					else:
 						# append
 						self.inbuffer.append (lastchar)
+				else:
+					# Nessun dato disponibile, aspetta un po'
+					time.sleep(0.01)
+			else:
+				print("ARDUINO: Serial port non disponibile")
+				time.sleep(1)
 		
 
 	def useData(self):
@@ -168,8 +175,15 @@ class Bridge(threading.Thread):
 		"""
 		with self.lock:
 			if sensor_type is None:
+				logging.debug(f"Bridge: sensor_type is None")
 				return self.sensor_values.copy()
-			return self.sensor_values.get(sensor_type, None)
+			
+			value = self.sensor_values.get(sensor_type, None)
+			if value is None:
+				logging.debug(f"Bridge: Nessun valore trovato per sensore '{sensor_type}'. Valori disponibili: {list(self.sensor_values.keys())}")
+			else:
+				logging.debug(f"Bridge: Valore trovato per '{sensor_type}': {value}")
+			return value
 	
 	def get_sensor_timestamp(self, sensor_type):
 		"""
@@ -187,11 +201,12 @@ class Bridge(threading.Thread):
 			if self.ser is not None:
 				if actuator_type == "irrigation":
 					# Arduino legge: type = Serial.read(); val = Serial.read();
-					if command.upper().startswith("ACTIVATE"):
+					command_upper = command.upper()
+					if command_upper.startswith("ACTIVATE") or command_upper == "ON":
 						self.ser.write(b'I')  # Tipo attuatore (ACTUATOR_TYPE)
 						self.ser.write(b'A')  # Comando ATTIVA
 						print(f"ARDUINO: Comando ATTIVA inviato per {actuator_type}")
-					elif command.upper().startswith("DEACTIVATE"):
+					elif command_upper.startswith("DEACTIVATE") or command_upper == "OFF":
 						self.ser.write(b'I')  # Tipo attuatore (ACTUATOR_TYPE)
 						self.ser.write(b'S')  # Comando DISATTIVA
 						print(f"ARDUINO: Comando DISATTIVA inviato per {actuator_type}")
