@@ -2,6 +2,7 @@ import json
 import os
 import glob
 import logging
+import time
 from flask import Blueprint, jsonify, current_app
 from processors.policy_evaluator import PolicyEvaluator
 from utils.helpers import format_timestamp
@@ -13,9 +14,6 @@ def get_alerts():
     """Get current alerts from all plants based on policies"""
     
     # Ricarica i dati dai file JSON ad ogni richiesta
-    
-    
-    # Usa il percorso assoluto
     log_dir = r"C:\Users\giuli\Documents\unimore\internet of things\Plants-System\cloud_simulator\plants_log"
     
     logging.info(f"Loading alerts from: {log_dir}")
@@ -46,13 +44,13 @@ def get_alerts():
     for plant_id, plant_data in plants_data.items():
         # Get alerts from plant log file (if any)
         plant_alerts = plant_data.get('alerts', [])
-        logging.info(f"Found {len(plant_alerts)} alerts for plant {plant_id}")
+        logging.info(f"Found {len(plant_alerts)} saved alerts for plant {plant_id}")
         
         for alert in plant_alerts:
             all_alerts.append({
                 "id": alert_id,
                 "type": alert.get('type', 'info'),
-                "plantName": plant_id,  # Usa sempre l'ID per consistenza
+                "plantName": plant_id,
                 "message": alert.get('message', ''),
                 "timestamp": format_timestamp(alert.get('timestamp', ''))
             })

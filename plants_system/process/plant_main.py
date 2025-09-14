@@ -7,6 +7,7 @@ import threading
 from plants_system.smart_objects.resources.factory_plants import PlantFactory
 from plants_system.process.plant_producer import PlantProducer
 from plants_system.process.plant_consumer import PlantConsumer
+from bridge.bridge_Serial import Bridge
 
 class Plants:
     """
@@ -24,6 +25,7 @@ class Plants:
         self.threads = []
         self.producers = []
         self.consumers = []
+        self.arduino_bridge = Bridge()  # Inizializza il Bridge Arduino
 
     def start(self):
         """
@@ -39,6 +41,13 @@ class Plants:
             self.threads.extend([t_producer, t_consumer])
             self.producers.append(producer)
             self.consumers.append(consumer)
+        
+        # Avvia il Bridge Arduino
+        if self.arduino_bridge.start():
+            self.threads.append(self.arduino_bridge)  # Aggiungi il Bridge alla lista dei thread
+            print("Sistema completo avviato: MQTT + Arduino Bridge")
+        else:
+            print("Sistema avviato senza Arduino Bridge (porta seriale non disponibile)")
 
     def stop(self):
         """
@@ -48,6 +57,8 @@ class Plants:
             producer.stop()
         for consumer in self.consumers:
             consumer.stop()
+        # Ferma il Bridge Arduino
+        self.arduino_bridge.stop()
         for thread in self.threads:
             thread.join()
 

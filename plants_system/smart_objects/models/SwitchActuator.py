@@ -1,5 +1,6 @@
 from abc import ABC
 import logging
+from bridge.bridge_Serial import Bridge
 
 class SwitchActuator(ABC):
 
@@ -9,6 +10,7 @@ class SwitchActuator(ABC):
         self.type = type
         self.device = device
         self.is_real = is_real
+        self.bridge_serial = Bridge()  # Usa l'istanza singleton condivisa
         
     def change_status(self):
         self.status = not self.status
@@ -20,8 +22,8 @@ class SwitchActuator(ABC):
             self.handle_command_simulated(command)
 
     def handle_command_real(self, command: str):
-        pass
-    #TODO: Implementare il comportamento reale
+        self.bridge_serial.send_actuator_command(self.type, command)
+        logging.info(f"Comando reale inviato per {self.type}: {command}")
 
     
     def handle_command_simulated(self, command: str):

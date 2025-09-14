@@ -4,6 +4,7 @@ import random
 import time
 from typing import Generic, TypeVar
 import json
+from bridge.bridge_Serial import Bridge
 
 T = TypeVar('T')
 
@@ -19,6 +20,7 @@ class Sensor(ABC, Generic[T]):
         self.device = device
         self.timestamp = 0
         self.is_real = is_real
+        self.bridge_serial = Bridge()  # Usa l'istanza singleton condivisa
 
     def update(self):
         if self.is_real:
@@ -27,8 +29,13 @@ class Sensor(ABC, Generic[T]):
             self.update_simulated()
 
     def update_real(self):
-        pass
-    #TODO: Implementare il comportamento reale
+        sensor_value = self.bridge_serial.get_sensor_value(self.type)
+        if sensor_value is not None:
+            self.value = sensor_value
+            self.timestamp = int(time.time())
+            logging.info(f"Updated real {self.type} measurement: {self.value} {self.unit} at {self.timestamp} - plant: {self.plant_id}")
+        else:
+            logging.warning(f"Nessun valore disponibile per sensore {self.type}")
 
     def update_simulated(self):
         self.value = round(random.uniform(self.min_value, self.max_value),1)

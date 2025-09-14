@@ -18,7 +18,7 @@ class Bridge():
 		self.ser = None
 
 		if self.config.get("Serial","UseDescription", fallback=False):
-			self.portname = self.config.get("Serial","PortNamgit push --force origin main_pce", fallback="COM1")
+			self.portname = self.config.get("Serial","PortName", fallback="COM1")
 		else:
 			print("list of available ports: ")
 			ports = serial.tools.list_ports.comports()
