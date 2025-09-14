@@ -26,6 +26,7 @@ class Plants:
         self.producers = []
         self.consumers = []
         self.arduino_bridge = Bridge()  # Inizializza il Bridge Arduino
+        self.arduino_thread = None  # Thread del Bridge Arduino
 
     def start(self):
         """
@@ -44,7 +45,7 @@ class Plants:
         
         # Avvia il Bridge Arduino
         if self.arduino_bridge.start():
-            self.threads.append(self.arduino_bridge)  # Aggiungi il Bridge alla lista dei thread
+            self.arduino_thread = self.arduino_bridge  # Il Bridge stesso è un thread
             print("Sistema completo avviato: MQTT + Arduino Bridge")
         else:
             print("Sistema avviato senza Arduino Bridge (porta seriale non disponibile)")
@@ -53,14 +54,28 @@ class Plants:
         """
         Interrompe i producer e i consumer e attende la terminazione dei thread.
         """
+        print("Stopping producers...")
         for producer in self.producers:
             producer.stop()
+        
+        print("Stopping consumers...")
         for consumer in self.consumers:
             consumer.stop()
+        
+        print("Stopping Arduino bridge...")
         # Ferma il Bridge Arduino
         self.arduino_bridge.stop()
+        
+        print("Waiting for threads to finish...")
+        # Attendi la terminazione dei thread normali
         for thread in self.threads:
-            thread.join()
+            thread.join(timeout=5.0)  # Timeout di 5 secondi
+        
+        # Attendi la terminazione del thread Arduino
+        if self.arduino_thread:
+            self.arduino_thread.join(timeout=5.0)
+        
+        print("All threads stopped successfully")
 
 if __name__ == "__main__":
     """

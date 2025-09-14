@@ -37,6 +37,9 @@ class PolicyManager:
         
         Questo metodo valuta tutte le policy definite per la pianta specificata,
         generando alert e azioni in base ai valori dei sensori.
+        
+        Returns:
+            tuple: (alerts, actions) - Lista di alert e azioni per la pianta
         """
         policies = self.plant_policies.get(plant.plant_id, [])
         logging.info(f"Evaluating {len(policies)} policies for plant {plant.plant_id}")
@@ -77,6 +80,10 @@ class PolicyManager:
                         # Evita duplicati
                         if action_str not in self.actions[plant.plant_id]:
                             self.actions[plant.plant_id].append(action_str)
+                            logging.info(f"Generated action for {plant.plant_id}: {action_str}")
+        
+        # Restituisce le liste di alert e azioni per questa pianta
+        return (self.alerts[plant.plant_id], self.actions[plant.plant_id])
 
     @staticmethod
     def _find_sensor(plant: PlantDescriptor, sensor_type: str):
@@ -100,6 +107,6 @@ class PolicyManager:
         """
         for device in plant.devices:
             for a in getattr(device, "actuators", []):
-                if a.device == actuator_name:
+                if a.type == actuator_name:
                     return a
         return None

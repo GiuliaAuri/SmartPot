@@ -79,10 +79,15 @@ class PlantConsumer():
         topic_parts = msg.topic.split('/')
         if len(topic_parts) >= 5:
             device_id = topic_parts[3]  # plant/{plant_id}/device/{device_id}/command
+            logging.info(f"Processing command for device: {device_id}")
+            
             for device in self.plant_descriptor.devices:
-                for actuator in device.actuators:
-                    if actuator.device == device_id:
+                if device.device == device_id:  # Trova il dispositivo corretto
+                    logging.info(f"Found device: {device.device}")
+                    for actuator in device.actuators:
+                        logging.info(f"Found actuator: {actuator.type}")
                         actuator.handle_command(command=message_payload)
+                        logging.info(f"Command '{message_payload}' sent to actuator {actuator.type}")
 
     def stop(self):
         """
