@@ -66,9 +66,13 @@ class Bridge():
 		print(msg.topic + " " + str(msg.payload))
 		if self.ser is not None:
 			if int(msg.payload) > 100:
-				self.ser.write(b'A')
+				self.ser.write(b'I')  # Tipo attuatore (ACTUATOR_TYPE)
+				self.ser.write(b'A')  # Comando ATTIVA
+				print("Comando ATTIVA inviato: I + A")
 			else:
-				self.ser.write(b'S')
+				self.ser.write(b'I')  # Tipo attuatore (ACTUATOR_TYPE)
+				self.ser.write(b'S')  # Comando DISATTIVA
+				print("Comando DISATTIVA inviato: I + S")
 		else:
 			print("Serial port not available!")
 
