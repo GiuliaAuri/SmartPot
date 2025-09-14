@@ -13,8 +13,6 @@ from managers.config_manager import ConfigManager
 # Import processors
 from processors.sensor_processor import SensorDataProcessor
 from processors.actuator_processor import ActuatorDataProcessor
-from processors.policy_evaluator import PolicyEvaluator
-from processors.status_evaluator import PlantStatusEvaluator
 
 # Import routes
 from routes.plants import plants_bp
@@ -57,19 +55,11 @@ data_manager = PlantDataManager()
 sensor_processor = SensorDataProcessor()
 actuator_processor = ActuatorDataProcessor()
 
-# Caricamento configurazioni e dati
+# Caricamento dati
 if data_manager.load_configurations():
     app.plants_data = data_manager.load_plants_data()
-    policy_evaluator = PolicyEvaluator(data_manager.policies_config)
-    status_evaluator = PlantStatusEvaluator(policy_evaluator)
-    app.status_evaluator = status_evaluator
-    app.policy_evaluator = policy_evaluator
 else:
     app.plants_data = {}
-    policy_evaluator = None
-    status_evaluator = None
-    app.status_evaluator = None
-    app.policy_evaluator = None
 
 # Registrazione blueprint
 app.register_blueprint(plants_bp)

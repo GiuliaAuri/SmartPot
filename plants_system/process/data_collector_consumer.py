@@ -10,7 +10,7 @@ from conf.mqtt_conf_params import MqttConfigurationParameters
 from plants_system.smart_objects.models.plant_descriptor import PlantDescriptor
 from plants_system.process.policy_manager import PolicyManager
 from plants_system.process.data_collector_producer import DataCollectorProducer
-
+POLLING_INTERVAL = 2
 class DataCollectorConsumer:
     """
     Consumer MQTT per la raccolta e elaborazione dei dati delle piante.
@@ -311,8 +311,21 @@ class DataCollectorConsumer:
         self.client.loop_start()
         self.running = True
         
+        # Inizializza lo stato degli attuatori
+        self.initialize_actuator_states()
+        
+        # Inizializza il polling per rilevare cambiamenti negli attuatori
+        self.last_actuator_check = time.time()
+        self.actuator_polling_interval = POLLING_INTERVAL  # Controlla ogni 2 secondi
+        
         try:
             while self.running:
+                # Polling per rilevare cambiamenti negli attuatori
+                current_time = time.time()
+                if current_time - self.last_actuator_check >= self.actuator_polling_interval:
+                    self._check_actuator_changes()
+                    self.last_actuator_check = current_time
+                
                 time.sleep(1)
         finally:
             self.client.loop_stop()
@@ -576,7 +589,7 @@ class DataCollectorConsumer:
         # Trova o crea l'attuatore
         actuator_found = False
         for a in plant["actuators"]:
-            if a.get("actuator") == actuator_type and a.get("device") == device_name:
+            if a.get("type") == actuator_type and a.get("device") == device_name:
                 actuator_found = True
                 if "values" not in a:
                     a["values"] = []
@@ -590,7 +603,7 @@ class DataCollectorConsumer:
         
         if not actuator_found:
             plant["actuators"].append({
-                "actuator": actuator_type,
+                "type": actuator_type,
                 "device": device_name,
                 "values": [{"value": value, "timestamp": str(timestamp)}]
             })
@@ -696,7 +709,7 @@ class DataCollectorConsumer:
                 if plant["plant_id"] == self.plant_descriptor.plant_id:
                     actuators = plant.get("actuators", [])
                     for actuator in actuators:
-                        if actuator.get("actuator") == actuator_type:
+                        if actuator.get("type") == actuator_type:
                             values = actuator.get("values", [])
                             if values:
                                 return values[-1].get("value", False)
@@ -705,4 +718,130 @@ class DataCollectorConsumer:
             logging.error(f"Error reading actuator state: {e}")
             
         return False
+
+    def initialize_actuator_states(self):
+        """
+        Inizializza lo stato degli attuatori nel file JSON se non esistono.
+        
+        Questo metodo crea le voci degli attuatori con stato iniziale False
+        per tutti gli attuatori definiti nella configurazione della pianta.
+        """
+        try:
+            # Leggi i dati esistenti
+            plants = self._safe_read_json()
+            
+            # Trova la pianta
+            plant = None
+            for p in plants:
+                if p["plant_id"] == self.plant_descriptor.plant_id:
+                    plant = p
+                    break
+            
+            if not plant:
+                logging.warning(f"Plant {self.plant_descriptor.plant_id} not found for actuator initialization")
+                return
+            
+            # Assicurati che la sezione actuators esista
+            if "actuators" not in plant:
+                plant["actuators"] = []
+            
+            # Inizializza tutti gli attuatori definiti nella configurazione
+            for device in self.plant_descriptor.devices:
+                for actuator in getattr(device, "actuators", []):
+                    actuator_type = getattr(actuator, "type", None)
+                    if actuator_type:
+                        # Controlla se l'attuatore esiste già
+                        actuator_exists = False
+                        for existing_actuator in plant["actuators"]:
+                            if existing_actuator.get("type") == actuator_type:
+                                actuator_exists = True
+                                break
+                        
+                        # Se non esiste, crealo con stato iniziale False
+                        if not actuator_exists:
+                            plant["actuators"].append({
+                                "type": actuator_type,
+                                "device": device.device,
+                                "values": [{"value": False, "timestamp": str(int(time.time()))}]
+                            })
+                            logging.info(f"Initialized actuator {actuator_type} with state False")
+            
+            # Salva i dati aggiornati
+            if not self._safe_write_json(plants):
+                logging.error("Failed to initialize actuator states")
+                
+        except Exception as e:
+            logging.error(f"Error initializing actuator states: {e}")
+
+    def _check_actuator_changes(self):
+        """
+        Controlla se ci sono stati cambiamenti negli attuatori nei file JSON.
+        
+        Questo metodo legge i file JSON e rileva se ci sono stati cambiamenti
+        negli stati degli attuatori che richiedono l'invio di comandi MQTT.
+        """
+        try:
+            # Leggi i dati attuali dal file JSON
+            plants = self._safe_read_json()
+            
+            # Trova la pianta corrente
+            plant = None
+            for p in plants:
+                if p["plant_id"] == self.plant_descriptor.plant_id:
+                    plant = p
+                    break
+            
+            if not plant or "actuators" not in plant:
+                return
+            
+            # Controlla ogni attuatore per cambiamenti
+            for actuator_data in plant["actuators"]:
+                if "values" not in actuator_data or not actuator_data["values"]:
+                    continue
+                
+                # Prendi l'ultimo valore
+                last_value = actuator_data["values"][-1]
+                current_state = last_value["value"]
+                timestamp = last_value["timestamp"]
+                
+                # Controlla se questo è un cambiamento recente (ultimi 5 secondi)
+                current_time = int(time.time())
+                if current_time - int(timestamp) <= 5:
+                    # Questo è un cambiamento recente, invia comando MQTT
+                    self._send_actuator_command(actuator_data, current_state)
+                    
+        except Exception as e:
+            logging.error(f"Error checking actuator changes: {e}")
+    
+    def _send_actuator_command(self, actuator_data, state):
+        """
+        Invia un comando MQTT per l'attuatore specificato.
+        
+        Args:
+            actuator_data: Dati dell'attuatore dal JSON
+            state: Nuovo stato dell'attuatore (True/False)
+        """
+        try:
+            actuator_type = actuator_data.get("type")
+            device_name = actuator_data.get("device")
+            
+            if not actuator_type or not device_name:
+                logging.warning(f"Incomplete actuator data: {actuator_data}")
+                return
+            
+            # Determina il comando basato sullo stato
+            command = "on" if state else "off"
+            
+            # Costruisci il topic MQTT
+            topic = MqttConfigurationParameters.build_command_plant_topic(
+                self.plant_descriptor.plant_id, 
+                device_name
+            )
+            
+            # Invia il comando MQTT
+            self.client.publish(topic, command)
+            logging.info(f"Sent actuator command: {command} to topic: {topic}")
+            
+        except Exception as e:
+            logging.error(f"Error sending actuator command: {e}")
 

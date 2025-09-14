@@ -1,9 +1,11 @@
 from flask import Blueprint, jsonify, request, current_app
 from datetime import datetime
 import logging
+import json
+import os
+import glob
 from processors.sensor_processor import SensorDataProcessor
 from processors.actuator_processor import ActuatorDataProcessor
-from processors.status_evaluator import PlantStatusEvaluator
 from utils.helpers import format_timestamp
 plants_bp = Blueprint('plants', __name__)
 
@@ -54,10 +56,14 @@ def post_actuator_command(plant_id, actuator_name):
     """Send command to plant actuator"""
     
     if plant_id not in current_app.plants_data:
+        logging.error(f"Plant {plant_id} not found in plants_data. Available plants: {list(current_app.plants_data.keys())}")
         return {"error": "Plant not found"}, 404
 
     plant_data = current_app.plants_data[plant_id]
     actuators = plant_data.get('actuators', [])
+    
+    logging.info(f"Found plant {plant_id} with {len(actuators)} actuators")
+    logging.info(f"Plant data keys: {list(plant_data.keys())}")
     
     command = request.json.get("command")
     if not command:
@@ -71,7 +77,7 @@ def post_actuator_command(plant_id, actuator_name):
     # Find the actuator and update its state
     actuator_found = False
     for actuator in actuators:
-        if actuator.get('actuator') == actuator_name:
+        if actuator.get('type') == actuator_name:
             actuator_found = True
             if 'values' not in actuator:
                 actuator['values'] = []
@@ -96,7 +102,7 @@ def post_actuator_command(plant_id, actuator_name):
     if not actuator_found:
         new_value = command in ['on', 'start', 'true', '1']
         actuators.append({
-            "actuator": actuator_name,
+            "type": actuator_name,
             "device": f"{actuator_name}_device",
             "values": [{
                 "value": new_value,
@@ -105,6 +111,11 @@ def post_actuator_command(plant_id, actuator_name):
         })
         logging.info(f"Created new actuator {actuator_name} with value {new_value}")
 
+    # Scrivi lo stato aggiornato nel file JSON
+    _write_plant_data_to_json(plant_id, plant_data)
+    
+    # Aggiorna anche i dati in memoria
+    current_app.plants_data[plant_id] = plant_data
     
     return {
         "status": "success",
@@ -208,10 +219,19 @@ def get_all_plants():
                 minutes = time_since_watering.seconds // 60
                 last_watered = f"{minutes} minuti fa"
         
-        # Determine overall status
+        # Determine overall status based on alerts count
         status = "unknown"
-        if current_app.status_evaluator:
-            status = current_app.status_evaluator.determine_plant_status(plant_id, sensors)
+        alerts = plant_data.get('alerts', [])
+        alert_count = len(alerts)
+        
+        if alert_count == 0:
+            status = "good"
+        elif alert_count == 1:
+            status = "healthy"
+        elif alert_count == 2:
+            status = "warning"
+        else:
+            status = "critical"
         
         plant_info = {
             "id": plant_id,
@@ -231,3 +251,52 @@ def get_all_plants():
         plants_list.append(plant_info)
     
     return jsonify(plants_list), 200
+
+def _write_plant_data_to_json(plant_id, plant_data):
+    """
+    Scrive i dati della pianta nel file JSON corrispondente.
+    
+    Args:
+        plant_id: ID della pianta
+        plant_data: Dati della pianta da scrivere
+    """
+    try:
+        # Percorso del file JSON (relativo alla root del progetto)
+        project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        log_dir = os.path.join(project_root, "cloud_simulator", "plants_log")
+        json_file = os.path.join(log_dir, f"{plant_id}.json")
+        
+        # Assicurati che la directory esista
+        os.makedirs(log_dir, exist_ok=True)
+        
+        # Leggi i dati esistenti se il file esiste
+        existing_data = []
+        if os.path.exists(json_file):
+            try:
+                with open(json_file, 'r', encoding='utf-8') as f:
+                    existing_data = json.load(f)
+                    if not isinstance(existing_data, list):
+                        existing_data = []
+            except Exception as e:
+                logging.error(f"Error reading existing JSON file {json_file}: {e}")
+                existing_data = []
+        
+        # Trova o crea l'entrata per questa pianta
+        plant_found = False
+        for i, plant in enumerate(existing_data):
+            if plant.get('plant_id') == plant_id:
+                existing_data[i] = plant_data
+                plant_found = True
+                break
+        
+        if not plant_found:
+            existing_data.append(plant_data)
+        
+        # Scrivi i dati aggiornati
+        with open(json_file, 'w', encoding='utf-8') as f:
+            json.dump(existing_data, f, indent=2, ensure_ascii=False)
+        
+        logging.info(f"Successfully wrote plant data to {json_file}")
+        
+    except Exception as e:
+        logging.error(f"Error writing plant data to JSON: {e}")

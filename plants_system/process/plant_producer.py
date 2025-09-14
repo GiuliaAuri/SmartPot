@@ -62,7 +62,10 @@ class PlantProducer:
         
         Questo metodo viene chiamato quando il producer si connette al broker MQTT.
         """
-        logging.info("Connected with result code %s", str(rc))
+        if rc == 0:
+            logging.info("Connected with result code %s", str(rc))
+        else:
+            logging.error("Failed to connect to MQTT broker with result code %s", str(rc))
 
     def generate_telemetry(self):
         """

@@ -60,9 +60,13 @@ class PlantConsumer():
         
         Questo metodo viene chiamato quando il consumer si connette al broker MQTT.
         """
-        plant_topic = MqttConfigurationParameters.build_command_plant_topic(self.plant_descriptor.plant_id, "+")
-        self.client.subscribe(plant_topic)
-        logging.info(f"Subscribed to topic: {plant_topic}")
+        if rc == 0:
+            logging.info("Connected with result code %s", str(rc))
+            plant_topic = MqttConfigurationParameters.build_command_plant_topic(self.plant_descriptor.plant_id, "+")
+            self.client.subscribe(plant_topic)
+            logging.info(f"Subscribed to topic: {plant_topic}")
+        else:
+            logging.error("Failed to connect to MQTT broker with result code %s", str(rc))
 
     def on_message(self, client, userdata, msg):
         """
@@ -80,7 +84,15 @@ class PlantConsumer():
                     if actuator.device == device_id:
                         actuator.handle_command(command=message_payload)
 
-
+    def stop(self):
+        """
+        Interrompe il consumer MQTT e termina la connessione.
+        
+        Questo metodo chiude il loop di ricezione messaggi e si disconnette dal broker MQTT.
+        """
+        self.running = False
+        self.client.disconnect()
+        logging.info("PlantConsumer stopped...")
 
 
 

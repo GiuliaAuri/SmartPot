@@ -27,10 +27,11 @@ class SwitchActuator(ABC):
 
     
     def handle_command_simulated(self, command: str):
-        if command.upper().startswith("ACTIVATE"):
+        command_upper = command.upper()
+        if command_upper.startswith("ACTIVATE") or command_upper == "ON" or command_upper == "1" or command_upper == "TRUE":
             self.status = True
             logging.info(f"{self.device} -> switched ON")
-        elif command.upper().startswith("DEACTIVATE"):
+        elif command_upper.startswith("DEACTIVATE") or command_upper == "OFF" or command_upper == "0" or command_upper == "FALSE":
             self.status = False
             logging.info(f"{self.device} -> switched OFF")
         else:

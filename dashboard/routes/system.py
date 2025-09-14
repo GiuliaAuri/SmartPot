@@ -25,7 +25,7 @@ def get_status():
         "status": "running",
         "plants_loaded": plants_count,
         "data_source": "cloud_simulator JSON files",
-        "policies_loaded": current_app.policy_evaluator is not None,
+        "policies_loaded": False, #TODO: RIGA DA ELIMINARE
         "update_frequency": f"{update_freq} seconds",
         "last_update": datetime.now().isoformat()
     }), 200

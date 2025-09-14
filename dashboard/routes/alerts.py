@@ -4,7 +4,6 @@ import glob
 import logging
 import time
 from flask import Blueprint, jsonify, current_app
-from processors.policy_evaluator import PolicyEvaluator
 from utils.helpers import format_timestamp
 alerts_bp = Blueprint('alerts', __name__)
 
