@@ -20,7 +20,7 @@ class Sensor(ABC, Generic[T]):
         self.device = device
         self.timestamp = 0
         self.is_real = is_real
-        self.bridge_serial = Bridge()  # Usa l'istanza singleton condivisa
+        self.bridge_serial = None  # Inizializzato solo quando necessario
 
     def update(self):
         if self.is_real:
@@ -29,6 +29,14 @@ class Sensor(ABC, Generic[T]):
             self.update_simulated()
 
     def update_real(self):
+        # Inizializza il Bridge solo quando necessario
+        if self.bridge_serial is None:
+            try:
+                self.bridge_serial = Bridge()
+            except Exception as e:
+                logging.warning(f"Impossibile inizializzare Bridge per sensore {self.type}: {e}")
+                return
+        
         sensor_value = self.bridge_serial.get_sensor_value(self.type)
         if sensor_value is not None:
             self.value = sensor_value

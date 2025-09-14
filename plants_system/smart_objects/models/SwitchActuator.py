@@ -10,7 +10,7 @@ class SwitchActuator(ABC):
         self.type = type
         self.device = device
         self.is_real = is_real
-        self.bridge_serial = Bridge()  # Usa l'istanza singleton condivisa
+        self.bridge_serial = None  # Inizializzato solo quando necessario
         
     def change_status(self):
         self.status = not self.status
@@ -22,6 +22,14 @@ class SwitchActuator(ABC):
             self.handle_command_simulated(command)
 
     def handle_command_real(self, command: str):
+        # Inizializza il Bridge solo quando necessario
+        if self.bridge_serial is None:
+            try:
+                self.bridge_serial = Bridge()
+            except Exception as e:
+                logging.warning(f"Impossibile inizializzare Bridge per attuatore {self.type}: {e}")
+                return
+        
         self.bridge_serial.send_actuator_command(self.type, command)
         logging.info(f"Comando reale inviato per {self.type}: {command}")
 
