@@ -11,7 +11,7 @@ class ActuatorDataProcessor:
             for actuator in actuators:
                 # Gestisce sia dizionari che stringhe
                 if isinstance(actuator, dict):
-                    if actuator.get('actuator') == actuator_name:
+                    if actuator.get('type') == actuator_name:
                         values = actuator.get('values', [])
                         if values:
                             return values[-1].get('value', default_value)
@@ -28,7 +28,7 @@ class ActuatorDataProcessor:
             for actuator in actuators:
                 # Gestisce sia dizionari che stringhe
                 if isinstance(actuator, dict):
-                    if actuator.get('actuator') == actuator_name:
+                    if actuator.get('type') == actuator_name:
                         values = actuator.get('values', [])
                         if values:
                             return values[-1].get('timestamp', None)
@@ -45,7 +45,7 @@ class ActuatorDataProcessor:
             for actuator in actuators:
                 # Gestisce sia dizionari che stringhe
                 if isinstance(actuator, dict):
-                    if actuator.get('actuator') == 'irrigation':
+                    if actuator.get('type') == 'irrigation':
                         values = actuator.get('values', [])
                         if not values:
                             return None
