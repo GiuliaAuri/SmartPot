@@ -10,7 +10,7 @@ from conf.mqtt_conf_params import MqttConfigurationParameters
 from data_collector.plant_descriptor import PlantDescriptor
 #from data_collector.policy_manager import PolicyManager
 from data_collector.data_collector_producer import DataCollectorProducer
-#from data_collector.json_manager import JsonManager
+from data_collector.json_manager import JsonManager
 
 class DataCollectorConsumer:
     """
@@ -27,6 +27,9 @@ class DataCollectorConsumer:
         
         self.plant_descriptor = plant_descriptor
         self.running = False
+        
+        # Inizializza JsonManager per il salvataggio dei dati
+        self.json_manager = JsonManager(base_path=path)
 
         # Configurazione MQTT
         client_id = f"{plant_descriptor.plant_id}-data-collector-consumer"
@@ -92,18 +95,27 @@ class DataCollectorConsumer:
             
             logging.info(f"Processed sensor data: {sensor_type} = {sensor_value}")
             
+            # Salva i dati del sensore nel file JSON
+            try:
+                self.json_manager.save_sensor_data(
+                    plant_id=self.plant_descriptor.plant_id,
+                    sensor_type=sensor_type,
+                    value=sensor_value,
+                    species=self.plant_descriptor.species
+                )
+                print(f"💾 Dati sensore salvati: {sensor_type} = {sensor_value}")
+            except Exception as e:
+                logging.error(f"Errore salvataggio sensore {sensor_type}: {e}")
+            
             # Elabora i dati ricevuti
             #TODO:
             # - aggiornare il PlantDescriptor
-            # - salvare i dati nel JSON
             # - valutare le policy
             # - salvare gli alert
             # - eseguire le azioni
             
         except Exception as e:
             logging.error(f"Error in on_message: {e}")
-    
-    
     
     def run(self):
         """

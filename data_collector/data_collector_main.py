@@ -15,8 +15,8 @@ from data_collector.data_collector_consumer import DataCollectorConsumer
 from plants_system.smart_objects.resources.plant_info_consumer import PlantInfoConsumer
 
 #FILENAME="cloud_simulator/plants.json"
-#PATH="cloud_simulator/plants_log/"
-PATH="data_collector/plants_log/"
+PATH="cloud_simulator/plants_log/"
+#PATH="data_collector/plants_log/"
 
 class Main:
     """

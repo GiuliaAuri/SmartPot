@@ -1,0 +1,58 @@
+{
+  "plant_id": "test_plant",
+  "species": "cactus",
+  "created_at": "2025-09-15T21:53:56.355457Z",
+  "last_updated": "2025-09-15T22:31:39.668255Z",
+  "sensors": {
+    "humidity": [
+      {
+        "value": 65.5,
+        "timestamp": 1757966036,
+        "datetime": "2025-09-15T21:53:56Z"
+      },
+      {
+        "value": 65.5,
+        "timestamp": 1757966200,
+        "datetime": "2025-09-15T21:56:40Z"
+      },
+      {
+        "value": 65.5,
+        "timestamp": 1757968299
+      }
+    ],
+    "temperature": [
+      {
+        "value": 25.0,
+        "timestamp": 1757966036,
+        "datetime": "2025-09-15T21:53:56Z"
+      },
+      {
+        "value": 25.0,
+        "timestamp": 1757966200,
+        "datetime": "2025-09-15T21:56:40Z"
+      },
+      {
+        "value": 25.0,
+        "timestamp": 1757968299
+      }
+    ]
+  },
+  "actuators": {
+    "irrigation": [
+      {
+        "action": "start",
+        "timestamp": 1757966036,
+        "datetime": "2025-09-15T21:53:56Z"
+      },
+      {
+        "action": "start",
+        "timestamp": 1757966200,
+        "datetime": "2025-09-15T21:56:40Z"
+      },
+      {
+        "action": "start",
+        "timestamp": 1757968299
+      }
+    ]
+  }
+}

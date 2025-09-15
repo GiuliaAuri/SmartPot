@@ -1,90 +1,62 @@
-[
-  {
-    "plant_id": "plant_cactus_001",
-    "sensors": [
+{
+  "plant_id": "plant_cactus_001",
+  "species": "cactus",
+  "created_at": "2025-09-15T22:08:15.777581Z",
+  "last_updated": "2025-09-15T22:31:59.978168Z",
+  "sensors": {
+    "humidity": [
       {
-        "sensor": "battery_level",
-        "device": "environment_telemetry",
-        "values": [
-          {
-            "value": 92.33940137511549,
-            "timestamp": "1757944509"
-          },
-          {
-            "value": 87.34191109918297,
-            "timestamp": "1757944519"
-          },
-          {
-            "value": 90.96443328399951,
-            "timestamp": "1757944878"
-          },
-          {
-            "value": 89.55655173996169,
-            "timestamp": "1757944888"
-          },
-          {
-            "value": 86.11051308041716,
-            "timestamp": "1757944897"
-          }
-        ]
+        "value": 146.0,
+        "timestamp": 1757967648
       },
       {
-        "sensor": "lightness",
-        "device": "environment_telemetry",
-        "values": [
-          {
-            "value": 1259.7775956319142,
-            "timestamp": "1757944512"
-          }
-        ]
-      },
-      {
-        "sensor": "level_tank",
-        "device": "tank_monitoring",
-        "values": [
-          {
-            "value": 0.7588033654066833,
-            "timestamp": "1757944868"
-          }
-        ]
-      },
-      {
-        "sensor": "temperature",
-        "device": "environment_telemetry",
-        "values": [
-          {
-            "value": 20.738420778187194,
-            "timestamp": "1757944878"
-          },
-          {
-            "value": 22.83744239024771,
-            "timestamp": "1757944898"
-          }
-        ]
-      },
-      {
-        "sensor": "water_flow",
-        "device": "water_metering",
-        "values": [
-          {
-            "value": 3.7133201304836536,
-            "timestamp": "1757944880"
-          }
-        ]
+        "value": 90.5,
+        "timestamp": 1757968319
       }
-    ],
-    "actuators": [
+    ]
+  },
+  "actuators": {
+    "irrigation": [
       {
-        "type": "irrigation",
-        "device": "water_metering",
-        "values": [
-          {
-            "value": false,
-            "timestamp": "1757944507"
-          }
-        ]
+        "action": "start",
+        "timestamp": 1757967068
+      },
+      {
+        "action": "start",
+        "timestamp": 1757968106
+      },
+      {
+        "action": "stop",
+        "timestamp": 1757968109
+      },
+      {
+        "action": "start",
+        "timestamp": 1757968210
+      },
+      {
+        "action": "stop",
+        "timestamp": 1757968213
+      },
+      {
+        "action": "start",
+        "timestamp": 1757968215
+      },
+      {
+        "action": "stop",
+        "timestamp": 1757968218
+      },
+      {
+        "action": "start",
+        "timestamp": 1757968220
+      },
+      {
+        "action": "start",
+        "timestamp": 1757968319
+      },
+      {
+        "action": "stop",
+        "timestamp": 1757968319
       }
-    ],
-    "alerts": []
+    ]
   }
-]
+}

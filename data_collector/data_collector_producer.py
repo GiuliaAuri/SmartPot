@@ -1,6 +1,7 @@
 import paho.mqtt.client as mqtt
 from conf.mqtt_conf_params import MqttConfigurationParameters
 from data_collector.plant_descriptor import PlantDescriptor
+from data_collector.json_manager import JsonManager
 import logging
 import time
 
@@ -12,9 +13,13 @@ class DataCollectorProducer:
     delle piante, permettendo al sistema di controllare dispositivi come
     l'irrigazione automatica basandosi sulle policy valutate.
     """
-    def __init__(self, plant_descriptor: PlantDescriptor, command:str):
+    def __init__(self, plant_descriptor: PlantDescriptor, command: str, json_path: str = "cloud_simulator/plants_log"):
         self.plant_descriptor = plant_descriptor
-        self.command=command
+        self.command = command
+        
+        # Inizializza JsonManager per il salvataggio delle azioni degli attuatori
+        self.json_manager = JsonManager(base_path=json_path)
+        
         client_id = f"{self.plant_descriptor.plant_id}-data-collector-producer"
         # Compatibilità con versioni vecchie e nuove di paho-mqtt
         try:
@@ -38,7 +43,7 @@ class DataCollectorProducer:
         """
         Pubblica un comando MQTT agli attuatori delle piante.
         
-        Converte i comandi in formato compatibile con il bridge.
+        Converte i comandi in formato compatibile con il bridge e salva l'azione.
         """
         # Converte comandi in formato semplice compatibile con bridge
         simple_command = self.convert_to_simple_command(command)
@@ -50,6 +55,28 @@ class DataCollectorProducer:
             topic = MqttConfigurationParameters.build_command_plant_topic(actuator_type)
             self.client.publish(topic, simple_command)
             logging.info("Published command: %s to topic: %s", simple_command, topic)
+            
+            # Salva l'azione dell'attuatore nel file JSON
+            self.save_actuator_action(actuator_type, simple_command)
+    
+    def save_actuator_action(self, actuator_type: str, action: str):
+        """
+        Salva l'azione di un attuatore nel file JSON.
+        
+        Args:
+            actuator_type: Tipo di attuatore (es. "irrigation")
+            action: Azione eseguita (es. "start", "stop")
+        """
+        try:
+            self.json_manager.save_actuator_data(
+                plant_id=self.plant_descriptor.plant_id,
+                actuator_type=actuator_type,
+                action=action,
+                species=self.plant_descriptor.species
+            )
+            print(f"💾 Azione attuatore salvata: {actuator_type} = {action}")
+        except Exception as e:
+            logging.error(f"Errore salvataggio attuatore {actuator_type}: {e}")
     
     def convert_to_simple_command(self, command: str):
         """
