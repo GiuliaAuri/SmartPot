@@ -353,6 +353,55 @@ class JsonManager:
         except Exception as e:
             logging.error(f"Errore recupero ultimo valore sensore {sensor_type} per {plant_id}: {e}")
             return None
+    
+    def process_sensor_data_and_evaluate_policies(self, plant_descriptor, sensor_type: str, sensor_value: float, policy_manager):
+        """
+        Processa i dati del sensore, li salva e valuta le policy.
+        
+        Args:
+            plant_descriptor: PlantDescriptor della pianta
+            sensor_type: Tipo di sensore (es. "humidity", "temperature")
+            sensor_value: Valore del sensore ricevuto
+            policy_manager: PolicyManager per la valutazione delle policy
+            
+        Returns:
+            List[str]: Lista delle azioni eseguite
+        """
+        try:
+            # Salva i dati del sensore
+            self.save_sensor_data(
+                plant_id=plant_descriptor.plant_id,
+                sensor_type=sensor_type,
+                value=sensor_value,
+                species=plant_descriptor.species
+            )
+            print(f"💾 Dati sensore salvati: {sensor_type} = {sensor_value}")
+            
+            # Aggiorna il valore del sensore nel plant_descriptor per la valutazione
+            for sensor in plant_descriptor.sensors:
+                if sensor.type == sensor_type:
+                    sensor.value = sensor_value
+                    break
+            
+            # Crea un dizionario con i valori dei sensori per la valutazione
+            sensor_values = {}
+            for sensor in plant_descriptor.sensors:
+                sensor_values[sensor.type] = sensor.value
+            
+            # Valuta le policy
+            actions, alerts = policy_manager.evaluate_policies(plant_descriptor, sensor_values)
+            
+            # Gestisci gli alert (per ora non fare nulla)
+            for alert in alerts:
+                print(f"🚨 ALERT per {plant_descriptor.plant_id}: {alert}")
+                # TODO: Salvare gli alert nel JSON (per ora ignorato)
+            
+            # Restituisci le azioni per l'esecuzione
+            return actions
+            
+        except Exception as e:
+            logging.error(f"Errore processamento dati sensore {sensor_type}: {e}")
+            return []
 
 # Test del JsonManager
 if __name__ == "__main__":

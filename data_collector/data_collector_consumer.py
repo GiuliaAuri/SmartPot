@@ -8,7 +8,7 @@ import threading
 import concurrent.futures
 from conf.mqtt_conf_params import MqttConfigurationParameters
 from data_collector.plant_descriptor import PlantDescriptor
-#from data_collector.policy_manager import PolicyManager
+from data_collector.policy_manager import PolicyManager
 from data_collector.data_collector_producer import DataCollectorProducer
 from data_collector.json_manager import JsonManager
 
@@ -30,6 +30,9 @@ class DataCollectorConsumer:
         
         # Inizializza JsonManager per il salvataggio dei dati
         self.json_manager = JsonManager(base_path=path)
+        
+        # Inizializza PolicyManager per la valutazione delle policy
+        self.policy_manager = PolicyManager()
 
         # Configurazione MQTT
         client_id = f"{plant_descriptor.plant_id}-data-collector-consumer"
@@ -95,24 +98,33 @@ class DataCollectorConsumer:
             
             logging.info(f"Processed sensor data: {sensor_type} = {sensor_value}")
             
-            # Salva i dati del sensore nel file JSON
-            try:
-                self.json_manager.save_sensor_data(
-                    plant_id=self.plant_descriptor.plant_id,
-                    sensor_type=sensor_type,
-                    value=sensor_value,
-                    species=self.plant_descriptor.species
-                )
-                print(f"💾 Dati sensore salvati: {sensor_type} = {sensor_value}")
-            except Exception as e:
-                logging.error(f"Errore salvataggio sensore {sensor_type}: {e}")
+            # Processa i dati del sensore e valuta le policy tramite JsonManager
+            actions = self.json_manager.process_sensor_data_and_evaluate_policies(
+                plant_descriptor=self.plant_descriptor,
+                sensor_type=sensor_type,
+                sensor_value=sensor_value,
+                policy_manager=self.policy_manager
+            )
             
-            # Elabora i dati ricevuti
-            #TODO:
-            # - aggiornare il PlantDescriptor
-            # - valutare le policy
-            # - salvare gli alert
-            # - eseguire le azioni
+            # Esegui le azioni tramite il producer solo per activate/deactivate
+            for action_str in actions:
+                print(f"⚡ Esecuzione azione per {self.plant_descriptor.plant_id}: {action_str}")
+                
+                # Verifica se l'azione è activate o deactivate
+                if "activate" in action_str.lower() or "deactivate" in action_str.lower():
+                    try:
+                        # Crea e avvia il producer per eseguire l'azione
+                        producer = DataCollectorProducer(
+                            plant_descriptor=self.plant_descriptor, 
+                            command=action_str, 
+                            json_path=self.json_manager.base_path
+                        )
+                        producer.run()
+                        print(f"✅ Azione eseguita: {action_str}")
+                    except Exception as e:
+                        logging.error(f"Errore esecuzione azione {action_str}: {e}")
+                else:
+                    print(f"⚠️ Azione ignorata (non activate/deactivate): {action_str}")
             
         except Exception as e:
             logging.error(f"Error in on_message: {e}")
