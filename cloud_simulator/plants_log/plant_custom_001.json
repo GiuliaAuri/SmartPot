@@ -1,0 +1,80 @@
+[
+  {
+    "plant_id": "plant_custom_001",
+    "sensors": [
+      {
+        "sensor": "battery_level",
+        "device": "environment_telemetry",
+        "values": [
+          {
+            "value": 94.19275479064841,
+            "timestamp": "1757944509"
+          },
+          {
+            "value": 89.78831888016553,
+            "timestamp": "1757944519"
+          },
+          {
+            "value": 92.52134763046934,
+            "timestamp": "1757944877"
+          },
+          {
+            "value": 88.1650301021028,
+            "timestamp": "1757944887"
+          },
+          {
+            "value": 86.92524482990912,
+            "timestamp": "1757944897"
+          }
+        ]
+      },
+      {
+        "sensor": "lightness",
+        "device": "environment_telemetry",
+        "values": [
+          {
+            "value": 55014.35489139581,
+            "timestamp": "1757944510"
+          }
+        ]
+      },
+      {
+        "sensor": "water_flow",
+        "device": "water_metering",
+        "values": [
+          {
+            "value": 3.8061255754395473,
+            "timestamp": "1757944520"
+          },
+          {
+            "value": 2.7208765410946767,
+            "timestamp": "1757944899"
+          }
+        ]
+      },
+      {
+        "sensor": "humidity",
+        "device": "environment_telemetry",
+        "values": [
+          {
+            "value": 39.12815532758537,
+            "timestamp": "1757944888"
+          }
+        ]
+      }
+    ],
+    "actuators": [
+      {
+        "type": "irrigation",
+        "device": "water_metering",
+        "values": [
+          {
+            "value": false,
+            "timestamp": "1757944507"
+          }
+        ]
+      }
+    ],
+    "alerts": []
+  }
+]

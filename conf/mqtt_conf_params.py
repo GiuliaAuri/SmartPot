@@ -14,37 +14,34 @@ class MqttConfigurationParameters(object):
     DEVICE_TOPIC: ClassVar[str] = "device"
     TELEMETRY_TOPIC: ClassVar[str] = "telemetry"
     COMMAND_TOPIC: ClassVar[str] = "command"
-
+    SENSOR_TOPIC: ClassVar[str] = "sensor"
+    ACTUATOR_TOPIC: ClassVar[str] = "actuator"
+    
     @staticmethod
-    def build_telemetry_plant_topic(
-        plant_id: str, device_id: str, resource_id: str
-    ) -> str:
-        """Build the telemetry topic for a specific plant and device, 
+    def build_telemetry_plant_topic(sensor_id: str) -> str:
+        """Build the telemetry topic for a specific plant and sensor, 
         comunication from sensor to cloud.
-        e.g., plant/{plant_id}/device/{device_id}/telemetry/{resource_id}
-        plant/plant02/device/environmental_monitoring/telemetry/temperature
+        e.g., plant/{plant_id}/sensor/{sensor_id}
+        plant/plant02/sensor/temperature
         """
-        return "{0}/{1}/{2}/{3}/{4}/{5}".format(
+        return "{0}/{1}/{2}".format(
             MqttConfigurationParameters.BASIC_TOPIC,
-            plant_id,
-            MqttConfigurationParameters.DEVICE_TOPIC,
-            device_id,
-            MqttConfigurationParameters.TELEMETRY_TOPIC,
-            resource_id,
+            MqttConfigurationParameters.SENSOR_TOPIC,
+            sensor_id
+            
         )
 
     @staticmethod
-    def build_command_plant_topic(plant_id: str, device_id: str) -> str:
+    def build_command_plant_topic(actuator_id: str) -> str:
         """Build the control topic for a specific plant and device,
         communication from cloud to actuator.
-        e.g. plant/{plant_id}/device/{device_id}/command
+        e.g. plant/actuator/actuator_id
+        plant/actuator/irrigation
         """
-        return "{0}/{1}/{2}/{3}/{4}".format(
+        return "{0}/{1}/{2}".format(
             MqttConfigurationParameters.BASIC_TOPIC,
-            plant_id,
-            MqttConfigurationParameters.DEVICE_TOPIC,
-            device_id,
-            MqttConfigurationParameters.COMMAND_TOPIC
+            MqttConfigurationParameters.ACTUATOR_TOPIC,
+            actuator_id
         )
     
     @staticmethod

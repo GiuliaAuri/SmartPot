@@ -1,0 +1,106 @@
+[
+  {
+    "plant_id": "plant_fico_001",
+    "sensors": [
+      {
+        "sensor": "battery_level",
+        "device": "environment_telemetry",
+        "values": [
+          {
+            "value": 93.2779254225648,
+            "timestamp": "1757944509"
+          },
+          {
+            "value": 91.96382600126198,
+            "timestamp": "1757944519"
+          },
+          {
+            "value": 91.28879724252639,
+            "timestamp": "1757944878"
+          },
+          {
+            "value": 90.46672318641141,
+            "timestamp": "1757944888"
+          },
+          {
+            "value": 87.36835072259328,
+            "timestamp": "1757944897"
+          }
+        ]
+      },
+      {
+        "sensor": "temperature",
+        "device": "environment_telemetry",
+        "values": [
+          {
+            "value": 18.577525597248012,
+            "timestamp": "1757944510"
+          },
+          {
+            "value": 42.08506310127314,
+            "timestamp": "1757944880"
+          },
+          {
+            "value": 32.06771856188954,
+            "timestamp": "1757944889"
+          },
+          {
+            "value": 38.46347181926902,
+            "timestamp": "1757944899"
+          }
+        ]
+      },
+      {
+        "sensor": "water_flow",
+        "device": "water_metering",
+        "values": [
+          {
+            "value": 2.1643125985156537,
+            "timestamp": "1757944512"
+          },
+          {
+            "value": 2.2156268905170085,
+            "timestamp": "1757944522"
+          },
+          {
+            "value": 0.12542933807778878,
+            "timestamp": "1757944879"
+          }
+        ]
+      },
+      {
+        "sensor": "level_tank",
+        "device": "tank_monitoring",
+        "values": [
+          {
+            "value": 0.5850449354738296,
+            "timestamp": "1757944520"
+          }
+        ]
+      },
+      {
+        "sensor": "lightness",
+        "device": "environment_telemetry",
+        "values": [
+          {
+            "value": 44576.885090869095,
+            "timestamp": "1757944890"
+          }
+        ]
+      }
+    ],
+    "actuators": [
+      {
+        "type": "irrigation",
+        "device": "water_metering",
+        "values": [
+          {
+            "value": false,
+            "timestamp": "1757944507"
+          }
+        ]
+      }
+    ],
+    "alerts": []
+  }
+]

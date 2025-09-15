@@ -87,7 +87,7 @@ class DataCollectorConsumer:
             for device in self.plant_descriptor.devices:
                 for sensor in device.sensors:
                     topic = MqttConfigurationParameters.build_telemetry_plant_topic(
-                        self.plant_descriptor.plant_id, sensor.device, sensor.type
+                        sensor.type
                     )
                     self.client.subscribe(topic)
                     logging.info(f"Subscribed to topic: {topic}")
@@ -106,16 +106,29 @@ class DataCollectorConsumer:
             message_payload = msg.payload.decode("utf-8")
             logging.debug(f"Received message on topic {msg.topic}")
             
-            # Parsing veloce del messaggio
-            data = json.loads(message_payload)
+            # Estrai il tipo di sensore dal topic
+            # Topic formato: plant/sensor/{sensor_type}
+            topic_parts = msg.topic.split('/')
+            sensor_type = topic_parts[-1] if len(topic_parts) >= 3 else "unknown"
+            
+            # Il bridge invia solo il valore numerico
+            try:
+                sensor_value = float(message_payload)
+            except ValueError:
+                logging.warning(f"Invalid sensor value: {message_payload}")
+                return
+            
+            # Crea il messaggio nel formato interno
             message_data = {
                 'topic': msg.topic,
                 'payload': message_payload,
-                'sensor_type': data.get("type"),
-                'value': data.get("value"),
-                'device_name': data.get("device"),
-                'timestamp': data.get("timestamp", int(time.time()))
+                'sensor_type': sensor_type,
+                'value': sensor_value,
+                'device_name': 'environment_telemetry',  # Default device
+                'timestamp': int(time.time())
             }
+            
+            logging.info(f"Processed sensor data: {sensor_type} = {sensor_value}")
             
             # Esegui l'elaborazione in modo asincrono
             if self.loop and not self.loop.is_closed():

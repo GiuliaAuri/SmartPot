@@ -78,6 +78,16 @@
             "timestamp": "1757869150"
           }
         ]
+      },
+      {
+        "sensor": "humidity",
+        "device": "environment_telemetry",
+        "values": [
+          {
+            "value": 145.0,
+            "timestamp": "1757954925"
+          }
+        ]
       }
     ],
     "actuators": [
@@ -120,6 +130,14 @@
           {
             "value": true,
             "timestamp": "1757871045"
+          },
+          {
+            "value": false,
+            "timestamp": "1757944876"
+          },
+          {
+            "value": true,
+            "timestamp": "1757944878"
           }
         ]
       }

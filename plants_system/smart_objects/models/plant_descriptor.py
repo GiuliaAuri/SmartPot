@@ -7,6 +7,8 @@ class PlantDescriptor:
     def __init__(self, species, plant_id, devices=None):
         self.plant_id = plant_id
         self.species = species
+        #TODO: deve creare i direttamente i sensori e attuatori
+
         
         if devices is not None:
             self.devices = devices

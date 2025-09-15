@@ -1,0 +1,19 @@
+[
+  {
+    "plant_id": "my_felce1",
+    "sensors": [],
+    "actuators": [
+      {
+        "type": "irrigation",
+        "device": "water_metering",
+        "values": [
+          {
+            "value": false,
+            "timestamp": "1757944506"
+          }
+        ]
+      }
+    ],
+    "alerts": []
+  }
+]

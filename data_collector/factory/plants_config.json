@@ -1,0 +1,82 @@
+{
+    "plants": [
+      {
+        "plant_id": "my_cactus1",
+        "species": "cactus",
+        "description": "Pianta Cactus simulata",
+        "devices": {
+          "environment_telemetry": {
+            "enabled": true,
+            "sensors": {
+              "humidity": {
+                "enabled": true,
+                "initial_value": 30.0,
+                "unit": "%",
+                "min_value": 0.0,
+                "max_value": 100.0,
+                "is_real": true
+              },
+              "temperature": {
+                "enabled": true,
+                "initial_value": 25.0,
+                "unit": "°C",
+                "min_value": 0.0,
+                "max_value": 50.0,
+                "is_real": false
+              },
+              "lightness": {
+                "enabled": true,
+                "initial_value": 50000.0,
+                "unit": "lx",
+                "min_value": 0.0,
+                "max_value": 100000.0,
+                "is_real": false
+              },
+              "battery_level": {
+                "enabled": true,
+                "initial_value": 100.0,
+                "unit": "%",
+                "min_value": 0.0,
+                "max_value": 100.0,
+                "is_real": false
+              }
+            },
+            "actuators": {}
+          },
+          "tank_monitoring": {
+            "enabled": true,
+            "sensors": {
+              "level_tank": {
+                "enabled": true,
+                "initial_value": 1.0,
+                "unit": "l",
+                "min_value": 0.0,
+                "max_value": 2.0,
+                "is_real": false
+              }
+            },
+            "actuators": {}
+          },
+          "water_metering": {
+            "enabled": true,
+            "sensors": {
+              "water_flow": {
+                "enabled": true,
+                "initial_value": 2.0,
+                "unit": "l/s",
+                "min_value": 0.0,
+                "max_value": 5.0,
+                "is_real": false
+              }
+            },
+            "actuators": {
+              "irrigation": {
+                "enabled": true,
+                "is_real": true
+              }
+            }
+          }
+        }
+      }
+    ]
+}
