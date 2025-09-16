@@ -1,14 +1,14 @@
 import json
 import os
 from data_collector.plant_descriptor import PlantDescriptor
-
+FILEPATH = "plants_config.json"
 class Factory:
     """ create the plant descriptor from the json file """
     
     @staticmethod
     def create_plant_descriptor():
         """Legge la configurazione dal file plants_config.json"""
-        config_path = os.path.join(os.path.dirname(__file__), "plants_config.json")
+        config_path = os.path.join(os.path.dirname(__file__), FILEPATH)
         
         try:
             with open(config_path, 'r', encoding='utf-8') as f:
