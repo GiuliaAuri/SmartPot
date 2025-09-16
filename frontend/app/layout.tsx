@@ -5,9 +5,14 @@ import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.app',
+  title: 'Smart Plants',
+  description: 'Sistema di monitoraggio intelligente per piante',
+  generator: 'Smart Plants System',
+  icons: {
+    icon: '/simple-leaf-favicon.svg',
+    shortcut: '/simple-leaf-favicon.svg',
+    apple: '/simple-leaf-favicon.svg',
+  },
 }
 
 export default function RootLayout({
