@@ -60,5 +60,5 @@ class Sensor(ABC, Generic[T]):
         
         # Calcola percentuale relativa
         percentage = ((self.max_value - clamped_value) / (self.min_value - clamped_value)) * 100
-        
-        return round(percentage, 1)
+        #round(percentage, 1)
+        return percentage

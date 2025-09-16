@@ -320,6 +320,31 @@ def control_actuator(plant_id: str, actuator_type: str):
         logger.error(f"Errore nell'endpoint POST /api/plants/{plant_id}/actuators/{actuator_type}: {e}")
         return jsonify({"error": str(e)}), 500
 
+@app.route('/api/plants/<plant_id>/sensors/<sensor_type>/history', methods=['GET'])
+def get_sensor_history(plant_id: str, sensor_type: str):
+    """Endpoint per ottenere la cronologia di un sensore."""
+    try:
+        # Parametri query
+        hours = request.args.get('hours', 24, type=int)
+        
+        logger.info(f"Richiesta cronologia {sensor_type} per {plant_id} (ultime {hours}h)")
+        
+        # Usa JsonManager per recuperare i dati storici
+        history_data = plant_service.json_manager.get_sensor_history(plant_id, sensor_type, hours)
+        
+        return jsonify({
+            "success": True,
+            "plant_id": plant_id,
+            "sensor_type": sensor_type,
+            "hours": hours,
+            "data_points": len(history_data),
+            "data": history_data
+        })
+        
+    except Exception as e:
+        logger.error(f"Errore recupero cronologia {sensor_type} per {plant_id}: {e}")
+        return jsonify({"error": str(e)}), 500
+
 @app.route('/api/health', methods=['GET'])
 def health_check():
     """Endpoint per il controllo dello stato del server."""

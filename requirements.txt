@@ -6,3 +6,4 @@ python-dotenv==1.1.0
 Flask-Cors==3.0.10
 requests==2.32.4
 pyserial
+recharts

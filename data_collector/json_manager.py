@@ -284,6 +284,61 @@ class JsonManager:
             logging.error(f"Errore recupero ultimo valore sensore {sensor_type} per {plant_id}: {e}")
             return None
     
+    def get_sensor_history(self, plant_id: str, sensor_type: str, hours: int = 24) -> List[Dict[str, Any]]:
+        """
+        Recupera la cronologia di un sensore per una pianta.
+        
+        Args:
+            plant_id: ID della pianta
+            sensor_type: Tipo di sensore (es. "humidity", "temperature")
+            hours: Numero di ore di cronologia da recuperare
+            
+        Returns:
+            Lista di dizionari con {timestamp, value, time_formatted}
+        """
+        try:
+            data = self._load_plant_data(plant_id)
+            if sensor_type not in data["sensors"]:
+                return []
+            
+            # Filtra per le ultime N ore
+            current_time = int(time.time())
+            cutoff_time = current_time - (hours * 3600)
+            
+            sensor_data = data["sensors"][sensor_type]
+            filtered_data = [
+                entry for entry in sensor_data 
+                if entry["timestamp"] >= cutoff_time
+            ]
+            
+            # Formatta i dati per il grafico
+            formatted_data = []
+            for entry in filtered_data:
+                timestamp = entry["timestamp"]
+                value = entry["value"]
+                
+                # Converti timestamp in formato leggibile
+                dt = datetime.fromtimestamp(timestamp)
+                time_formatted = dt.strftime("%H:%M")
+                
+                formatted_data.append({
+                    "timestamp": timestamp,
+                    "value": value,
+                    "time_formatted": time_formatted,
+                    "hour": dt.hour,
+                    "minute": dt.minute
+                })
+            
+            # Ordina per timestamp
+            formatted_data.sort(key=lambda x: x["timestamp"])
+            
+            logging.info(f"Recuperati {len(formatted_data)} punti per {sensor_type} di {plant_id}")
+            return formatted_data
+            
+        except Exception as e:
+            logging.error(f"Errore recupero cronologia sensore {sensor_type} per {plant_id}: {e}")
+            return []
+
     def process_sensor_data_and_evaluate_policies(self, plant_descriptor, sensor_type: str, sensor_value: float, policy_manager):
         """
         Processa i dati del sensore, li salva e valuta le policy.
