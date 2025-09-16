@@ -91,7 +91,7 @@ export function PlantDashboard({ plants, setPlantsData, onIrrigationControl }: P
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <Droplets className="h-4 w-4 text-cyan-500 flex-shrink-0" />
-                  <span className="text-sm font-medium">Umidità del Terreno</span>
+                  <span className="text-sm font-medium">Umidità</span>
                 </div>
                 <Progress
                   value={plant.soilMoisture}

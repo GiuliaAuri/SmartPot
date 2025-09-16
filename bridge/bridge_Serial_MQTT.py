@@ -163,7 +163,30 @@ class Bridge():
 				self.clientMQTT.publish(topic, payload)
 
 if __name__ == '__main__':
-	br=Bridge()
-	br.loop()
-
-#TODO: aggiungere meccanismo di terminazione a causa di Ctrl+C
+	try:
+		print("🌉 Avvio Bridge Serial-MQTT...")
+		print("📡 Connessione Arduino -> MQTT")
+		print("🔧 Premi Ctrl+C per terminare")
+		print("=" * 50)
+		
+		br = Bridge()
+		br.loop()
+		
+	except KeyboardInterrupt:
+		print("\n🛑 Interruzione da tastiera (Ctrl+C)")
+		print("🔄 Chiusura connessioni...")
+		
+		# Chiudi connessione seriale
+		if hasattr(br, 'ser') and br.ser is not None:
+			br.ser.close()
+			print("✅ Connessione seriale chiusa")
+		
+		# Chiudi connessione MQTT
+		if hasattr(br, 'clientMQTT'):
+			br.clientMQTT.loop_stop()
+			br.clientMQTT.disconnect()
+			print("✅ Connessione MQTT chiusa")
+		
+		print("✅ Bridge terminato correttamente")
+		
+	

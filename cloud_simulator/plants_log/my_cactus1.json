@@ -1,0 +1,258 @@
+{
+  "plant_id": "my_cactus1",
+  "species": "cactus",
+  "created_at": "2025-09-16T18:23:53.027655Z",
+  "last_updated": "2025-09-16T18:28:03.468379Z",
+  "sensors": {
+    "humidity": [
+      {
+        "value": 146.0,
+        "timestamp": 1758039833
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758039835
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758039837
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758039951
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758039953
+      },
+      {
+        "value": 147.0,
+        "timestamp": 1758039955
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758039957
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758039959
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758039961
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758039963
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758039965
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758039967
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758039969
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758039971
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758039973
+      },
+      {
+        "value": 147.0,
+        "timestamp": 1758039975
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758039977
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758039979
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758039981
+      },
+      {
+        "value": 148.0,
+        "timestamp": 1758039983
+      },
+      {
+        "value": 148.0,
+        "timestamp": 1758039986
+      },
+      {
+        "value": 148.0,
+        "timestamp": 1758039988
+      },
+      {
+        "value": 148.0,
+        "timestamp": 1758039991
+      },
+      {
+        "value": 148.0,
+        "timestamp": 1758039993
+      },
+      {
+        "value": 148.0,
+        "timestamp": 1758039995
+      },
+      {
+        "value": 147.0,
+        "timestamp": 1758039997
+      },
+      {
+        "value": 147.0,
+        "timestamp": 1758039999
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758040001
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758040004
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758040006
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758040008
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758040010
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758040038
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758040040
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758040042
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758040044
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758040046
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758040048
+      },
+      {
+        "value": 148.0,
+        "timestamp": 1758040050
+      },
+      {
+        "value": 148.0,
+        "timestamp": 1758040052
+      },
+      {
+        "value": 147.0,
+        "timestamp": 1758040054
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758040056
+      },
+      {
+        "value": 148.0,
+        "timestamp": 1758040059
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758040061
+      },
+      {
+        "value": 147.0,
+        "timestamp": 1758040063
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758040065
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758040067
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758040069
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758040071
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758040073
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758040075
+      },
+      {
+        "value": 147.0,
+        "timestamp": 1758040077
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758040079
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758040081
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758040083
+      }
+    ]
+  },
+  "actuators": {
+    "irrigation": [
+      {
+        "action": "start",
+        "timestamp": 1758039980
+      },
+      {
+        "action": "stop",
+        "timestamp": 1758039994
+      },
+      {
+        "action": "start",
+        "timestamp": 1758040046
+      },
+      {
+        "action": "stop",
+        "timestamp": 1758040051
+      },
+      {
+        "action": "start",
+        "timestamp": 1758040055
+      },
+      {
+        "action": "stop",
+        "timestamp": 1758040058
+      }
+    ]
+  }
+}

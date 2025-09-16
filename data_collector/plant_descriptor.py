@@ -1,6 +1,6 @@
 import json
-from plants_system.smart_objects.sensors.humidity_sensor import HumiditySensor
-from plants_system.smart_objects.actuators.irrigation_actuator import IrrigationActuator
+from smart_objects.sensors.humidity_sensor import HumiditySensor
+from smart_objects.actuators.irrigation_actuator import IrrigationActuator
 
 
 class PlantDescriptor:
@@ -8,7 +8,7 @@ class PlantDescriptor:
         self.plant_id = plant_id
         self.species = species
         self.sensors=[ HumiditySensor(plant_id, 0, "%", 0, 100, "environment_telemetry", True)]
-        self.actuators=[IrrigationActuator(plant_id, "water_metering", True)]
+        self.actuators=[IrrigationActuator(plant_id, "water_metering")]
 
 
     def to_json(self):
