@@ -6,6 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Droplets, Leaf, Play, Pause } from "lucide-react"
+import Image from "next/image"
+import { useState, useEffect } from "react"
 
 interface Plant {
   id: string
@@ -22,7 +24,53 @@ interface PlantDashboardProps {
   onIrrigationControl?: (plantId: string, action: "start" | "stop") => void
 }
 
+// Componente per gestire le immagini delle piante con fallback
+function PlantImage({ plantType, plantName }: { plantType: string; plantName: string }) {
+  const [currentImage, setCurrentImage] = useState<string>('')
+  const [imageError, setImageError] = useState(false)
+
+  // Funzione per ottenere l'immagine della pianta basata sul tipo
+  const getPlantImage = (plantType: string): string => {
+    const type = plantType.toLowerCase()
+    
+    // Cerca direttamente nella cartella plant-images con il nome della specie
+    return `/plant-images/${type}.jpg`
+  }
+
+  // Inizializza l'immagine corrente
+  useEffect(() => {
+    setCurrentImage(getPlantImage(plantType))
+    setImageError(false)
+  }, [plantType])
+
+  const handleImageError = () => {
+    if (!imageError) {
+      setImageError(true)
+      // Prova fallback con PNG se JPG fallisce
+      if (currentImage.endsWith('.jpg')) {
+        setCurrentImage(currentImage.replace('.jpg', '.png'))
+      } else if (currentImage.endsWith('.png')) {
+        // Se anche PNG fallisce, usa immagine generica
+        setCurrentImage('/plant-images/plant.jpg')
+      }
+    }
+  }
+
+  return (
+    <div className="w-72 h-72 relative">
+      <Image
+        src={currentImage}
+        alt={`${plantName} - ${plantType}`}
+        fill
+        className="object-contain rounded-lg"
+        onError={handleImageError}
+      />
+    </div>
+  )
+}
+
 export function PlantDashboard({ plants, setPlantsData, onIrrigationControl }: PlantDashboardProps) {
+
   const handleManualControl = (plantId: string, action: "start" | "stop") => {
     console.log(`🔧 Manual control clicked: ${plantId} - ${action}`)
     if (onIrrigationControl) {
@@ -66,6 +114,11 @@ export function PlantDashboard({ plants, setPlantsData, onIrrigationControl }: P
                   </div>
                 </div>
               </div>
+              
+                     {/* Immagine della pianta sotto nome e specie */}
+                     <div className="flex justify-center mt-2">
+                       <PlantImage plantType={plant.type} plantName={plant.name} />
+                     </div>
             </CardHeader>
 
             <CardContent className="space-y-3 sm:space-y-4">

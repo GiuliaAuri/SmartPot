@@ -2,7 +2,7 @@
   "plant_id": "my_cactus1",
   "species": "cactus",
   "created_at": "2025-09-16T19:11:27.746678Z",
-  "last_updated": "2025-09-16T21:51:19.546214Z",
+  "last_updated": "2025-09-16T22:41:05.686946Z",
   "sensors": {
     "humidity": [
       {
@@ -696,6 +696,174 @@
       {
         "value": 146.0,
         "timestamp": 1758052279
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758055180
+      },
+      {
+        "value": 147.0,
+        "timestamp": 1758055182
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758055184
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758055186
+      },
+      {
+        "value": 147.0,
+        "timestamp": 1758055188
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758055190
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758055192
+      },
+      {
+        "value": 143.0,
+        "timestamp": 1758055194
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758055196
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758055198
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758055200
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758055202
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758055204
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758055206
+      },
+      {
+        "value": 148.0,
+        "timestamp": 1758055208
+      },
+      {
+        "value": 148.0,
+        "timestamp": 1758055211
+      },
+      {
+        "value": 148.0,
+        "timestamp": 1758055213
+      },
+      {
+        "value": 148.0,
+        "timestamp": 1758055215
+      },
+      {
+        "value": 148.0,
+        "timestamp": 1758055218
+      },
+      {
+        "value": 148.0,
+        "timestamp": 1758055220
+      },
+      {
+        "value": 148.0,
+        "timestamp": 1758055223
+      },
+      {
+        "value": 148.0,
+        "timestamp": 1758055225
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758055227
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758055229
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758055231
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758055233
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758055235
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758055237
+      },
+      {
+        "value": 147.0,
+        "timestamp": 1758055239
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758055241
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758055243
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758055245
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758055247
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758055249
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758055251
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758055253
+      },
+      {
+        "value": 147.0,
+        "timestamp": 1758055255
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758055257
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758055259
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758055261
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758055263
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758055265
       }
     ]
   },
@@ -760,6 +928,18 @@
       {
         "action": "stop",
         "timestamp": 1758052265
+      },
+      {
+        "action": "start",
+        "timestamp": 1758055204
+      },
+      {
+        "action": "start",
+        "timestamp": 1758055206
+      },
+      {
+        "action": "stop",
+        "timestamp": 1758055224
       }
     ]
   }
