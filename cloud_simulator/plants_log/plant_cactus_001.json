@@ -2,7 +2,7 @@
   "plant_id": "plant_cactus_001",
   "species": "cactus",
   "created_at": "2025-09-16T11:55:53.157775Z",
-  "last_updated": "2025-09-16T15:31:18.422108Z",
+  "last_updated": "2025-09-16T15:49:21.218095Z",
   "sensors": {
     "humidity": [
       {
@@ -1424,6 +1424,174 @@
       {
         "value": 146.0,
         "timestamp": 1758029478
+      },
+      {
+        "value": 145.0,
+        "timestamp": 1758030476
+      },
+      {
+        "value": 145.0,
+        "timestamp": 1758030478
+      },
+      {
+        "value": 145.0,
+        "timestamp": 1758030480
+      },
+      {
+        "value": 145.0,
+        "timestamp": 1758030482
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758030484
+      },
+      {
+        "value": 145.0,
+        "timestamp": 1758030486
+      },
+      {
+        "value": 145.0,
+        "timestamp": 1758030488
+      },
+      {
+        "value": 145.0,
+        "timestamp": 1758030490
+      },
+      {
+        "value": 145.0,
+        "timestamp": 1758030492
+      },
+      {
+        "value": 145.0,
+        "timestamp": 1758030494
+      },
+      {
+        "value": 145.0,
+        "timestamp": 1758030496
+      },
+      {
+        "value": 145.0,
+        "timestamp": 1758030498
+      },
+      {
+        "value": 145.0,
+        "timestamp": 1758030500
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758030502
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758030504
+      },
+      {
+        "value": 145.0,
+        "timestamp": 1758030506
+      },
+      {
+        "value": 147.0,
+        "timestamp": 1758030508
+      },
+      {
+        "value": 147.0,
+        "timestamp": 1758030511
+      },
+      {
+        "value": 147.0,
+        "timestamp": 1758030513
+      },
+      {
+        "value": 145.0,
+        "timestamp": 1758030515
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758030517
+      },
+      {
+        "value": 147.0,
+        "timestamp": 1758030519
+      },
+      {
+        "value": 135.0,
+        "timestamp": 1758030521
+      },
+      {
+        "value": 101.0,
+        "timestamp": 1758030523
+      },
+      {
+        "value": 105.0,
+        "timestamp": 1758030525
+      },
+      {
+        "value": 77.0,
+        "timestamp": 1758030527
+      },
+      {
+        "value": 77.0,
+        "timestamp": 1758030529
+      },
+      {
+        "value": 77.0,
+        "timestamp": 1758030531
+      },
+      {
+        "value": 72.0,
+        "timestamp": 1758030534
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758030536
+      },
+      {
+        "value": 148.0,
+        "timestamp": 1758030539
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758030541
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758030543
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758030545
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758030547
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758030549
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758030551
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758030553
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758030555
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758030557
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758030559
+      },
+      {
+        "value": 146.0,
+        "timestamp": 1758030561
       }
     ]
   },
@@ -1560,6 +1728,30 @@
       {
         "action": "stop",
         "timestamp": 1758029444
+      },
+      {
+        "action": "start",
+        "timestamp": 1758030252
+      },
+      {
+        "action": "stop",
+        "timestamp": 1758030499
+      },
+      {
+        "action": "start",
+        "timestamp": 1758030504
+      },
+      {
+        "action": "stop",
+        "timestamp": 1758030511
+      },
+      {
+        "action": "start",
+        "timestamp": 1758030527
+      },
+      {
+        "action": "stop",
+        "timestamp": 1758030536
       }
     ],
     "lighting": [

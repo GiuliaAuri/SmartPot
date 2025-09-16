@@ -13,6 +13,8 @@ from typing import Dict, List, Any, Optional
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import logging
+from data_collector.data_collector_producer import DataCollectorProducer
+from data_collector.plant_descriptor import PlantDescriptor
 
 # Aggiungi il path per importare i moduli del progetto
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -263,26 +265,25 @@ class PlantDataService:
             logger.error(f"Errore salvataggio azione attuatore {plant_id}: {e}")
             raise
     
-    def _send_mqtt_command(self, actuator_type: str, command: str) -> bool:
-        """Invia un comando MQTT all'attuatore."""
+    def _send_mqtt_command(self, plant_id: str, actuator_type: str, command: str) -> bool:
+        """Invia un comando MQTT all'attuatore usando DataCollectorProducer."""
         try:
-            import paho.mqtt.client as mqtt
-            from conf.mqtt_conf_params import MqttConfigurationParameters
             
-            # Crea client MQTT
-            client = mqtt.Client()
             
-            # Connessione al broker
-            client.connect(MqttConfigurationParameters.BROKER_ADDRESS, MqttConfigurationParameters.BROKER_PORT)
+            # Crea un PlantDescriptor temporaneo per il producer
+            plant_descriptor = PlantDescriptor(species="unknown", plant_id=plant_id)
             
-            # Pubblica il comando
-            topic = MqttConfigurationParameters.build_command_plant_topic(actuator_type)
-            client.publish(topic, command)
+            # Crea il producer con il comando
+            producer = DataCollectorProducer(
+                plant_descriptor=plant_descriptor,
+                command=f"{command} {actuator_type}",
+                json_path=self.plants_log_path
+            )
             
-            # Disconnetti
-            client.disconnect()
+            # Esegue il comando (pubblica MQTT e salva nel JSON)
+            producer.run()
             
-            logger.info(f"Comando MQTT inviato: {topic} = {command}")
+            logger.info(f"Comando MQTT inviato tramite DataCollectorProducer: {actuator_type} = {command}")
             return True
             
         except Exception as e:
@@ -407,11 +408,8 @@ def control_actuator(plant_id: str, actuator_type: str):
         # Converti l'azione in comando semplice
         simple_command = convert_action_to_simple_command(action)
         
-        # Salva l'azione nel file JSON
-        plant_service._save_actuator_action(plant_id, actuator_type, simple_command)
-        
-        # Invia comando MQTT all'attuatore
-        mqtt_success = plant_service._send_mqtt_command(actuator_type, simple_command)
+        # Invia comando MQTT all'attuatore (che salva anche nel JSON)
+        mqtt_success = plant_service._send_mqtt_command(plant_id, actuator_type, simple_command)
         
         return jsonify({
             "success": True,
