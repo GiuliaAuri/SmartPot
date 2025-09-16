@@ -20,6 +20,7 @@ import logging
 from data_collector.data_collector_producer import DataCollectorProducer
 from data_collector.plant_descriptor import PlantDescriptor
 from data_collector.json_manager import JsonManager
+from smart_objects.models.Sensor import Sensor
 
 # Configurazione logging
 logging.basicConfig(level=logging.INFO)
@@ -89,8 +90,20 @@ class PlantDataService:
         sensors_data = data.get("sensors", {})
         actuators_data = data.get("actuators", {})
         
-        # Calcola umidità del suolo (humidity sensor)
+        # Calcola umidità del suolo (humidity sensor) con percentuale relativa
         soil_moisture = self._get_latest_sensor_value(sensors_data, "humidity", 50)
+        
+        # Crea un'istanza temporanea di Sensor per calcolare la percentuale relativa
+        temp_sensor = Sensor(
+            plant_id=plant_id,
+            initial_value=soil_moisture,
+            unit="%",
+            min_value=30,  # Valori predefiniti per humidity
+            max_value=100,
+            type="humidity",
+            device="environment_telemetry"
+        )
+        soil_moisture_percentage = temp_sensor.calculate_relative_percentage(soil_moisture)
         
         # Determina se l'irrigazione è attiva
         is_watering = self._is_irrigation_active(actuators_data)
@@ -100,15 +113,16 @@ class PlantDataService:
         
         return {
             "id": plant_id,
-            "name": f"{species.title()} ({plant_id})",
+            "name": f"{plant_id}",
             "type": species,
-            "soilMoisture": soil_moisture,
+            "soilMoisture": soil_moisture_percentage,
             "isWatering": is_watering,
             "lastWatered": last_watered,
             "lastUpdated": last_updated,
             "sensors": self._format_sensors_data(sensors_data),
             "actuators": self._format_actuators_data(actuators_data)
         }
+    
     
     def _get_latest_sensor_value(self, sensors_data: Dict, sensor_type: str, default_value: float) -> float:
         """Ottiene l'ultimo valore di un sensore."""
@@ -232,9 +246,9 @@ def get_all_plants():
             logger.warning("Nessun dato pianta trovato, restituisco dati di esempio")
             plants_data = [
                 {
-                    "id": "plant_cactus_001",
-                    "name": "Cactus (plant_cactus_001)",
-                    "type": "cactus",
+                    "id": "my_pomodoro",
+                    "name": "Pomodoro (my_pomodoro)",
+                    "type": "pomodoro",
                     "soilMoisture": 75,
                     "isWatering": False,
                     "lastWatered": "Nessun dato disponibile",

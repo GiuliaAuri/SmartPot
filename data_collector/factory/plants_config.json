@@ -7,7 +7,7 @@
         "sensors":[ {
           "humidity": {
             "enabled": true,
-            "initial_value": 30.0,
+            "initial_value": 80.0,
             "unit": "%",
             "min_value": 50.0, 
             "max_value": 150.0,
