@@ -27,7 +27,6 @@ class Main:
     """
     def __init__(self, config_path):
         #TODO: devo fare la discovery delle piante come??
-        #self.discover_plants(config_path, 10)
         print("🔧 Creazione plant descriptors...")
         try:
             self.plants = Factory.create_plant_descriptor()
@@ -43,19 +42,7 @@ class Main:
         self.threads = []
         self.consumers = []
 
-    def discover_plants(self, filename, discovery_time):
-        """
-        Esegue la discovery delle piante tramite PlantInfoConsumer per discovery_time secondi.
-        """
-        #plant_info_discoverer = PlantInfoConsumer(filename)
-        #plant_info_discoverer.run()
-        #time.sleep(discovery_time)
-        #if hasattr(plant_info_discoverer, "stop"):
-            #plant_info_discoverer.stop()
-        #else:
-            #logging.warning("PlantInfoConsumer has no stop method")
-        pass
-
+   
     def start(self):
         """
         Avvia i consumer per ogni pianta.
@@ -93,18 +80,15 @@ if __name__ == "__main__":
     l'applicazione in esecuzione fino a quando non viene ricevuto un
     segnale di interruzione (Ctrl+C).
     """
-    #TODO:eliminare queste linee di codice
+    
     # Verifica che il file di configurazione esista
     config_file = "data_collector/factory/plants_config.json"
     if not os.path.exists(config_file):
         print(f"❌ File di configurazione non trovato: {config_file}")
-        print(f"📁 Directory corrente: {os.getcwd()}")
-        print(f"📁 File cercato in: {os.path.abspath(config_file)}")
         sys.exit(1)
     
     print(f"✅ File di configurazione trovato: {config_file}")
     
-    #manager = Main(FILENAME)
     print("🏗️ Creazione Main...")
     manager=Main(config_file)
     print("🚀 Avvio consumer...")

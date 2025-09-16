@@ -1,5 +1,4 @@
 "use client"
-//TODO:migliorare la visualizzazione dei umidità delle piante
 import { useState, useEffect } from "react"
 import { Leaf } from "lucide-react"
 import { PlantDashboard } from "@/components/plant-dashboard"

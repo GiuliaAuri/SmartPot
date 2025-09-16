@@ -160,9 +160,6 @@ class DataCollectorConsumer:
             
         except Exception as e:
             print(f"❌ Errore avvio DataCollectorConsumer {self.plant_descriptor.plant_id}: {e}")
-            #TODO: capire queste righe di codice
-            import traceback
-            traceback.print_exc()
             raise
         
         

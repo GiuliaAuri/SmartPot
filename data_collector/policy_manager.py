@@ -7,9 +7,7 @@ Questo PolicyManager:
 - Valuta le condizioni sui valori dei sensori
 - Genera azioni per gli attuatori
 - Genera alert quando necessario
-"""
-#TODO capire i valori per cui attivare e disattivare l'irrigazione
-  
+"""  
 
 import json
 import os

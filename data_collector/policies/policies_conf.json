@@ -1,18 +1,18 @@
 [
     {
-      "plant_id": "plant_cactus_001",
+      "plant_id": "my_cactus1",
       "policies": [
         {
           "sensor": "humidity",
           "condition": "<",
-          "value": 80,
+          "value": 30,
           "actuator": "irrigation",
           "action": "activate"
         },
         {
           "sensor": "humidity",
           "condition": ">",
-          "value": 120,
+          "value": 50,
           "actuator": "irrigation",
           "action": "deactivate"
         }
