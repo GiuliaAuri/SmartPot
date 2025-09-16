@@ -63,7 +63,7 @@ function PlantImage({ plantType, plantName }: { plantType: string; plantName: st
   }
 
   return (
-    <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 xl:w-32 xl:h-32 relative">
+    <div className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 lg:w-56 lg:h-56 xl:w-64 xl:h-64 relative">
       <Image
         src={currentImage}
         alt={`${plantName} - ${plantType}`}
@@ -182,19 +182,17 @@ function PlantCard({ plant, onIrrigationControl }: PlantCardProps) {
   return (
     <Card className="overflow-hidden w-full h-full flex flex-col">
       <CardHeader className="pb-3 flex-shrink-0">
-        <div className="flex items-center gap-3 min-w-0 flex-1">
-          <div className="p-2 bg-green-100 dark:bg-green-900 rounded-lg flex-shrink-0">
-            <Leaf className="h-4 w-4 sm:h-5 sm:w-5 text-green-600 dark:text-green-400" />
+        <div className="flex items-center gap-3">
+          {/* Immagine della pianta a sinistra */}
+          <div className="flex-shrink-0">
+            <PlantImage plantType={plant.type} plantName={plant.name} />
           </div>
+          
+          {/* Nome e specie a destra */}
           <div className="min-w-0 flex-1">
             <CardTitle className="text-sm sm:text-base lg:text-lg truncate">{plant.name}</CardTitle>
             <CardDescription className="text-xs sm:text-sm truncate">{plant.type}</CardDescription>
           </div>
-        </div>
-        
-        {/* Immagine della pianta sotto nome e specie */}
-        <div className="flex justify-center mt-2">
-          <PlantImage plantType={plant.type} plantName={plant.name} />
         </div>
       </CardHeader>
 
@@ -220,7 +218,7 @@ function PlantCard({ plant, onIrrigationControl }: PlantCardProps) {
         <div className="space-y-1 sm:space-y-2">
           <div className="flex items-center gap-2">
             <Droplets className="h-3 w-3 sm:h-4 sm:w-4 text-cyan-500 flex-shrink-0" />
-            <span className="text-xs sm:text-sm font-medium">Umidità del Terreno</span>
+            <span className="text-xs sm:text-sm font-medium">Umidità</span>
           </div>
           <Progress
             value={plant.soilMoisture}
