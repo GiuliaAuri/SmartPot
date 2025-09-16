@@ -12,7 +12,7 @@ import time
 import threading
 from data_collector.factory.factory import Factory
 from data_collector.data_collector_consumer import DataCollectorConsumer
-from plants_system.smart_objects.resources.plant_info_consumer import PlantInfoConsumer
+#from plants_system.smart_objects.resources.plant_info_consumer import PlantInfoConsumer
 
 #FILENAME="cloud_simulator/plants.json"
 PATH="cloud_simulator/plants_log/"
@@ -47,13 +47,14 @@ class Main:
         """
         Esegue la discovery delle piante tramite PlantInfoConsumer per discovery_time secondi.
         """
-        plant_info_discoverer = PlantInfoConsumer(filename)
-        plant_info_discoverer.run()
-        time.sleep(discovery_time)
-        if hasattr(plant_info_discoverer, "stop"):
-            plant_info_discoverer.stop()
-        else:
-            logging.warning("PlantInfoConsumer has no stop method")
+        #plant_info_discoverer = PlantInfoConsumer(filename)
+        #plant_info_discoverer.run()
+        #time.sleep(discovery_time)
+        #if hasattr(plant_info_discoverer, "stop"):
+            #plant_info_discoverer.stop()
+        #else:
+            #logging.warning("PlantInfoConsumer has no stop method")
+        pass
 
     def start(self):
         """
@@ -94,7 +95,7 @@ if __name__ == "__main__":
     """
     #TODO:eliminare queste linee di codice
     # Verifica che il file di configurazione esista
-    config_file = "plants_system/smart_objects/resources/plants_config.json"
+    config_file = "data_collector/factory/plants_config.json"
     if not os.path.exists(config_file):
         print(f"❌ File di configurazione non trovato: {config_file}")
         print(f"📁 Directory corrente: {os.getcwd()}")
