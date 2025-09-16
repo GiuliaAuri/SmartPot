@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Server REST API per il frontend web app.
 Legge i dati dai file JSON del data_collector e li espone via REST API.
@@ -6,6 +5,11 @@ Legge i dati dai file JSON del data_collector e li espone via REST API.
 
 import os
 import sys
+
+# Aggiungi il path per importare i moduli del progetto PRIMA degli import
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.insert(0, project_root)
+
 import json
 import time
 from datetime import datetime, timedelta
@@ -15,10 +19,7 @@ from flask_cors import CORS
 import logging
 from data_collector.data_collector_producer import DataCollectorProducer
 from data_collector.plant_descriptor import PlantDescriptor
-
-# Aggiungi il path per importare i moduli del progetto
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-sys.path.insert(0, project_root)
+from data_collector.json_manager import JsonManager
 
 # Configurazione logging
 logging.basicConfig(level=logging.INFO)
@@ -32,30 +33,23 @@ PLANTS_LOG_PATH = "cloud_simulator/plants_log"
 DEFAULT_POLLING_INTERVAL = 5  # secondi
 
 class PlantDataService:
-    """Servizio per leggere e processare i dati delle piante dai file JSON."""
+    """Servizio per leggere e processare i dati delle piante usando JsonManager."""
     
     def __init__(self, plants_log_path: str):
-        self.plants_log_path = plants_log_path
-        self._ensure_directory_exists()
-    
-    def _ensure_directory_exists(self):
-        """Assicura che la directory dei log esista."""
-        if not os.path.exists(self.plants_log_path):
-            os.makedirs(self.plants_log_path)
-            logger.info(f"Creata directory: {self.plants_log_path}")
+        self.json_manager = JsonManager(base_path=plants_log_path)
     
     def get_all_plants_data(self) -> List[Dict[str, Any]]:
-        """Legge tutti i dati delle piante dai file JSON."""
+        """Legge tutti i dati delle piante usando JsonManager."""
         plants_data = []
         
         try:
-            # Scansiona tutti i file JSON nella directory
-            for filename in os.listdir(self.plants_log_path):
-                if filename.endswith('.json'):
-                    plant_id = filename.replace('.json', '')
-                    plant_data = self._load_plant_data(plant_id)
-                    if plant_data:
-                        plants_data.append(plant_data)
+            # Ottieni lista delle piante da JsonManager
+            plant_ids = self.json_manager.list_plants()
+            
+            for plant_id in plant_ids:
+                plant_data = self._load_plant_data(plant_id)
+                if plant_data:
+                    plants_data.append(plant_data)
             
             logger.info(f"Caricati dati per {len(plants_data)} piante")
             return plants_data
@@ -65,57 +59,35 @@ class PlantDataService:
             return []
     
     def _load_plant_data(self, plant_id: str) -> Optional[Dict[str, Any]]:
-        """Carica i dati di una singola pianta dal file JSON."""
-        file_path = os.path.join(self.plants_log_path, f"{plant_id}.json")
-        
+        """Carica i dati di una singola pianta usando JsonManager."""
         try:
-            if not os.path.exists(file_path):
-                logger.warning(f"File non trovato: {file_path}")
-                return None
+            # Usa JsonManager per caricare i dati raw
+            raw_data = self.json_manager.get_plant_data(plant_id)
             
-            with open(file_path, 'r', encoding='utf-8') as f:
-                raw_data = json.load(f)
-            
-            # Gestisci formato vecchio (lista) e nuovo (dizionario)
-            if isinstance(raw_data, list) and len(raw_data) > 0:
-                data = raw_data[0]  # Prendi il primo elemento della lista
-                logger.info(f"Convertito formato vecchio per {plant_id}")
-            elif isinstance(raw_data, dict):
-                data = raw_data
-            else:
-                logger.warning(f"Formato dati non riconosciuto per {plant_id}")
+            if not raw_data:
+                logger.warning(f"Pianta {plant_id} non trovata")
                 return None
             
             # Processa i dati per il frontend
-            return self._process_plant_data_for_frontend(plant_id, data)
+            return self._process_plant_data_for_frontend(plant_id, raw_data)
             
         except Exception as e:
-            logger.error(f"Errore nel caricamento file {file_path}: {e}")
+            logger.error(f"Errore nel caricamento pianta {plant_id}: {e}")
             return None
     
     def _process_plant_data_for_frontend(self, plant_id: str, data: Dict[str, Any]) -> Dict[str, Any]:
         """Processa i dati della pianta per il formato richiesto dal frontend."""
         
-        # Gestisci diversi formati di dati
-        if isinstance(data, list) and len(data) > 0:
-            # Formato vecchio: lista con primo elemento che contiene i dati
-            plant_info = data[0]
-            species = plant_info.get("species", plant_info.get("type", "unknown"))
-            last_updated = plant_info.get("last_updated", "")
-            
-            # Gestisci formato sensori come lista
-            sensors_list = plant_info.get("sensors", [])
-            sensors_data = self._convert_sensors_list_to_dict(sensors_list)
-            
-            # Gestisci formato attuatori come lista
-            actuators_list = plant_info.get("actuators", [])
-            actuators_data = self._convert_actuators_list_to_dict(actuators_list)
-        else:
-            # Formato nuovo: dizionario diretto
-            species = data.get("species", "unknown")
-            last_updated = data.get("last_updated", "")
-            sensors_data = data.get("sensors", {})
-            actuators_data = data.get("actuators", {})
+        # Gestisci solo il formato standard (dizionario)
+        if not isinstance(data, dict):
+            logger.warning(f"Formato dati non supportato per {plant_id}: {type(data)}")
+            return None
+        
+        # Estrai dati dal formato standard
+        species = data.get("species", "unknown")
+        last_updated = data.get("last_updated", "")
+        sensors_data = data.get("sensors", {})
+        actuators_data = data.get("actuators", {})
         
         # Calcola umidità del suolo (humidity sensor)
         soil_moisture = self._get_latest_sensor_value(sensors_data, "humidity", 50)
@@ -185,99 +157,30 @@ class PlantDataService:
                 }
         return formatted
     
-    def _convert_sensors_list_to_dict(self, sensors_list: List[Dict]) -> Dict[str, List[Dict]]:
-        """Converte la lista di sensori in formato dizionario."""
-        sensors_dict = {}
-        for sensor_info in sensors_list:
-            sensor_type = sensor_info.get("sensor", "unknown")
-            values = sensor_info.get("values", [])
-            # Converte i valori nel formato atteso
-            converted_values = []
-            for value_entry in values:
-                converted_values.append({
-                    "value": value_entry.get("value", 0),
-                    "timestamp": int(value_entry.get("timestamp", 0))
-                })
-            sensors_dict[sensor_type] = converted_values
-        return sensors_dict
-    
-    def _convert_actuators_list_to_dict(self, actuators_list: List[Dict]) -> Dict[str, List[Dict]]:
-        """Converte la lista di attuatori in formato dizionario."""
-        actuators_dict = {}
-        for actuator_info in actuators_list:
-            actuator_type = actuator_info.get("actuator", "unknown")
-            values = actuator_info.get("values", [])
-            # Converte i valori nel formato atteso
-            converted_values = []
-            for value_entry in values:
-                converted_values.append({
-                    "action": value_entry.get("action", ""),
-                    "timestamp": int(value_entry.get("timestamp", 0))
-                })
-            actuators_dict[actuator_type] = converted_values
-        return actuators_dict
-    
-    def _save_actuator_action(self, plant_id: str, actuator_type: str, action: str):
-        """Salva un'azione di attuatore nel file JSON."""
-        try:
-            # Carica i dati RAW dal file JSON (non processati)
-            file_path = self._get_plant_file_path(plant_id)
-            
-            if not os.path.exists(file_path):
-                logger.warning(f"File non trovato: {file_path}")
-                return
-            
-            with open(file_path, 'r', encoding='utf-8') as f:
-                raw_data = json.load(f)
-            
-            # Gestisci formato vecchio (lista) e nuovo (dizionario)
-            if isinstance(raw_data, list) and len(raw_data) > 0:
-                data = raw_data[0]
-            elif isinstance(raw_data, dict):
-                data = raw_data
-            else:
-                logger.warning(f"Formato dati non riconosciuto per {plant_id}")
-                return
-            
-            # Assicurati che actuators sia un dizionario
-            if "actuators" not in data:
-                data["actuators"] = {}
-            
-            # Aggiungi l'azione
-            if actuator_type not in data["actuators"]:
-                data["actuators"][actuator_type] = []
-            
-            timestamp = int(time.time())
-            entry = {"action": action, "timestamp": timestamp}
-            data["actuators"][actuator_type].append(entry)
-            
-            # Mantieni solo gli ultimi 1000 valori
-            data["actuators"][actuator_type] = data["actuators"][actuator_type][-1000:]
-            data["last_updated"] = datetime.now().isoformat() + "Z"
-            
-            # Salva i dati RAW
-            with open(file_path, 'w', encoding='utf-8') as f:
-                json.dump(data, f, indent=2, ensure_ascii=False)
-            
-            logger.info(f"Azione attuatore salvata: {plant_id} - {actuator_type} = {action}")
-            
-        except Exception as e:
-            logger.error(f"Errore salvataggio azione attuatore {plant_id}: {e}")
-            raise
+    def _format_actuators_data(self, actuators_data: Dict) -> Dict[str, Any]:
+        """Formatta i dati degli attuatori per il frontend."""
+        formatted = {}
+        for actuator_type, entries in actuators_data.items():
+            if entries and len(entries) > 0:
+                latest_entry = entries[-1]
+                formatted[actuator_type] = {
+                    "action": latest_entry.get("action", ""),
+                    "timestamp": latest_entry.get("timestamp", 0),
+                    "history": entries[-10:] if len(entries) > 10 else entries  # Ultimi 10 valori
+                }
+        return formatted
     
     def _send_mqtt_command(self, plant_id: str, actuator_type: str, command: str) -> bool:
         """Invia un comando MQTT all'attuatore usando DataCollectorProducer."""
         try:
-            
-            
             # Crea un PlantDescriptor temporaneo per il producer
             plant_descriptor = PlantDescriptor(species="unknown", plant_id=plant_id)
             
-            # Crea il producer con il comando
+            # Crea il producer con il comando usando il path da JsonManager
             producer = DataCollectorProducer(
                 plant_descriptor=plant_descriptor,
                 command=f"{command} {actuator_type}",
-                json_path=self.plants_log_path
+                json_path=self.json_manager.base_path
             )
             
             # Esegue il comando (pubblica MQTT e salva nel JSON)
@@ -303,28 +206,6 @@ class PlantDataService:
                 }
         return formatted
     
-    def _save_plant_data(self, plant_id: str, data: Dict[str, Any]):
-        """Salva i dati di una pianta nel file JSON."""
-        try:
-            file_path = self._get_plant_file_path(plant_id)
-            
-            # Crea la directory se non esiste
-            os.makedirs(os.path.dirname(file_path), exist_ok=True)
-            
-            # Salva i dati
-            with open(file_path, 'w', encoding='utf-8') as f:
-                json.dump(data, f, indent=2, ensure_ascii=False)
-            
-            logger.info(f"Dati pianta salvati: {file_path}")
-            
-        except Exception as e:
-            logger.error(f"Errore salvataggio dati pianta {plant_id}: {e}")
-            raise
-    
-    def _get_plant_file_path(self, plant_id: str) -> str:
-        """Ottiene il percorso del file JSON per una pianta."""
-        return os.path.join(self.plants_log_path, f"{plant_id}.json")
-
 # Funzioni di supporto
 def convert_action_to_simple_command(action: str) -> str:
     """Converte un'azione complessa in comando semplice."""

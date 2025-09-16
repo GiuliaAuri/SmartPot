@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 JsonManager - Gestione dei file JSON per il salvataggio dei dati delle piante.
 
@@ -80,17 +79,11 @@ class JsonManager:
                 with open(file_path, 'r', encoding='utf-8') as f:
                     data = json.load(f)
                     
-                # Gestisce sia struttura lista che dizionario
-                if isinstance(data, list) and len(data) > 0:
-                    # Struttura lista: prendi il primo elemento
-                    plant_data = data[0]
-                    # Converte alla nuova struttura
-                    return self._convert_old_structure_to_new(plant_data, plant_id)
-                elif isinstance(data, dict):
-                    # Struttura dizionario: usa direttamente
+                # Gestisce solo il formato standard (dizionario)
+                if isinstance(data, dict):
                     return data
                 else:
-                    logging.warning(f"Struttura file non riconosciuta in {file_path}")
+                    logging.warning(f"Formato file non supportato in {file_path}: {type(data)}")
                     return self._create_empty_plant_data(plant_id)
                     
             except (json.JSONDecodeError, IOError) as e:
@@ -119,69 +112,6 @@ class JsonManager:
             "sensors": {},
             "actuators": {}
         }
-    
-    def _convert_old_structure_to_new(self, old_data: Dict[str, Any], plant_id: str) -> Dict[str, Any]:
-        """
-        Converte la struttura vecchia (lista) alla nuova struttura (dizionario).
-        
-        Args:
-            old_data: Dati nella struttura vecchia
-            plant_id: ID della pianta
-            
-        Returns:
-            Dati nella nuova struttura
-        """
-        now = datetime.now()
-        
-        # Crea nuova struttura
-        new_data = {
-            "plant_id": plant_id,
-            "species": old_data.get("species", "unknown"),
-            "created_at": now.isoformat() + "Z",
-            "last_updated": now.isoformat() + "Z",
-            "sensors": {},
-            "actuators": {}
-        }
-        
-        # Converte sensori dalla struttura vecchia
-        if "sensors" in old_data and isinstance(old_data["sensors"], list):
-            for sensor in old_data["sensors"]:
-                sensor_name = sensor.get("sensor", "unknown")
-                device = sensor.get("device", "unknown")
-                
-                if sensor_name not in new_data["sensors"]:
-                    new_data["sensors"][sensor_name] = []
-                
-                # Converte i valori
-                if "values" in sensor and isinstance(sensor["values"], list):
-                    for value_entry in sensor["values"]:
-                        new_entry = {
-                            "value": value_entry.get("value"),
-                            "timestamp": int(value_entry.get("timestamp", time.time()))
-                        }
-                        new_data["sensors"][sensor_name].append(new_entry)
-        
-        # Converte attuatori dalla struttura vecchia
-        if "actuators" in old_data and isinstance(old_data["actuators"], list):
-            for actuator in old_data["actuators"]:
-                actuator_type = actuator.get("type", "unknown")
-                device = actuator.get("device", "unknown")
-                
-                if actuator_type not in new_data["actuators"]:
-                    new_data["actuators"][actuator_type] = []
-                
-                # Converte i valori
-                if "values" in actuator and isinstance(actuator["values"], list):
-                    for value_entry in actuator["values"]:
-                        # Converte boolean a stringa per le azioni
-                        action = "start" if value_entry.get("value", False) else "stop"
-                        new_entry = {
-                            "action": action,
-                            "timestamp": int(value_entry.get("timestamp", time.time()))
-                        }
-                        new_data["actuators"][actuator_type].append(new_entry)
-        
-        return new_data
     
     def _save_plant_data(self, plant_id: str, data: Dict[str, Any]):
         """
