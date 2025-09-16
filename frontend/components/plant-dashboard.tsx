@@ -5,7 +5,6 @@ import type React from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
-import { Switch } from "@/components/ui/switch"
 import { Droplets, Leaf, Play, Pause } from "lucide-react"
 
 interface Plant {
@@ -20,11 +19,18 @@ interface Plant {
 interface PlantDashboardProps {
   plants: Plant[]
   setPlantsData: (plants: Plant[]) => void
+  onIrrigationControl?: (plantId: string, action: "start" | "stop") => void
 }
 
-export function PlantDashboard({ plants, setPlantsData }: PlantDashboardProps) {
-  const toggleWatering = (plantId: string) => {
-    setPlantsData(plants.map((plant) => (plant.id === plantId ? { ...plant, isWatering: !plant.isWatering } : plant)))
+export function PlantDashboard({ plants, setPlantsData, onIrrigationControl }: PlantDashboardProps) {
+  const handleManualControl = (plantId: string, action: "start" | "stop") => {
+    console.log(`🔧 Manual control clicked: ${plantId} - ${action}`)
+    if (onIrrigationControl) {
+      console.log(`📤 Calling onIrrigationControl...`)
+      onIrrigationControl(plantId, action)
+    } else {
+      console.log(`❌ onIrrigationControl not provided`)
+    }
   }
 
   const getMoistureColor = (value: number) => {
@@ -70,20 +76,16 @@ export function PlantDashboard({ plants, setPlantsData }: PlantDashboardProps) {
                   {plant.isWatering && <span className="text-xs text-blue-600 font-medium">ATTIVA</span>}
                 </div>
                 <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
-                  <Switch
-                    checked={plant.isWatering}
-                    onCheckedChange={() => toggleWatering(plant.id)}
-                    className="scale-75 sm:scale-100"
-                  />
                   <Button
                     size="sm"
                     variant={plant.isWatering ? "destructive" : "default"}
-                    onClick={() => toggleWatering(plant.id)}
+                    onClick={() => handleManualControl(plant.id, plant.isWatering ? "stop" : "start")}
                     className="h-7 w-7 sm:h-8 sm:w-8 p-0"
                   >
                     {plant.isWatering ? <Pause className="h-3 w-3" /> : <Play className="h-3 w-3" />}
                   </Button>
                 </div>
+                
               </div>
 
               <div className="space-y-2">

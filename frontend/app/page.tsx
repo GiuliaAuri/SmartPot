@@ -1,5 +1,5 @@
 "use client"
-
+//TODO:migliorare la visualizzazione dei umidità delle piante
 import { useState, useEffect } from "react"
 import { Leaf } from "lucide-react"
 import { PlantDashboard } from "@/components/plant-dashboard"
@@ -39,6 +39,21 @@ export default function SmartPlantDashboard() {
       ])
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleIrrigationControl = async (plantId: string, action: "start" | "stop") => {
+    console.log(`🌱 Irrigation control: ${plantId} - ${action}`)
+    try {
+      console.log(`📤 Calling API...`)
+      await apiService.controlIrrigation(plantId, action)
+      console.log(`✅ API call successful, reloading data...`)
+      // Ricarica i dati per aggiornare lo stato
+      await loadPlantsData()
+      console.log(`✅ Data reloaded`)
+    } catch (err) {
+      console.error("❌ Failed to control irrigation:", err)
+      setError("Errore nel controllo dell'irrigazione")
     }
   }
 
@@ -88,7 +103,11 @@ export default function SmartPlantDashboard() {
         </div>
 
         {/* Main Content - Only Dashboard */}
-        <PlantDashboard plants={plants} setPlantsData={setPlantsData} />
+        <PlantDashboard 
+          plants={plants} 
+          setPlantsData={setPlantsData} 
+          onIrrigationControl={handleIrrigationControl}
+        />
       </div>
     </div>
   )

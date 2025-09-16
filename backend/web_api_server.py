@@ -15,7 +15,7 @@ from flask_cors import CORS
 import logging
 
 # Aggiungi il path per importare i moduli del progetto
-project_root = os.path.abspath(os.path.dirname(__file__))
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, project_root)
 
 # Configurazione logging
@@ -215,6 +215,80 @@ class PlantDataService:
             actuators_dict[actuator_type] = converted_values
         return actuators_dict
     
+    def _save_actuator_action(self, plant_id: str, actuator_type: str, action: str):
+        """Salva un'azione di attuatore nel file JSON."""
+        try:
+            # Carica i dati RAW dal file JSON (non processati)
+            file_path = self._get_plant_file_path(plant_id)
+            
+            if not os.path.exists(file_path):
+                logger.warning(f"File non trovato: {file_path}")
+                return
+            
+            with open(file_path, 'r', encoding='utf-8') as f:
+                raw_data = json.load(f)
+            
+            # Gestisci formato vecchio (lista) e nuovo (dizionario)
+            if isinstance(raw_data, list) and len(raw_data) > 0:
+                data = raw_data[0]
+            elif isinstance(raw_data, dict):
+                data = raw_data
+            else:
+                logger.warning(f"Formato dati non riconosciuto per {plant_id}")
+                return
+            
+            # Assicurati che actuators sia un dizionario
+            if "actuators" not in data:
+                data["actuators"] = {}
+            
+            # Aggiungi l'azione
+            if actuator_type not in data["actuators"]:
+                data["actuators"][actuator_type] = []
+            
+            timestamp = int(time.time())
+            entry = {"action": action, "timestamp": timestamp}
+            data["actuators"][actuator_type].append(entry)
+            
+            # Mantieni solo gli ultimi 1000 valori
+            data["actuators"][actuator_type] = data["actuators"][actuator_type][-1000:]
+            data["last_updated"] = datetime.now().isoformat() + "Z"
+            
+            # Salva i dati RAW
+            with open(file_path, 'w', encoding='utf-8') as f:
+                json.dump(data, f, indent=2, ensure_ascii=False)
+            
+            logger.info(f"Azione attuatore salvata: {plant_id} - {actuator_type} = {action}")
+            
+        except Exception as e:
+            logger.error(f"Errore salvataggio azione attuatore {plant_id}: {e}")
+            raise
+    
+    def _send_mqtt_command(self, actuator_type: str, command: str) -> bool:
+        """Invia un comando MQTT all'attuatore."""
+        try:
+            import paho.mqtt.client as mqtt
+            from conf.mqtt_conf_params import MqttConfigurationParameters
+            
+            # Crea client MQTT
+            client = mqtt.Client()
+            
+            # Connessione al broker
+            client.connect(MqttConfigurationParameters.BROKER_ADDRESS, MqttConfigurationParameters.BROKER_PORT)
+            
+            # Pubblica il comando
+            topic = MqttConfigurationParameters.build_command_plant_topic(actuator_type)
+            client.publish(topic, command)
+            
+            # Disconnetti
+            client.disconnect()
+            
+            logger.info(f"Comando MQTT inviato: {topic} = {command}")
+            return True
+            
+        except Exception as e:
+            logger.error(f"Errore invio comando MQTT {actuator_type}: {e}")
+            return False
+    
     def _format_actuators_data(self, actuators_data: Dict) -> Dict[str, Any]:
         """Formatta i dati degli attuatori per il frontend."""
         formatted = {}
@@ -227,6 +301,40 @@ class PlantDataService:
                     "history": entries[-10:] if len(entries) > 10 else entries  # Ultimi 10 valori
                 }
         return formatted
+    
+    def _save_plant_data(self, plant_id: str, data: Dict[str, Any]):
+        """Salva i dati di una pianta nel file JSON."""
+        try:
+            file_path = self._get_plant_file_path(plant_id)
+            
+            # Crea la directory se non esiste
+            os.makedirs(os.path.dirname(file_path), exist_ok=True)
+            
+            # Salva i dati
+            with open(file_path, 'w', encoding='utf-8') as f:
+                json.dump(data, f, indent=2, ensure_ascii=False)
+            
+            logger.info(f"Dati pianta salvati: {file_path}")
+            
+        except Exception as e:
+            logger.error(f"Errore salvataggio dati pianta {plant_id}: {e}")
+            raise
+    
+    def _get_plant_file_path(self, plant_id: str) -> str:
+        """Ottiene il percorso del file JSON per una pianta."""
+        return os.path.join(self.plants_log_path, f"{plant_id}.json")
+
+# Funzioni di supporto
+def convert_action_to_simple_command(action: str) -> str:
+    """Converte un'azione complessa in comando semplice."""
+    action_lower = action.lower()
+    
+    if action_lower in ['deactivate', 'stop', 'off']:
+        return 'stop'
+    elif action_lower in ['activate', 'start', 'on']:
+        return 'start'
+    else:
+        return action_lower
 
 # Inizializza il servizio
 plant_service = PlantDataService(PLANTS_LOG_PATH)
@@ -273,6 +381,50 @@ def get_plant_by_id(plant_id: str):
         
     except Exception as e:
         logger.error(f"Errore nell'endpoint /api/plants/{plant_id}: {e}")
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/plants/<plant_id>/actuators/<actuator_type>', methods=['POST'])
+def control_actuator(plant_id: str, actuator_type: str):
+    """Endpoint per controllare manualmente un attuatore."""
+    try:
+        # Leggi il payload della richiesta
+        data = request.get_json()
+        if not data or 'action' not in data:
+            return jsonify({"error": "Payload mancante o formato non valido"}), 400
+        
+        action = data['action'].lower()
+        
+        # Valida l'azione
+        valid_actions = ['start', 'stop', 'on', 'off', 'activate', 'deactivate']
+        if action not in valid_actions:
+            return jsonify({"error": f"Azione non valida. Valori accettati: {valid_actions}"}), 400
+        
+        # Verifica che la pianta esista
+        plant_data = plant_service._load_plant_data(plant_id)
+        if not plant_data:
+            return jsonify({"error": f"Pianta {plant_id} non trovata"}), 404
+        
+        # Converti l'azione in comando semplice
+        simple_command = convert_action_to_simple_command(action)
+        
+        # Salva l'azione nel file JSON
+        plant_service._save_actuator_action(plant_id, actuator_type, simple_command)
+        
+        # Invia comando MQTT all'attuatore
+        mqtt_success = plant_service._send_mqtt_command(actuator_type, simple_command)
+        
+        return jsonify({
+            "success": True,
+            "message": f"Comando {simple_command} inviato all'attuatore {actuator_type}",
+            "plant_id": plant_id,
+            "actuator_type": actuator_type,
+            "action": simple_command,
+            "mqtt_sent": mqtt_success,
+            "timestamp": datetime.now().isoformat()
+        })
+        
+    except Exception as e:
+        logger.error(f"Errore nell'endpoint POST /api/plants/{plant_id}/actuators/{actuator_type}: {e}")
         return jsonify({"error": str(e)}), 500
 
 @app.route('/api/health', methods=['GET'])

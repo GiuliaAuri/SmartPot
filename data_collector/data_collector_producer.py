@@ -91,10 +91,10 @@ class DataCollectorProducer:
         command_lower = command.lower()
         
         # Mapping comandi complessi -> semplici
-        if "activate" in command_lower or "start" in command_lower or "on" in command_lower:
-            return "start"
-        elif "deactivate" in command_lower or "stop" in command_lower or "off" in command_lower:
+        if "deactivate" in command_lower or "stop" in command_lower or "off" in command_lower:
             return "stop"
+        elif "activate" in command_lower or "start" in command_lower or "on" in command_lower:
+            return "start"
         else:
             # Se è già un comando semplice, restituiscilo
             if command_lower in ["start", "stop", "on", "off", "1", "0"]:
