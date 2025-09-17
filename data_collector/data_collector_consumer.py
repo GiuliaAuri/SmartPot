@@ -85,6 +85,18 @@ class DataCollectorConsumer:
             except ValueError:
                 logging.warning(f"Invalid sensor value: {message_payload}")
                 return
+
+            #conversione del valore del sensore (di umidità) se necessario
+            if sensor_type == "humidity":
+                # Trova il sensore di umidità corretto
+                humidity_sensor = None
+                for sensor in self.plant_descriptor.sensors:
+                    if sensor.type == "humidity":
+                        humidity_sensor = sensor
+                        break
+                
+                if humidity_sensor:
+                    sensor_value = humidity_sensor.calculate_relative_percentage(sensor_value)
             
             # Crea il messaggio nel formato interno
             message_data = {

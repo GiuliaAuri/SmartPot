@@ -20,7 +20,6 @@ import logging
 from data_collector.data_collector_producer import DataCollectorProducer
 from data_collector.plant_descriptor import PlantDescriptor
 from data_collector.json_manager import JsonManager
-from smart_objects.models.Sensor import Sensor
 
 # Configurazione logging
 logging.basicConfig(level=logging.INFO)
@@ -90,20 +89,8 @@ class PlantDataService:
         sensors_data = data.get("sensors", {})
         actuators_data = data.get("actuators", {})
         
-        # Calcola umidità del suolo (humidity sensor) con percentuale relativa
-        soil_moisture = self._get_latest_sensor_value(sensors_data, "humidity", 50)
-        
-        # Crea un'istanza temporanea di Sensor per calcolare la percentuale relativa
-        temp_sensor = Sensor(
-            plant_id=plant_id,
-            initial_value=soil_moisture,
-            unit="%",
-            min_value=30,  # Valori predefiniti per humidity
-            max_value=100,
-            type="humidity",
-            device="environment_telemetry"
-        )
-        soil_moisture_percentage = temp_sensor.calculate_relative_percentage(soil_moisture)
+        # Leggi umidità del suolo (già convertita in percentuale dal data collector)
+        soil_moisture_percentage = self._get_latest_sensor_value(sensors_data, "humidity", 50)
         
         # Determina se l'irrigazione è attiva
         is_watering = self._is_irrigation_active(actuators_data)

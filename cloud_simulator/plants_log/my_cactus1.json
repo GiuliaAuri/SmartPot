@@ -1,869 +1,141 @@
 {
   "plant_id": "my_cactus1",
   "species": "cactus",
-  "created_at": "2025-09-16T19:11:27.746678Z",
-  "last_updated": "2025-09-17T00:29:30.801599Z",
+  "created_at": "2025-09-17T11:53:07.873922Z",
+  "last_updated": "2025-09-17T11:59:52.131674Z",
   "sensors": {
     "humidity": [
       {
-        "value": 146.0,
-        "timestamp": 1758042687
+        "value": 100.0,
+        "timestamp": 1758102787
       },
       {
-        "value": 146.0,
-        "timestamp": 1758042689
+        "value": 100.0,
+        "timestamp": 1758102790
       },
       {
-        "value": 146.0,
-        "timestamp": 1758042691
+        "value": 100.0,
+        "timestamp": 1758102934
       },
       {
-        "value": 146.0,
-        "timestamp": 1758042693
+        "value": 100.0,
+        "timestamp": 1758102937
       },
       {
-        "value": 146.0,
-        "timestamp": 1758042695
+        "value": 100.0,
+        "timestamp": 1758102939
       },
       {
-        "value": 146.0,
-        "timestamp": 1758042697
+        "value": 100.0,
+        "timestamp": 1758102941
       },
       {
-        "value": 148.0,
-        "timestamp": 1758042700
+        "value": 90.0,
+        "timestamp": 1758103098
       },
       {
-        "value": 148.0,
-        "timestamp": 1758042702
+        "value": 90.0,
+        "timestamp": 1758103100
       },
       {
-        "value": 148.0,
-        "timestamp": 1758042704
+        "value": 10.0,
+        "timestamp": 1758103136
       },
       {
-        "value": 148.0,
-        "timestamp": 1758042707
+        "value": 10.0,
+        "timestamp": 1758103139
       },
       {
-        "value": 148.0,
-        "timestamp": 1758042709
+        "value": 10.0,
+        "timestamp": 1758103141
       },
       {
-        "value": 148.0,
-        "timestamp": 1758042712
+        "value": 10.0,
+        "timestamp": 1758103143
       },
       {
-        "value": 146.0,
-        "timestamp": 1758042714
+        "value": 10.0,
+        "timestamp": 1758103146
       },
       {
-        "value": 146.0,
-        "timestamp": 1758042716
+        "value": 10.0,
+        "timestamp": 1758103148
       },
       {
-        "value": 146.0,
-        "timestamp": 1758042718
+        "value": 10.0,
+        "timestamp": 1758103151
       },
       {
-        "value": 146.0,
-        "timestamp": 1758042720
+        "value": 10.0,
+        "timestamp": 1758103153
       },
       {
-        "value": 146.0,
-        "timestamp": 1758042722
+        "value": 10.0,
+        "timestamp": 1758103156
       },
       {
-        "value": 147.0,
-        "timestamp": 1758042724
+        "value": 10.0,
+        "timestamp": 1758103158
       },
       {
-        "value": 146.0,
-        "timestamp": 1758042726
+        "value": 10.0,
+        "timestamp": 1758103160
       },
       {
-        "value": 146.0,
-        "timestamp": 1758043288
+        "value": 10.0,
+        "timestamp": 1758103163
       },
       {
-        "value": 146.0,
-        "timestamp": 1758043290
+        "value": 10.0,
+        "timestamp": 1758103165
       },
       {
-        "value": 146.0,
-        "timestamp": 1758043292
+        "value": 10.0,
+        "timestamp": 1758103168
       },
       {
-        "value": 148.0,
-        "timestamp": 1758043294
+        "value": 10.0,
+        "timestamp": 1758103170
       },
       {
-        "value": 148.0,
-        "timestamp": 1758043297
+        "value": 10.0,
+        "timestamp": 1758103172
       },
       {
-        "value": 146.0,
-        "timestamp": 1758043299
+        "value": 10.0,
+        "timestamp": 1758103175
       },
       {
-        "value": 146.0,
-        "timestamp": 1758043301
+        "value": 10.0,
+        "timestamp": 1758103177
       },
       {
-        "value": 146.0,
-        "timestamp": 1758043303
+        "value": 10.0,
+        "timestamp": 1758103180
       },
       {
-        "value": 146.0,
-        "timestamp": 1758043305
+        "value": 11.818181818181813,
+        "timestamp": 1758103182
       },
       {
-        "value": 146.0,
-        "timestamp": 1758043307
+        "value": 10.909090909090907,
+        "timestamp": 1758103184
       },
       {
-        "value": 146.0,
-        "timestamp": 1758043309
+        "value": 10.909090909090907,
+        "timestamp": 1758103186
       },
       {
-        "value": 148.0,
-        "timestamp": 1758043311
+        "value": 10.909090909090907,
+        "timestamp": 1758103188
       },
       {
-        "value": 148.0,
-        "timestamp": 1758043313
+        "value": 10.909090909090907,
+        "timestamp": 1758103190
       },
       {
-        "value": 146.0,
-        "timestamp": 1758043315
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758043317
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758043319
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758043321
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758043323
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758043424
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758043426
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758043428
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758043430
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758043432
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758043434
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758043436
-      },
-      {
-        "value": 148.0,
-        "timestamp": 1758043438
-      },
-      {
-        "value": 148.0,
-        "timestamp": 1758043441
-      },
-      {
-        "value": 148.0,
-        "timestamp": 1758043443
-      },
-      {
-        "value": 147.0,
-        "timestamp": 1758043445
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758043447
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758043449
-      },
-      {
-        "value": 147.0,
-        "timestamp": 1758043451
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758043453
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758043456
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758050300
-      },
-      {
-        "value": 147.0,
-        "timestamp": 1758050302
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758050304
-      },
-      {
-        "value": 147.0,
-        "timestamp": 1758050306
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758050308
-      },
-      {
-        "value": 147.0,
-        "timestamp": 1758050310
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758050312
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758050314
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758050316
-      },
-      {
-        "value": 147.0,
-        "timestamp": 1758050318
-      },
-      {
-        "value": 147.0,
-        "timestamp": 1758050320
-      },
-      {
-        "value": 148.0,
-        "timestamp": 1758050322
-      },
-      {
-        "value": 148.0,
-        "timestamp": 1758050325
-      },
-      {
-        "value": 148.0,
-        "timestamp": 1758050327
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758050329
-      },
-      {
-        "value": 147.0,
-        "timestamp": 1758050331
-      },
-      {
-        "value": 147.0,
-        "timestamp": 1758050333
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758050335
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758050337
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758050339
-      },
-      {
-        "value": 147.0,
-        "timestamp": 1758050341
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758050343
-      },
-      {
-        "value": 147.0,
-        "timestamp": 1758050345
-      },
-      {
-        "value": 147.0,
-        "timestamp": 1758050347
-      },
-      {
-        "value": 147.0,
-        "timestamp": 1758050612
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758050614
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758050616
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758050618
-      },
-      {
-        "value": 147.0,
-        "timestamp": 1758050620
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758050622
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758050624
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758050626
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758050628
-      },
-      {
-        "value": 147.0,
-        "timestamp": 1758050630
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758050632
-      },
-      {
-        "value": 145.0,
-        "timestamp": 1758050634
-      },
-      {
-        "value": 136.0,
-        "timestamp": 1758050636
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758050638
-      },
-      {
-        "value": 138.0,
-        "timestamp": 1758050640
-      },
-      {
-        "value": 137.0,
-        "timestamp": 1758050642
-      },
-      {
-        "value": 138.0,
-        "timestamp": 1758050644
-      },
-      {
-        "value": 145.0,
-        "timestamp": 1758050646
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758050648
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758050650
-      },
-      {
-        "value": 148.0,
-        "timestamp": 1758050653
-      },
-      {
-        "value": 148.0,
-        "timestamp": 1758050655
-      },
-      {
-        "value": 148.0,
-        "timestamp": 1758050658
-      },
-      {
-        "value": 148.0,
-        "timestamp": 1758050660
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758050662
-      },
-      {
-        "value": 147.0,
-        "timestamp": 1758050664
-      },
-      {
-        "value": 147.0,
-        "timestamp": 1758050666
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758050668
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758050670
-      },
-      {
-        "value": 147.0,
-        "timestamp": 1758050672
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758050901
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758050903
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758050905
-      },
-      {
-        "value": 147.0,
-        "timestamp": 1758050907
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758050909
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758050911
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758050913
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758050915
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758050917
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758050919
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758050921
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758050923
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758051457
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758051459
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758051461
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758051463
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758051465
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758051467
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758051469
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758051471
-      },
-      {
-        "value": 148.0,
-        "timestamp": 1758051474
-      },
-      {
-        "value": 148.0,
-        "timestamp": 1758051476
-      },
-      {
-        "value": 148.0,
-        "timestamp": 1758051479
-      },
-      {
-        "value": 148.0,
-        "timestamp": 1758051481
-      },
-      {
-        "value": 148.0,
-        "timestamp": 1758051483
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758051485
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758051487
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758051489
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758051491
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758051493
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758051495
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758051497
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758051499
-      },
-      {
-        "value": 147.0,
-        "timestamp": 1758051501
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758051503
-      },
-      {
-        "value": 147.0,
-        "timestamp": 1758051505
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758051507
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758051509
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758051511
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758051513
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758051515
-      },
-      {
-        "value": 147.0,
-        "timestamp": 1758051517
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758051519
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758051522
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758051524
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758051526
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758051528
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758051530
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758052244
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758052246
-      },
-      {
-        "value": 147.0,
-        "timestamp": 1758052248
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758052250
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758052252
-      },
-      {
-        "value": 147.0,
-        "timestamp": 1758052254
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758052256
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758052258
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758052260
-      },
-      {
-        "value": 148.0,
-        "timestamp": 1758052263
-      },
-      {
-        "value": 148.0,
-        "timestamp": 1758052265
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758052267
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758052269
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758052271
-      },
-      {
-        "value": 147.0,
-        "timestamp": 1758052273
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758052275
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758052277
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758052279
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758055180
-      },
-      {
-        "value": 147.0,
-        "timestamp": 1758055182
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758055184
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758055186
-      },
-      {
-        "value": 147.0,
-        "timestamp": 1758055188
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758055190
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758055192
-      },
-      {
-        "value": 143.0,
-        "timestamp": 1758055194
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758055196
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758055198
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758055200
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758055202
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758055204
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758055206
-      },
-      {
-        "value": 148.0,
-        "timestamp": 1758055208
-      },
-      {
-        "value": 148.0,
-        "timestamp": 1758055211
-      },
-      {
-        "value": 148.0,
-        "timestamp": 1758055213
-      },
-      {
-        "value": 148.0,
-        "timestamp": 1758055215
-      },
-      {
-        "value": 148.0,
-        "timestamp": 1758055218
-      },
-      {
-        "value": 148.0,
-        "timestamp": 1758055220
-      },
-      {
-        "value": 148.0,
-        "timestamp": 1758055223
-      },
-      {
-        "value": 148.0,
-        "timestamp": 1758055225
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758055227
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758055229
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758055231
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758055233
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758055235
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758055237
-      },
-      {
-        "value": 147.0,
-        "timestamp": 1758055239
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758055241
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758055243
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758055245
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758055247
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758055249
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758055251
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758055253
-      },
-      {
-        "value": 147.0,
-        "timestamp": 1758055255
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758055257
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758055259
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758055261
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758055263
-      },
-      {
-        "value": 146.0,
-        "timestamp": 1758055265
+        "value": 10.909090909090907,
+        "timestamp": 1758103192
       }
     ]
   },
@@ -871,95 +143,11 @@
     "irrigation": [
       {
         "action": "start",
-        "timestamp": 1758042705
-      },
-      {
-        "action": "start",
-        "timestamp": 1758042706
+        "timestamp": 1758103136
       },
       {
         "action": "stop",
-        "timestamp": 1758042712
-      },
-      {
-        "action": "start",
-        "timestamp": 1758043291
-      },
-      {
-        "action": "stop",
-        "timestamp": 1758043294
-      },
-      {
-        "action": "start",
-        "timestamp": 1758043435
-      },
-      {
-        "action": "stop",
-        "timestamp": 1758043444
-      },
-      {
-        "action": "start",
-        "timestamp": 1758050318
-      },
-      {
-        "action": "stop",
-        "timestamp": 1758050326
-      },
-      {
-        "action": "start",
-        "timestamp": 1758050650
-      },
-      {
-        "action": "stop",
-        "timestamp": 1758050658
-      },
-      {
-        "action": "start",
-        "timestamp": 1758051468
-      },
-      {
-        "action": "stop",
-        "timestamp": 1758051483
-      },
-      {
-        "action": "start",
-        "timestamp": 1758052259
-      },
-      {
-        "action": "stop",
-        "timestamp": 1758052265
-      },
-      {
-        "action": "start",
-        "timestamp": 1758055204
-      },
-      {
-        "action": "start",
-        "timestamp": 1758055206
-      },
-      {
-        "action": "stop",
-        "timestamp": 1758055224
-      },
-      {
-        "action": "start",
-        "timestamp": 1758061169
-      },
-      {
-        "action": "stop",
-        "timestamp": 1758061174
-      },
-      {
-        "action": "start",
-        "timestamp": 1758061661
-      },
-      {
-        "action": "stop",
-        "timestamp": 1758061769
-      },
-      {
-        "action": "stop",
-        "timestamp": 1758061770
+        "timestamp": 1758103179
       }
     ]
   }

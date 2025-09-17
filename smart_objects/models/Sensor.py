@@ -48,17 +48,4 @@ class Sensor(ABC, Generic[T]):
     def _set_device(self, device: str):
         self.device = device
 
-    def calculate_relative_percentage(self, value: float) -> float:
-        """Calcola la percentuale relativa tra min e max per un sensore."""
-        
-        # Calcola la percentuale relativa
-        if self.min_value == self.max_value:
-            return 50.0  # Evita divisione per zero
-        
-        # Clamp il valore tra min e max
-        clamped_value = max(self.min_value, min(self.max_value, value))
-        
-        # Calcola percentuale relativa
-        percentage = ((self.max_value - clamped_value) / (self.min_value - clamped_value)) * 100
-        #round(percentage, 1)
-        return percentage
+   

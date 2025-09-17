@@ -4,11 +4,26 @@ from smart_objects.actuators.irrigation_actuator import IrrigationActuator
 
 
 class PlantDescriptor:
-    def __init__(self, species, plant_id, devices=None):
+    def __init__(self, species, plant_id, devices=None, sensor_config=None):
         self.plant_id = plant_id
         self.species = species
-        self.sensors=[ HumiditySensor(plant_id, 0, "%", 0, 100, "environment_telemetry", True)]
-        self.actuators=[IrrigationActuator(plant_id, "water_metering")]
+        
+        # Usa configurazione sensore se fornita, altrimenti default
+        if sensor_config:
+            self.sensors = [HumiditySensor(
+                plant_id, 
+                sensor_config.get("initial_value", 80.0),
+                sensor_config.get("unit", "%"),
+                sensor_config.get("min_value", 50.0),
+                sensor_config.get("max_value", 160.0),
+                "environment_telemetry", 
+                sensor_config.get("is_real", True)
+            )]
+        else:
+            # Fallback ai valori di default
+            self.sensors = [HumiditySensor(plant_id, 80.0, "%", 50.0, 160.0, "environment_telemetry", True)]
+        
+        self.actuators = [IrrigationActuator(plant_id, "water_metering")]
 
 
     def to_json(self):

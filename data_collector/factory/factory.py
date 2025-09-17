@@ -21,9 +21,17 @@ class Factory:
                 species = plant_config.get("species")
                 
                 if plant_id and species:
-                    plant_descriptor = PlantDescriptor(species, plant_id)
+                    # Estrai configurazione sensori
+                    sensor_config = None
+                    sensors_config = plant_config.get("sensors", [])
+                    if sensors_config and len(sensors_config) > 0:
+                        sensor_config = sensors_config[0].get("humidity")
+                    
+                    plant_descriptor = PlantDescriptor(species, plant_id, sensor_config=sensor_config)
                     plant_descriptors.append(plant_descriptor)
                     print(f"✅ Creato plant descriptor: {plant_id} ({species})")
+                    if sensor_config:
+                        print(f"   📊 Sensore umidità: min={sensor_config.get('min_value')}, max={sensor_config.get('max_value')}")
                 else:
                     print(f"⚠️ Configurazione pianta incompleta: {plant_config}")
             
