@@ -63,7 +63,7 @@ function PlantImage({ plantType, plantName }: { plantType: string; plantName: st
   }
 
   return (
-    <div className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 lg:w-56 lg:h-56 xl:w-64 xl:h-64 relative">
+    <div className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 lg:w-36 lg:h-36 xl:w-40 xl:h-40 relative">
       <Image
         src={currentImage}
         alt={`${plantName} - ${plantType}`}
