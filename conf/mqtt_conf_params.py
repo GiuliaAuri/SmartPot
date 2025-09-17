@@ -21,8 +21,8 @@ class MqttConfigurationParameters(object):
     def build_telemetry_plant_topic(sensor_id: str) -> str:
         """Build the telemetry topic for a specific plant and sensor, 
         comunication from sensor to cloud.
-        e.g., plant/{plant_id}/sensor/{sensor_id}
-        plant/plant02/sensor/temperature
+        e.g., plant/sensor/{sensor_id}
+        plant/sensor/temperature
         """
         return "{0}/{1}/{2}".format(
             MqttConfigurationParameters.BASIC_TOPIC,
