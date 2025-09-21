@@ -77,7 +77,7 @@ void loop() {
     // relè acceso -> animation drop
     for (int i = 0; i < NUM_FRAMES; i++) {
       matrix.loadFrame(animation_drop[i]);
-      delay(200); // velocità animazione
+      delay(100); 
     }
   } else {
     // relè spento -> smile

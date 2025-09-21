@@ -17,8 +17,13 @@ SENSOR_MAPPING = {
         'B': "battery_level"
     }
 ACTUATOR_MAPPING = {
-        0: "irrigation",
-    }
+    0: "irrigation",  # ID → Nome
+}
+
+ACTUATOR_CHAR_MAPPING = {
+    0: b'I',  # irrigation
+    
+}
 
 class Bridge():
 
@@ -81,32 +86,55 @@ class Bridge():
 
 	def on_connect(self, client, userdata, flags, rc):
 		print("Connected with result code " + str(rc))
-
-		# Subscribing in on_connect() means that if we lose the connection and
-		# reconnect then subscriptions will be renewed.
-		self.clientMQTT.subscribe(MqttConfigurationParameters.build_command_plant_topic(ACTUATOR_MAPPING[0]))
-
+		
+		# Sottoscrizione dinamica per tutti gli attuatori
+		for actuator_id, actuator_name in ACTUATOR_MAPPING.items():
+			topic = MqttConfigurationParameters.build_command_plant_topic(actuator_name)
+			self.clientMQTT.subscribe(topic)
+			print(f"✅ Sottoscritto a: {topic}")
+			
 	# The callback for when a PUBLISH message is received from the server.
 	def on_message(self, client, userdata, msg):
 		print(f"Comando ricevuto - Topic: {msg.topic}, Payload: {msg.payload}")
+		
+		# Estrai il tipo di attuatore dal topic
+		topic_parts = msg.topic.split('/')
+		actuator_type = topic_parts[-1]  # "irrigation", "lighting", etc.
+		
+		# Trova l'ID dell'attuatore
+		actuator_id = None
+		for id, name in ACTUATOR_MAPPING.items():
+			if name == actuator_type:
+				actuator_id = id
+				break
+		
+		if actuator_id is None:
+			print(f"Attuatore non riconosciuto: {actuator_type}")
+			return
+		
+		# Ottieni il carattere seriale
+		actuator_char = ACTUATOR_CHAR_MAPPING.get(actuator_id)
+		if not actuator_char:
+			print(f"Carattere seriale non trovato per attuatore {actuator_id}")
+			return
 		
 		# Decodifica il comando dal payload
 		command = msg.payload.decode('utf-8').lower()
 		
 		if self.ser is not None:
 			if command == "start" or command == "on" or command == "1":
-				self.ser.write(b'I')  # Tipo attuatore
+				self.ser.write(actuator_char)  # Tipo attuatore
 				self.ser.write(b'A')  # Comando ATTIVA
-				print("Comando ATTIVA inviato")
+				print(f"Comando ATTIVA inviato per {actuator_type}")
 			elif command == "stop" or command == "off" or command == "0":
-				self.ser.write(b'I')  # Tipo attuatore
+				self.ser.write(actuator_char)  # Tipo attuatore
 				self.ser.write(b'S')  # Comando DISATTIVA
-				print("Comando DISATTIVA inviato")
+				print(f"Comando DISATTIVA inviato per {actuator_type}")
 			else:
 				print(f"Comando non riconosciuto: {command}")
 		else:
 			print("Serial port not available!")
-
+			
 	def loop(self):
 		# infinite loop for serial managing
 		#
