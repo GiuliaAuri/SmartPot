@@ -1,9 +1,9 @@
 {
     "plants": [
       {
-        "plant_id": "my_cactus1",
-        "species": "cactus",
-        "description": "Pianta Cactus",
+        "plant_id": "my_felce",
+        "species": "Pteridofite",
+        "description": "Pianta Felce",
         "sensors":[ {
           "humidity": {
             "enabled": true,
