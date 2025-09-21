@@ -2,7 +2,7 @@
   "plant_id": "my_felce",
   "species": "Pteridofite",
   "created_at": "2025-09-20T18:42:31.299485Z",
-  "last_updated": "2025-09-21T15:04:35.487519Z",
+  "last_updated": "2025-09-21T15:08:16.223832Z",
   "sensors": {
     "humidity": [
       {
@@ -2500,6 +2500,66 @@
       {
         "value": 72.0,
         "timestamp": 1758459875
+      },
+      {
+        "value": 72.0,
+        "timestamp": 1758460064
+      },
+      {
+        "value": 72.0,
+        "timestamp": 1758460066
+      },
+      {
+        "value": 71.0,
+        "timestamp": 1758460068
+      },
+      {
+        "value": 72.0,
+        "timestamp": 1758460070
+      },
+      {
+        "value": 71.0,
+        "timestamp": 1758460073
+      },
+      {
+        "value": 72.0,
+        "timestamp": 1758460075
+      },
+      {
+        "value": 71.0,
+        "timestamp": 1758460078
+      },
+      {
+        "value": 72.0,
+        "timestamp": 1758460080
+      },
+      {
+        "value": 71.0,
+        "timestamp": 1758460082
+      },
+      {
+        "value": 72.0,
+        "timestamp": 1758460085
+      },
+      {
+        "value": 72.0,
+        "timestamp": 1758460087
+      },
+      {
+        "value": 71.0,
+        "timestamp": 1758460090
+      },
+      {
+        "value": 71.0,
+        "timestamp": 1758460092
+      },
+      {
+        "value": 72.0,
+        "timestamp": 1758460094
+      },
+      {
+        "value": 72.0,
+        "timestamp": 1758460096
       }
     ]
   },
@@ -2628,6 +2688,22 @@
       {
         "action": "stop",
         "timestamp": 1758459857
+      },
+      {
+        "action": "start",
+        "timestamp": 1758460064
+      },
+      {
+        "action": "stop",
+        "timestamp": 1758460081
+      },
+      {
+        "action": "start",
+        "timestamp": 1758460084
+      },
+      {
+        "action": "stop",
+        "timestamp": 1758460089
       }
     ]
   }
