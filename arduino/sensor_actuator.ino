@@ -1,7 +1,5 @@
 #include "Arduino_LED_Matrix.h"
 ArduinoLEDMatrix matrix;
-// --- LED Matrix ---
-// --- LED Matrix ---
 const uint32_t smile[8] = {
   0x19819,
   0x80004024,
