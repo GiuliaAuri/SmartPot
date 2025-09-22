@@ -1,6 +1,6 @@
 #include "Arduino_LED_Matrix.h"
 ArduinoLEDMatrix matrix;
-
+// --- LED Matrix ---
 // --- LED Matrix ---
 const uint32_t smile[8] = {
   0x19819,
@@ -33,7 +33,7 @@ void setup() {
   Serial.begin(9600);
   timestamp = millis();
   pinMode(RELAY_PIN,OUTPUT);
-  digitalWrite(RELAY_PIN, HIGH); // relè spento all'avvio (low-level trigger)
+  digitalWrite(RELAY_PIN, HIGH); // relay off at startup (low-level trigger)
 
   // LED Matrix
   matrix.begin();
@@ -43,12 +43,12 @@ void setup() {
 
 void loop() {
   int val;
-  if (millis() - timestamp > 2000){
-    // sensore
+  if (millis() - timestamp > 1000){
+    // sensor
     val = analogRead(SENSOR_PIN);
 
-    // pacchetto dati
-    // FF  numero type dato  FE
+    // data packet
+    // FF  number type value  FE
     Serial.write(0xFF);
     Serial.write(1);
     Serial.write(SENSOR_TYPE);
@@ -57,7 +57,7 @@ void loop() {
 
     Serial.write(0xFE);
 
-    // attuatore
+    // actuator
     if (Serial.available()>0)
     { int val;
       char type;
@@ -72,15 +72,15 @@ void loop() {
     timestamp = millis();
 
   }
-  // --- Gestione LED Matrix ---
+  // --- LED Matrix Management ---
   if (digitalRead(RELAY_PIN) == LOW) {
-    // relè acceso -> animation drop
+    // relay on -> animation drop
     for (int i = 0; i < NUM_FRAMES; i++) {
       matrix.loadFrame(animation_drop[i]);
       delay(100); 
     }
   } else {
-    // relè spento -> smile
+    // relay off -> smile
     matrix.loadFrame(smile);
   }
 }
