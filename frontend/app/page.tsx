@@ -59,10 +59,10 @@ export default function SmartPlantDashboard() {
   useEffect(() => {
     loadPlantsData()
 
-    // Poll for updates every 30 seconds
+    // Poll for updates every 10 seconds
     const interval = setInterval(() => {
       loadPlantsData()
-    }, 30000)
+    }, 10000)
 
     return () => clearInterval(interval)
   }, [])

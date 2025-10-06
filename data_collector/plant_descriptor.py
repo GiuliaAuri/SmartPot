@@ -8,7 +8,6 @@ class PlantDescriptor:
         self.plant_id = plant_id
         self.species = species
         
-        # Usa configurazione sensore se fornita, altrimenti default
         if sensor_config:
             self.sensors = [HumiditySensor(
                 plant_id, 
@@ -20,14 +19,14 @@ class PlantDescriptor:
                 sensor_config.get("is_real", True)
             )]
         else:
-            # Fallback ai valori di default
+           
             self.sensors = [HumiditySensor(plant_id, 80.0, "%", 50.0, 160.0, "environment_telemetry", True)]
         
         self.actuators = [IrrigationActuator(plant_id, "water_metering")]
 
 
     def to_json(self):
-        # Estrai tutti i sensori da tutti i dispositivi
+       
         all_sensors = []
         all_actuators = []
         

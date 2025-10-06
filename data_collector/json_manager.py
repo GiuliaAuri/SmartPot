@@ -1,13 +1,3 @@
-"""
-JsonManager - Gestione dei file JSON per il salvataggio dei dati delle piante.
-
-Questo modulo gestisce:
-- Creazione di file JSON separati per ogni pianta
-- Salvataggio dei dati dei sensori con timestamp
-- Salvataggio dei dati degli attuatori con timestamp
-- Struttura dati organizzata e leggibile
-"""
-
 import json
 import os
 import time
@@ -20,26 +10,7 @@ class JsonManager:
     Gestore per il salvataggio dei dati delle piante in file JSON.
     
     Ogni pianta ha un file JSON separato nella cartella cloud_simulator/plants_log/
-    con la struttura:
-    {
-        "plant_id": "plant_cactus_001",
-        "species": "cactus",
-        "created_at": "2024-01-01T00:00:00Z",
-        "last_updated": "2024-01-01T12:00:00Z",
-        "sensors": {
-            "humidity": [
-                {"value": 65, "timestamp": 1704067200}
-            ],
-            "temperature": [
-                {"value": 25, "timestamp": 1704067200}
-            ]
-        },
-        "actuators": {
-            "irrigation": [
-                {"action": "start", "timestamp": 1704067200}
-            ]
-        }
-    }
+    
     """
     
     def __init__(self, base_path: str = "cloud_simulator/plants_log"):
@@ -79,7 +50,7 @@ class JsonManager:
                 with open(file_path, 'r', encoding='utf-8') as f:
                     data = json.load(f)
                     
-                # Gestisce solo il formato standard (dizionario)
+                
                 if isinstance(data, dict):
                     return data
                 else:
@@ -149,32 +120,25 @@ class JsonManager:
             max_entries: Numero massimo di entry da mantenere per sensore
         """
         try:
-            # Carica dati esistenti
             data = self._load_plant_data(plant_id)
             
-            # Se è un nuovo file, imposta la specie
             if data["species"] == "unknown" and species != "unknown":
                 data["species"] = species
             
-            # Inizializza sensore se non esiste
             if sensor_type not in data["sensors"]:
                 data["sensors"][sensor_type] = []
             
-            # Crea nuova entry
             timestamp = int(time.time())
             entry = {
                 "value": value,
                 "timestamp": timestamp
             }
             
-            # Aggiungi entry
             data["sensors"][sensor_type].append(entry)
             
-            # Mantieni solo le ultime max_entries entry
             if len(data["sensors"][sensor_type]) > max_entries:
                 data["sensors"][sensor_type] = data["sensors"][sensor_type][-max_entries:]
             
-            # Salva dati
             self._save_plant_data(plant_id, data)
             
             logging.info(f"Sensore {sensor_type} salvato per {plant_id}: {value}")
@@ -196,32 +160,28 @@ class JsonManager:
             max_entries: Numero massimo di entry da mantenere per attuatore
         """
         try:
-            # Carica dati esistenti
+            
             data = self._load_plant_data(plant_id)
             
-            # Se è un nuovo file, imposta la specie
             if data["species"] == "unknown" and species != "unknown":
                 data["species"] = species
             
-            # Inizializza attuatore se non esiste
             if actuator_type not in data["actuators"]:
                 data["actuators"][actuator_type] = []
             
-            # Crea nuova entry
             timestamp = int(time.time())
             entry = {
                 "action": action,
                 "timestamp": timestamp
             }
             
-            # Aggiungi entry
             data["actuators"][actuator_type].append(entry)
             
-            # Mantieni solo le ultime max_entries entry
+                
             if len(data["actuators"][actuator_type]) > max_entries:
                 data["actuators"][actuator_type] = data["actuators"][actuator_type][-max_entries:]
             
-            # Salva dati
+            
             self._save_plant_data(plant_id, data)
             
             logging.info(f"Attuatore {actuator_type} salvato per {plant_id}: {action}")
@@ -257,7 +217,7 @@ class JsonManager:
             plants = []
             for filename in os.listdir(self.base_path):
                 if filename.endswith('.json'):
-                    plant_id = filename[:-5]  # Rimuovi .json
+                    plant_id = filename[:-5] 
                     plants.append(plant_id)
             return plants
         except Exception as e:
@@ -301,7 +261,6 @@ class JsonManager:
             if sensor_type not in data["sensors"]:
                 return []
             
-            # Filtra per le ultime N ore
             current_time = int(time.time())
             cutoff_time = current_time - (hours * 3600)
             
@@ -311,13 +270,11 @@ class JsonManager:
                 if entry["timestamp"] >= cutoff_time
             ]
             
-            # Formatta i dati per il grafico
             formatted_data = []
             for entry in filtered_data:
                 timestamp = entry["timestamp"]
                 value = entry["value"]
                 
-                # Converti timestamp in formato leggibile
                 dt = datetime.fromtimestamp(timestamp)
                 time_formatted = dt.strftime("%H:%M")
                 
@@ -329,7 +286,6 @@ class JsonManager:
                     "minute": dt.minute
                 })
             
-            # Ordina per timestamp
             formatted_data.sort(key=lambda x: x["timestamp"])
             
             logging.info(f"Recuperati {len(formatted_data)} punti per {sensor_type} di {plant_id}")
@@ -353,7 +309,6 @@ class JsonManager:
             List[str]: Lista delle azioni eseguite
         """
         try:
-            # Salva i dati del sensore
             self.save_sensor_data(
                 plant_id=plant_descriptor.plant_id,
                 sensor_type=sensor_type,
@@ -362,56 +317,23 @@ class JsonManager:
             )
             print(f"💾 Dati sensore salvati: {sensor_type} = {sensor_value}")
             
-            # Aggiorna il valore del sensore nel plant_descriptor per la valutazione
             for sensor in plant_descriptor.sensors:
                 if sensor.type == sensor_type:
                     sensor.value = sensor_value
                     break
             
-            # Crea un dizionario con i valori dei sensori per la valutazione
             sensor_values = {}
             for sensor in plant_descriptor.sensors:
                 sensor_values[sensor.type] = sensor.value
             
-            # Valuta le policy
             actions, alerts = policy_manager.evaluate_policies(plant_descriptor, sensor_values)
             
-            # Gestisci gli alert (per ora non fare nulla)
             for alert in alerts:
                 print(f"🚨 ALERT per {plant_descriptor.plant_id}: {alert}")
-                # TODO: Salvare gli alert nel JSON (per ora ignorato)
             
-            # Restituisci le azioni per l'esecuzione
             return actions
             
         except Exception as e:
             logging.error(f"Errore processamento dati sensore {sensor_type}: {e}")
             return []
 
-# Test del JsonManager
-if __name__ == "__main__":
-    # Configura logging
-    logging.basicConfig(level=logging.INFO)
-    
-    # Test del JsonManager
-    manager = JsonManager()
-    
-    # Test salvataggio sensore
-    manager.save_sensor_data("test_plant", "humidity", 65.5, "cactus")
-    manager.save_sensor_data("test_plant", "temperature", 25.0, "cactus")
-    
-    # Test salvataggio attuatore
-    manager.save_actuator_data("test_plant", "irrigation", "start", "cactus")
-    
-    # Test recupero dati
-    data = manager.get_plant_data("test_plant")
-    print("Dati pianta test:")
-    print(json.dumps(data, indent=2))
-    
-    # Test ultimo valore
-    last_humidity = manager.get_latest_sensor_value("test_plant", "humidity")
-    print(f"Ultima umidità: {last_humidity}")
-    
-    # Test lista piante
-    plants = manager.list_plants()
-    print(f"Piante trovate: {plants}")

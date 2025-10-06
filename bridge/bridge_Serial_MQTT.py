@@ -87,21 +87,17 @@ class Bridge():
 	def on_connect(self, client, userdata, flags, rc):
 		print("Connected with result code " + str(rc))
 		
-		# Sottoscrizione dinamica per tutti gli attuatori
 		for actuator_id, actuator_name in ACTUATOR_MAPPING.items():
 			topic = MqttConfigurationParameters.build_command_plant_topic(actuator_name)
 			self.clientMQTT.subscribe(topic)
 			print(f"✅ Sottoscritto a: {topic}")
 			
-	# The callback for when a PUBLISH message is received from the server.
 	def on_message(self, client, userdata, msg):
 		print(f"Comando ricevuto - Topic: {msg.topic}, Payload: {msg.payload}")
 		
-		# Estrai il tipo di attuatore dal topic
 		topic_parts = msg.topic.split('/')
 		actuator_type = topic_parts[-1]  # "irrigation", "lighting", etc.
 		
-		# Trova l'ID dell'attuatore
 		actuator_id = None
 		for id, name in ACTUATOR_MAPPING.items():
 			if name == actuator_type:
@@ -112,13 +108,11 @@ class Bridge():
 			print(f"Attuatore non riconosciuto: {actuator_type}")
 			return
 		
-		# Ottieni il carattere seriale
 		actuator_char = ACTUATOR_CHAR_MAPPING.get(actuator_id)
 		if not actuator_char:
 			print(f"Carattere seriale non trovato per attuatore {actuator_id}")
 			return
 		
-		# Decodifica il comando dal payload
 		command = msg.payload.decode('utf-8').lower()
 		
 		if self.ser is not None:
@@ -136,13 +130,9 @@ class Bridge():
 			print("Serial port not available!")
 			
 	def loop(self):
-		# infinite loop for serial managing
-		#
 		while (True):
-			#look for a byte from serial
 			if not self.ser is None:
 				if self.ser.in_waiting>0:
-					# data available from the serial port
 					lastchar=self.ser.read(1)
 					print(f"📨 Byte ricevuto da Arduino: {lastchar.hex()}")
 
@@ -151,17 +141,14 @@ class Bridge():
 						self.useData()
 						self.inbuffer =[]
 					else:
-						# append
+						
 						self.inbuffer.append (lastchar)
 			else:
-				# Debug: mostra se Arduino è connesso
 				if self.ser is None:
 					print("⚠️ Arduino non connesso - nessun dato in arrivo")
-					time.sleep(5)  # Aspetta 5 secondi prima di riprovare
-			#TODO aggiungere un polling per verificare se ci sono attuatori da controllare
+					time.sleep(5)  
 
 	def useData(self):
-		# I have received a packet from the serial port. I can use it
 		if len(self.inbuffer)<3:   # at least header, size, footer
 			return False
 		# split parts
@@ -170,51 +157,48 @@ class Bridge():
 
 		numval = int.from_bytes(self.inbuffer[1], byteorder='little')
 
-		# Arduino invia: FF + num_sensori + (tipo_sensore + valore) * numval + FE
-		# Struttura: FF + numval + tipo1 + val1 + tipo2 + val2 + ... + FE
+		# Message structure: FF + num_sensori + (tipo_sensore + valore) * numval + FE
 		for i in range(numval):
-			# Calcola offset per ogni sensore (ogni sensore occupa 2 byte: tipo + valore)
 			sensor_offset = 2 + i * 2
 			
-			if len(self.inbuffer) >= sensor_offset + 2:  # Verifica che ci siano abbastanza dati
+			if len(self.inbuffer) >= sensor_offset + 2:  
 				sensor_type_char = self.inbuffer[sensor_offset].decode('utf-8')
 				sensor_value = int.from_bytes(self.inbuffer[sensor_offset + 1], byteorder='little')
 				
-				# Usa la costante SENSOR_MAPPING definita all'inizio
 				sensor_name = SENSOR_MAPPING.get(sensor_type_char, f"sensor_{sensor_type_char}")
 				strval = "Sensor %s (%s): %d " % (sensor_name, sensor_type_char, sensor_value)
 				print(strval)
-				
+                
 				topic = MqttConfigurationParameters.build_telemetry_plant_topic(sensor_name)
 				payload = '{:d}'.format(sensor_value)
-				print(f"📤 Pubblicazione MQTT - Topic: {topic}, Payload: {payload}")
+				print(f"📤 MQTT publish - Topic: {topic}, Payload: {payload}")
 				self.clientMQTT.publish(topic, payload)
 
 if __name__ == '__main__':
 	try:
-		print("🌉 Avvio Bridge Serial-MQTT...")
-		print("📡 Connessione Arduino -> MQTT")
-		print("🔧 Premi Ctrl+C per terminare")
+		print("🌉 Starting Serial-MQTT Bridge...")
+		print("📡 Arduino -> MQTT connection")
+		print("🔧 Press Ctrl+C to stop")
 		print("=" * 50)
-		
+        
 		br = Bridge()
 		br.loop()
-		
+        
 	except KeyboardInterrupt:
-		print("\n🛑 Interruzione da tastiera (Ctrl+C)")
-		print("🔄 Chiusura connessioni...")
-		
-		# Chiudi connessione seriale
+		print("\n🛑 Keyboard interrupt (Ctrl+C)")
+		print("🔄 Closing connections...")
+        
+		# Close serial connection
 		if hasattr(br, 'ser') and br.ser is not None:
 			br.ser.close()
-			print("✅ Connessione seriale chiusa")
-		
-		# Chiudi connessione MQTT
+			print("✅ Serial connection closed")
+        
+		# Close MQTT connection
 		if hasattr(br, 'clientMQTT'):
 			br.clientMQTT.loop_stop()
 			br.clientMQTT.disconnect()
-			print("✅ Connessione MQTT chiusa")
-		
-		print("✅ Bridge terminato correttamente")
+			print("✅ MQTT connection closed")
+        
+		print("✅ Bridge terminated successfully")
 		
 	

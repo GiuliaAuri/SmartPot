@@ -1,12 +1,6 @@
-"""
-Server REST API per il frontend web app.
-Legge i dati dai file JSON del data_collector e li espone via REST API.
-"""
-
 import os
 import sys
 
-# Aggiungi il path per importare i moduli del progetto PRIMA degli import
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, project_root)
 
@@ -21,14 +15,12 @@ from data_collector.data_collector_producer import DataCollectorProducer
 from data_collector.plant_descriptor import PlantDescriptor
 from data_collector.json_manager import JsonManager
 
-# Configurazione logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
-CORS(app)  # Abilita CORS per il frontend
+CORS(app)  
 
-# Configurazione
 PLANTS_LOG_PATH = "cloud_simulator/plants_log"
 DEFAULT_POLLING_INTERVAL = 5  # secondi
 
@@ -43,7 +35,7 @@ class PlantDataService:
         plants_data = []
         
         try:
-            # Ottieni lista delle piante da JsonManager
+            
             plant_ids = self.json_manager.list_plants()
             
             for plant_id in plant_ids:
@@ -61,14 +53,14 @@ class PlantDataService:
     def _load_plant_data(self, plant_id: str) -> Optional[Dict[str, Any]]:
         """Carica i dati di una singola pianta usando JsonManager."""
         try:
-            # Usa JsonManager per caricare i dati raw
+           
             raw_data = self.json_manager.get_plant_data(plant_id)
             
             if not raw_data:
                 logger.warning(f"Pianta {plant_id} non trovata")
                 return None
             
-            # Processa i dati per il frontend
+            
             return self._process_plant_data_for_frontend(plant_id, raw_data)
             
         except Exception as e:
@@ -78,24 +70,19 @@ class PlantDataService:
     def _process_plant_data_for_frontend(self, plant_id: str, data: Dict[str, Any]) -> Dict[str, Any]:
         """Processa i dati della pianta per il formato richiesto dal frontend."""
         
-        # Gestisci solo il formato standard (dizionario)
         if not isinstance(data, dict):
             logger.warning(f"Formato dati non supportato per {plant_id}: {type(data)}")
             return None
         
-        # Estrai dati dal formato standard
         species = data.get("species", "unknown")
         last_updated = data.get("last_updated", "")
         sensors_data = data.get("sensors", {})
         actuators_data = data.get("actuators", {})
         
-        # Leggi umidità del suolo (già convertita in percentuale dal data collector)
         soil_moisture_percentage = self._get_latest_sensor_value(sensors_data, "humidity", 50)
         
-        # Determina se l'irrigazione è attiva
         is_watering = self._is_irrigation_active(actuators_data)
         
-        # Calcola ultima irrigazione
         last_watered = self._get_last_watering_time(actuators_data)
         
         return {
@@ -173,18 +160,16 @@ class PlantDataService:
     
     def _send_mqtt_command(self, plant_id: str, actuator_type: str, command: str) -> bool:
         """Invia un comando MQTT all'attuatore usando DataCollectorProducer."""
-        try:
-            # Crea un PlantDescriptor temporaneo per il producer
+        try:    
             plant_descriptor = PlantDescriptor(species="unknown", plant_id=plant_id)
             
-            # Crea il producer con il comando usando il path da JsonManager
             producer = DataCollectorProducer(
                 plant_descriptor=plant_descriptor,
                 command=f"{command} {actuator_type}",
                 json_path=self.json_manager.base_path
             )
             
-            # Esegue il comando (pubblica MQTT e salva nel JSON)
+            
             producer.run()
             
             logger.info(f"Comando MQTT inviato tramite DataCollectorProducer: {actuator_type} = {command}")
@@ -207,7 +192,6 @@ class PlantDataService:
                 }
         return formatted
     
-# Funzioni di supporto
 def convert_action_to_simple_command(action: str) -> str:
     """Converte un'azione complessa in comando semplice."""
     action_lower = action.lower()
@@ -219,7 +203,7 @@ def convert_action_to_simple_command(action: str) -> str:
     else:
         return action_lower
 
-# Inizializza il servizio
+
 plant_service = PlantDataService(PLANTS_LOG_PATH)
 
 @app.route('/api/plants', methods=['GET'])
@@ -311,12 +295,10 @@ def control_actuator(plant_id: str, actuator_type: str):
 def get_sensor_history(plant_id: str, sensor_type: str):
     """Endpoint per ottenere la cronologia di un sensore."""
     try:
-        # Parametri query
         hours = request.args.get('hours', 24, type=int)
         
         logger.info(f"Richiesta cronologia {sensor_type} per {plant_id} (ultime {hours}h)")
         
-        # Usa JsonManager per recuperare i dati storici
         history_data = plant_service.json_manager.get_sensor_history(plant_id, sensor_type, hours)
         
         return jsonify({

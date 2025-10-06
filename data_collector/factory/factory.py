@@ -21,7 +21,7 @@ class Factory:
                 species = plant_config.get("species")
                 
                 if plant_id and species:
-                    # Estrai configurazione sensori
+                    
                     sensor_config = None
                     sensors_config = plant_config.get("sensors", [])
                     if sensors_config and len(sensors_config) > 0:
@@ -39,7 +39,6 @@ class Factory:
             
         except FileNotFoundError:
             print(f"❌ File di configurazione non trovato: {config_path}")
-            # Fallback ai valori di default
             species = "cactus"
             plant_id = "plant_cactus_001"
             plant_descriptor = PlantDescriptor(species, plant_id)
@@ -47,7 +46,6 @@ class Factory:
             
         except json.JSONDecodeError as e:
             print(f"❌ Errore parsing JSON: {e}")
-            # Fallback ai valori di default
             species = "cactus"
             plant_id = "plant_cactus_001"
             plant_descriptor = PlantDescriptor(species, plant_id)

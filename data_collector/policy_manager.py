@@ -1,24 +1,10 @@
-#!/usr/bin/env python3
-"""
-PolicyManager Semplificato - Gestione delle policy per il sistema data collector.
-
-Questo PolicyManager:
-- Legge le policy dal file JSON
-- Valuta le condizioni sui valori dei sensori
-- Genera azioni per gli attuatori
-- Genera alert quando necessario
-"""  
-
 import json
 import os
 import sys
 import logging
 from typing import Dict, List, Tuple, Optional
-
-# Aggiungi il path per importare i moduli del progetto
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, project_root)
-
 from data_collector.plant_descriptor import PlantDescriptor
 from data_collector.data_collector_producer import DataCollectorProducer
 
@@ -26,8 +12,6 @@ class PolicyManager:
     """
     Gestore semplificato delle policy per la valutazione automatica delle condizioni.
     
-    Legge le policy dal file policies_conf.json e valuta le condizioni sui valori
-    dei sensori per generare azioni e alert.
     """
     
     OPERATORS = {
@@ -99,7 +83,6 @@ class PolicyManager:
             logging.debug(f"Nessuna policy trovata per {plant_id}")
             return [], []
         
-        # Inizializza lo stato degli attuatori per questa pianta se non esiste
         if plant_id not in self.actuator_states:
             self.actuator_states[plant_id] = {}
         
@@ -119,19 +102,19 @@ class PolicyManager:
                     logging.warning(f"Policy incompleta per {plant_id}: {policy}")
                     continue
                 
-                # Verifica se abbiamo il valore del sensore
+                
                 if sensor_type not in sensor_values:
                     logging.debug(f"Sensore {sensor_type} non disponibile per {plant_id}")
                     continue
                 
                 sensor_value = sensor_values[sensor_type]
                 
-                # Verifica se l'operatore è valido
+                
                 if condition not in self.OPERATORS:
                     logging.warning(f"Operatore non valido: {condition}")
                     continue
                 
-                # Valuta la condizione
+                
                 operator_func = self.OPERATORS[condition]
                 condition_met = operator_func(sensor_value, threshold_value)
                 
@@ -139,13 +122,11 @@ class PolicyManager:
                 
                 if condition_met:
                     if action == "alert":
-                        # Genera alert
                         message = policy.get("message", f"Alert: {sensor_type} {condition} {threshold_value}")
                         alerts.append(message)
                         logging.info(f"Alert generato per {plant_id}: {message}")
                     
                     elif action in ["activate", "start", "on"]:
-                        # Attiva attuatore solo se non è già attivo
                         actuator_type = policy.get("actuator", "irrigation")
                         current_state = self.actuator_states[plant_id].get(actuator_type, "off")
                         
@@ -158,7 +139,6 @@ class PolicyManager:
                             logging.debug(f"Attuatore {actuator_type} già attivo per {plant_id}")
                     
                     elif action in ["deactivate", "stop", "off"]:
-                        # Disattiva attuatore solo se è attivo
                         actuator_type = policy.get("actuator", "irrigation")
                         current_state = self.actuator_states[plant_id].get(actuator_type, "off")
                         
@@ -194,7 +174,6 @@ class PolicyManager:
             try:
                 logging.info(f"Esecuzione azione per {plant.plant_id}: {action}")
                 
-                # Crea producer per eseguire l'azione
                 producer = DataCollectorProducer(plant, action)
                 producer.run()
                 
@@ -220,39 +199,4 @@ class PolicyManager:
         self.policies = self._load_policies()
         logging.info("Policy ricaricate")
 
-# Test del PolicyManager
-if __name__ == "__main__":
-    # Configura logging
-    logging.basicConfig(level=logging.INFO)
-    
-    # Test del PolicyManager
-    manager = PolicyManager()
-    
-    # Crea plant descriptor di test
-    from data_collector.factory.factory import Factory
-    plants = Factory.create_plant_descriptor()
-    if plants:
-        plant = plants[0]
-        
-        # Simula valori sensori
-        sensor_values = {
-            "humidity": 150,  # Sotto la soglia di 200 -> dovrebbe attivare irrigazione
-            "battery_level": 15,  # Sotto la soglia di 20 -> dovrebbe generare alert
-            "level_tank": 0.2  # Sotto la soglia di 0.3 -> dovrebbe generare alert
-        }
-        
-        print(f"🧪 Test PolicyManager per {plant.plant_id}")
-        print(f"📊 Valori sensori: {sensor_values}")
-        
-        # Valuta policy
-        actions, alerts = manager.evaluate_policies(plant, sensor_values)
-        
-        print(f"📤 Azioni generate: {actions}")
-        print(f"🚨 Alert generati: {alerts}")
-        
-        # Esegui azioni
-        if actions:
-            print(f"⚡ Esecuzione azioni...")
-            manager.execute_actions(plant, actions)
-        
-        print("✅ Test completato")
+
