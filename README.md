@@ -1,421 +1,331 @@
-# 🌱 Plants-System
+# 🌱 Smartpot: prototipo di vaso intelligente per la cura automatizzata delle piante
 
-## Smart Home - Sistema IoT per Gestione Intelligente delle Piante
+**Smart Pot** è un sistema IoT *end-to-end* progettato per l'automazione, il monitoraggio e la cura a distanza delle piante d'appartamento. L'obiettivo principale è prevenire gli errori di irrigazione consentendo sia un'erogazione automatica dell'acqua basata su soglie configurabili, sia un controllo manuale remoto tramite web app.
 
-[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://python.org)
-[![Flask](https://img.shields.io/badge/Flask-2.0+-green.svg)](https://flask.palletsprojects.com)
-[![Next.js](https://img.shields.io/badge/Next.js-13+-black.svg)](https://nextjs.org)
-[![MQTT](https://img.shields.io/badge/MQTT-Mosquitto-orange.svg)](https://mosquitto.org)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+Il sistema raccoglie i dati dal sensore di umidità del terreno tramite un microcontrollore **Arduino UNO R4 WiFi**, li invia via connessione Seriale a un **Bridge Serial-MQTT** e li smista a un broker **Mosquitto**. Un **Data Collector** cloud in Python elabora i dati, gestisce il *Digital Twin* della pianta su file JSON, valuta le policy decisionali ed aziona la pompa di irrigazione. Un backend in **Flask** espone le API REST consumate da una dashboard web moderna sviluppata in **Next.js** e **React**.
 
-## 📋 Descrizione
+\---
 
-L’obiettivo del progetto è la realizzazione di un sistema **IoT** per la gestione intelligente di uno o più vasi per piante, che coinvolga i seguenti dispositivi (sensori e attuatori):
+## Caratteristiche Principali
 
-### Dispositivi
+* **Monitoraggio Real-Time**: Acquisizione continua dei valori di umidità relativa del terreno tramite sensore capacitivo.
+* **Irrigazione Automatica a Policy**: Attivazione e disattivazione automatica della pompa idrica in base a regole di soglia definite in formato JSON (`policy\_conf.json`).
+* **Controllo Manuale da Remoto**: Interfaccia grafica interattiva con pulsanti di avvio/arresto rapido dell'irrigazione via HTTP REST e MQTT.
+* **Feedback Visivo Hardware**: Animazioni dinamiche sulla matrice LED integrata di Arduino UNO R4 ("smile" in standby, "goccia" durante l'irrigazione).
+* **Digital Twin \& Persistenza JSON**: Modellazione digitale dello stato del vaso con salvataggio dello storico misurazioni ed azioni degli attuatori.
+* **Architettura Modulare \& Disaccoppiata**: Implementazione basata sul pattern Publish/Subscribe (MQTT) con separazione netta tra logica hardware, data collector, backend e frontend.
 
-| Nome                             | Tipologia         | Descrizione |
-|----------------------------------|------------------|-------------|
-| **Water Metering Smart Object**  | Sensore, Attuatore | Smart Object associato al monitoraggio e al controllo dei consumi dell’acqua:<br> - Sensore flusso acqua consumata (l/s - liter per second)<br> - Switch Fornitura (ON/OFF) |
-| **Tank Monitoring Smart Object** | Sensore           | Smart Object associato al serbatoio di un vaso per il monitoraggio del consumo di acqua:<br> - Sensore di livello |
-| **Environmental Monitoring Smart Object** | Sensore | Smart Object dotato dei seguenti sensori per il monitoraggio ambientale:<br> - Sensore di temperatura<br> - Sensore di umidità<br> - Sensore di luminosità<br> - Sensore per il livello di batteria del dispositivo |
+\---
 
-
-## Funzionamento del Sistema
-
-Il progetto sarà progettato per supportare **n dispositivi per ogni tipologia** in funzione delle esigenze delle piante.  
-In fase di demo del progetto è possibile emulare il numero minimo di device (fino a 3) per mostrare il corretto funzionamento del sistema sviluppato.
 ## 🏗️ Architettura del Sistema
 
-Il sistema è composto da cinque componenti principali:
+Il flusso informativo collega l'ambiente fisico al Cloud e alla Web App tramite la seguente catena:
 
-### 🔧 Backend (Python/Flask)
-- **API REST** (`backend/web_api_server.py`) per gestione dati e comandi
-- **Endpoints** per controllo irrigazione, recupero dati sensori e stato piante
-
-### 📊 Data Collector (Python)
-- **Data Collector Consumer** (`data_collector/data_collector_consumer.py`) per raccolta dati MQTT
-- **Data Collector Producer** (`data_collector/data_collector_producer.py`) per invio comandi
-- **Policy Manager** (`data_collector/policy_manager.py`) per valutazione automatica
-- **Factory** (`data_collector/factory/`) per configurazione piante
-- **JSON Manager** per persistenza dati in `cloud_simulator/plants_log/`
-
-### 🎨 Frontend (Next.js/React/TypeScript)
-- **Dashboard Interattiva** (`frontend/app/page.tsx`) per monitoraggio real-time
-- **Componenti React** (`frontend/components/`) per visualizzazione dati
-- **UI moderna** con shadcn/ui e Tailwind CSS
-- **Grafici in tempo reale** con Recharts
-
-### 🌐 Bridge Arduino-MQTT (Python)
-- **Bridge Serial-MQTT** (`bridge/bridge_Serial_MQTT.py`) per comunicazione con Arduino
-- **Traduzione** tra protocollo seriale e MQTT
-
-### 🤖 Arduino/Simulazione
-- **Firmware Arduino** (`arduino/sensor_actuator.ino`) per sensori e attuatori reali
-- **Simulazione sensori/attuatori** (`smart_objects/`) in Python
-
-### 📊 Funzionalità Principali
-
-- **Monitoraggio Real-time**: Visualizzazione continua di umidità del terreno
-- **Irrigazione Automatica**: Attivazione basata su policy configurabili
-- **Gestione Multi-pianta**: Supporto per più piante simultaneamente
-- **Configurazione Flessibile**: Policy personalizzabili in `data_collector/policies/policies_conf.json`
-- **Persistenza Dati**: Salvataggio storico JSON per analisi
-- **Supporto Arduino**: Integrazione con hardware reale tramite bridge seriale
-
-## 🌱 Sensori di Telemetria
-
-I sensori disponibili nel sistema sono implementati in `smart_objects/sensors/`:
-
-- **Umidità del terreno** (`humidity_sensor.py`) - Monitoraggio umidità suolo
-- **Temperatura** (`temperature_sensor.py`) - Temperatura ambiente
-- **Luminosità** (`lightness_sensor.py`) - Livello di luce
-- **Livello batteria** (`battery_level_sensor.py`) - Stato batteria dispositivo
-- **Livello serbatoio** (`level_tank_sensor.py`) - Livello acqua nel serbatoio
-- **Flusso acqua** (`water_flow_sensor.py`) - Consumo acqua in l/s
-
-I sensori possono essere:
-- **Simulati** in software Python
-- **Reali** tramite Arduino collegato via bridge seriale
-
-I dati raccolti vengono **pubblicati** sul topic MQTT con la seguente struttura: 
 ```
- plant/{plant_id}/device/{device_id}/telemetry/{resource_id}
+\[Sensore Capacitivo / Relè + Pompa]
+                │
+         (Cavo analogico/digitale)
+                ▼
+      \[Arduino UNO R4 WiFi]
+                │
+          (Cavo USB / Seriale 9600 baud)
+                ▼
+      \[Bridge Serial-MQTT]
+                │
+          (Protocollo MQTT / TCP 7883)
+                ▼
+      \[Broker MQTT Mosquitto (Docker)]
+                │
+          (Protocollo MQTT)
+                ▼
+      \[Data Collector (Consumer / Producer / Policy Manager)]
+                │
+          (Scrittura/Lettura File JSON)
+                ▼
+      \[Backend REST API (Flask)]
+                │
+          (Richieste HTTP / JSON)
+                ▼
+      \[Frontend Web App (Next.js 14 / React / Recharts)]
+
 ```
 
-Per scoprire quali piante sono disponibili nel sistema, ci si sottoscrive al topic:
-```
-plant/+/info
-```
-## 💧 Attuatore per l'Irrigazione
+\---
 
-L'attuatore di irrigazione è implementato in `smart_objects/actuators/irrigation_actuator.py`.
+## 🔌 Architettura Hardware e Circuiti
 
-Funzionamento:
-- È **sottoscritto** al topic MQTT per ricevere comandi
-- Può essere controllato tramite **API REST** (`POST /api/plants/{plant_id}/actuator/irrigation`)
-- Può essere **manuale** (controllato dall'utente) o **automatico** (basato su policy)
+### Componenti Utilizzati
 
-Topic MQTT per i comandi:
-```
-plant/{plant_id}/device/{device_id}/command/{resource_id}
-```
+|Componente|Modello / Specifiche|Ruolo nel Sistema|
+|-|-|-|
+|**Microcontrollore**|Arduino UNO R4 WiFi (Renesas RA4M1 32-bit + ESP32-S3)|Acquisizione sensori, controllo relè e matrice LED|
+|**Sensore Umidità**|Sensore Capacitivo di Umidità del Suolo|Misurazione dell'umidità del terreno senza corrosione|
+|**Attuatore**|Modulo Relè 5V Low-Level Trigger|Interruttore di potenza per l'alimentazione della pompa|
+|**Pompa Idrica**|Mini pompa ad immersione DC 3V–4.5V (Portata \~100 L/h)|Pescaggio acqua dal serbatoio ed irrigazione del vaso|
+|**Alimentazione Pompa**|Porta-pile esterno 3V (2x pile AA 1.5V)|Alimentazione separata per evitare picchi di assorbimento su Arduino|
+
+### Schema dei Collegamenti
+
+|Dispositivo|Pin Componente|Collegamento ad Arduino / Circuito|
+|-|-|-|
+|**Sensore Capacitivo**|VCC / GND / AUOUT|5V Arduino / GND Arduino / **A0** Arduino|
+|**Modulo Relè**|VCC / GND / IN|5V Arduino / GND Arduino / **Pin D7** Arduino|
+|**Circuito Potenza Pompa**|Relè COM / Relè NO|**+ 3V** Alimentatore Esterno / **+ (Rosso)** Pompa|
+|**Massa Comune**|**- (Nero)** Pompa / GND|**- 3V** Alimentatore Esterno / **GND** Arduino|
+
+\---
+
+## 📡 Protocolli di Comunicazione e Topic MQTT
+
+### 1\. Protocollo Seriale (Arduino ↔ Bridge)
+
+* **Baud Rate**: `9600`
+* **Pacchetto Dati Sensori (Arduino ➔ Bridge)**:
+`0xFF <ID\_SENSORE> <TIPO\_SENSORE> <VALORE\_NORMALIZZATO> 0xFE`
+* *Esempio*: `0xFF 0x01 'H' 0x4B 0xFE` (Umidità 'H', valore normalizzato a 75).
 
 
-## 🚀 Installazione e Avvio
 
-### Prerequisiti
-- Python 3.8+
-- Node.js 16+
-- Docker (per MQTT Broker)
+* **Comandi Attuatori (Bridge ➔ Arduino)**:
+`<TIPO\_ATTUATORE> <COMANDO>`
+* `'I'` + `'A'`: Attiva irrigazione (pin D7 LOW, relè acceso).
+* `'I'` + `'S'`: Disattiva irrigazione (pin D7 HIGH, relè spento).
 
-### 1. Clonare il Repository
-```bash
-git clone https://github.com/yourusername/Plants-System.git
-cd Plants-System
-```
 
-### 2. Installare Dipendenze Backend
-```bash
-pip install -r requirements.txt
-```
 
-### 3. Installare Dipendenze Frontend
-```bash
-cd frontend
-npm install
-```
+### 2\. Topic MQTT (Bridge ↔ Broker ↔ Data Collector)
 
-### 4. Avviare MQTT Broker
-```bash
-cd mqtt_broker
-docker-compose up -d
-```
+* **Telemetria Sensori**: `plant/sensor/humidity` (QoS 0)
+* **Comandi Attuatori**: `plant/actuator/irrigation` (Payload: `start` / `stop`)
 
-### 5. Avviare il Sistema
+\---
 
-#### Opzione A: Sistema con Arduino Reale
-```bash
-# Terminal 1: Backend API
-python backend/web_api_server.py
+## 💻 Moduli Software
 
-# Terminal 2: Data Collector
-python data_collector/data_collector_main.py
+### 1\. Bridge Serial-MQTT (`bridge\_Serial\_MQTT.py`)
 
-# Terminal 3: Bridge Arduino-MQTT
-python bridge/bridge_Serial_MQTT.py
+Legge la porta seriale locale connessa ad Arduino, accumula i byte fino al carattere di fine pacchetto `0xFE`, converte il dato ed effettua la `publish` sul broker MQTT. Contestualmente si iscrive ai topic dei comandi ed inoltra i segnali ad Arduino.
 
-# Terminal 4: Frontend
-cd frontend
-npm run dev
-```
+### 2\. Data Collector Python (`data\_collector/`)
 
-#### Opzione B: Sistema con Sensori Simulati
-```bash
-# Terminal 1: Backend API
-python backend/web_api_server.py
+* **`Factory`**: Istanzia i descrittori delle piante leggendo il file `plants\_config.json`.
+* **`DataCollectorConsumer`**: Riceve i dati di telemetria via MQTT, aggiorna il registro JSON ed invoca il Policy Manager.
+* **`PolicyManager`**: Confronta i valori misurati con le regole attive in `policy\_conf.json`.
+* **`DataCollectorProducer`**: Invia i comandi di attivazione/spegnimento della pompa sul topic MQTT dell'attuatore.
+* **`JsonManager`**: Gestisce la lettura/scrittura atomica dei file JSON contenenti lo storico temporale.
 
-# Terminal 2: Data Collector
-python data_collector/data_collector_main.py
+### 3\. Backend REST API (`web\_api\_server.py`)
 
-# Terminal 3: Simulazione Sensori
-python tests/simulate_arduino.py
-# oppure
-python tests/test_complete_system.py
+Server web Flask che legge il Digital Twin nei file JSON e mette a disposizione le rotte HTTP per il frontend:
 
-# Terminal 4: Frontend
-cd frontend
-npm run dev
-```
+|Metodo|Endpoint|Descrizione|
+|-|-|-|
+|`GET`|`/api/plants`|Restituisce la lista di tutte le piante e il loro stato attuale|
+|`GET`|`/api/plants/<id>`|Dettagli completi e letture per una singola pianta|
+|`POST`|`/api/plants/<id>/actuators/<tipo>`|Invia un comando all'attuatore (es. `{"action": "start"}`)|
+|`GET`|`/api/plants/<id>/sensors/<tipo>/history`|Storico delle letture filtrate nel tempo|
+|`GET`|`/api/health`|Healthcheck del server|
+|`GET`|`/api/stats`|Statistiche aggregate (umidità media, irrigazioni attive)|
 
-### 6. Accedere alla Dashboard
-Aprire il browser all'indirizzo: **http://localhost:3000**
+### 4\. Frontend Web (`dashboard/`)
 
-## 📁 Struttura del Progetto
+Dashboard sviluppata con **Next.js 14**, **React**, **TypeScript**, **Tailwind CSS** e **Recharts**:
+
+* **Card Pianta**: Mostra la specie, l'immagine dedicata, l'umiditàattuale e il timestamp dell'ultima irrigazione.
+* **Grafico Dinamico**: Rappresentazione temporale dell'andamento dell'umidità.
+* **Controlli Manuali**: Pulsante Play/Stop per attivare/arrestare manualmente la pompa con feedback in tempo reale.
+* **Polling Automatico**: Aggiornamento periodico dell'interfaccia ogni 10 secondi.
+
+\---
+
+## 📂 Struttura del Repository
 
 ```
 Plants-System/
-├── 📁 backend/                      # Backend Flask API
-│   └── web_api_server.py            # Server API REST
-├── 📁 frontend/                     # Frontend Next.js
-│   ├── 📁 app/                      # Pagine Next.js
-│   │   ├── page.tsx                 # Pagina principale dashboard
-│   │   └── layout.tsx               # Layout applicazione
-│   ├── 📁 components/               # Componenti React
-│   │   ├── plant-dashboard.tsx      # Dashboard piante (UTILIZZATO)
-│   │   ├── alerts-panel.tsx         # Pannello avvisi (non utilizzato)
-│   │   ├── humidity-chart.tsx       # Grafico umidità avanzato (non utilizzato)
-│   │   ├── plant-configuration.tsx  # Config avanzata (non utilizzato)
-│   │   ├── real-time-monitoring.tsx # Monitoring avanzato (non utilizzato)
-│   │   ├── theme-provider.tsx       # Gestione temi (non utilizzato)
-│   │   └── 📁 ui/                   # Componenti UI (shadcn/ui)
-│   └── 📁 lib/                      # Utilities e API client
-│       └── api.ts                   # Client API REST
-├── 📁 data_collector/               # Sistema raccolta dati
-│   ├── data_collector_main.py       # Entry point collector
-│   ├── data_collector_consumer.py   # Consumer MQTT
-│   ├── data_collector_producer.py   # Producer MQTT
-│   ├── policy_manager.py            # Gestione policy
-│   ├── json_manager.py              # Persistenza JSON
-│   ├── plant_descriptor.py          # Descrittore pianta
-│   ├── 📁 factory/                  # Factory piante
-│   │   ├── factory.py               # Factory pattern
-│   │   └── plants_config.json       # Config piante
-│   └── 📁 policies/                 # Policy di irrigazione
-│       └── policies_conf.json       # Configurazione policy
-├── 📁 bridge/                       # Bridge Arduino-MQTT
-│   ├── bridge_Serial_MQTT.py        # Bridge seriale/MQTT
-│   └── config.ini                   # Configurazione bridge
-├── 📁 arduino/                      # Firmware Arduino
-│   └── sensor_actuator.ino          # Sketch Arduino
-├── 📁 smart_objects/                # Sensori e attuatori simulati
-│   ├── 📁 sensors/                  # Implementazione sensori
-│   │   ├── humidity_sensor.py       # Sensore umidità
-│   │   ├── temperature_sensor.py    # Sensore temperatura
-│   │   ├── lightness_sensor.py      # Sensore luminosità
-│   │   ├── battery_level_sensor.py  # Sensore batteria
-│   │   ├── level_tank_sensor.py     # Sensore livello
-│   │   └── water_flow_sensor.py     # Sensore flusso
-│   ├── 📁 actuators/                # Implementazione attuatori
-│   │   └── irrigation_actuator.py   # Attuatore irrigazione
-│   └── 📁 models/                   # Modelli base
-│       ├── Sensor.py                # Classe base sensore
-│       └── SwitchActuator.py        # Classe base attuatore
-├── 📁 mqtt_broker/                  # Broker MQTT
-│   ├── docker-compose.yml           # Config Docker Mosquitto
-│   └── 📁 mosquitto/                # Config Mosquitto
-├── 📁 cloud_simulator/              # Persistenza dati
-│   └── 📁 plants_log/               # Log JSON piante
-│       └── my_felce.json            # Dati storici pianta
-├── 📁 conf/                         # Configurazioni globali
-│   └── mqtt_conf_params.py          # Parametri MQTT
-├── 📁 tests/                        # Test e simulazioni
-│   ├── test_complete_system.py      # Test sistema completo
-│   ├── simulate_arduino.py          # Simulazione Arduino
-│   └── ...                          # Altri test
-├── 📁 doc/                          # Documentazione
-│   ├── SYSTEM_DOCUMENTATION.md      # Doc sistema
-│   ├── WEB_DASHBOARD_README.md      # Doc dashboard
-│   └── ...                          # Altri doc
-├── README.md                        # Questo file
-└── requirements.txt                 # Dipendenze Python
+├── 📁 cloud\_simulator/           # Persistenza dati e simulazione Cloud
+│   └── 📁 plants\_log/            # File JSON del Digital Twin (es. my\_felce.json)
+├── 📁 dashboard/                 # Frontend Next.js \& Server Flask REST API
+│   ├── 📁 app/                   # Pagine e routing Next.js (page.tsx)
+│   ├── 📁 components/            # Componenti React UI (plant-dashboard.tsx, etc.)
+│   ├── 📁 lib/                   # Client API (api.ts)
+│   └── 📄 web\_api\_server.py      # Server REST API Flask
+├── 📁 data\_collector/            # Unità di Elaborazione e Controllo Policy
+│   ├── 📄 data\_collector\_main.py # Main orchestratore dei Consumer/Producer
+│   ├── 📄 data\_collector\_consumer.py
+│   ├── 📄 data\_collector\_producer.py
+│   ├── 📄 policy\_manager.py      # Gestore regole ed automazioni
+│   ├── 📄 json\_manager.py        # Gestione lettura/scrittura file JSON
+│   └── 📁 factory/               # Factory per creazione PlantDescriptor
+├── 📁 mqtt\_broker/               # Configurazione del Broker MQTT Mosquitto
+│   ├── 📄 docker-compose.yml
+│   └── 📄 mosquitto.conf
+├── 📁 bridge/                    # Bridge di comunicazione locale
+│   └── 📄 bridge\_Serial\_MQTT.py  # Bridge Seriale ↔ MQTT
+└── 📁 arduino/                   # Codice C++ per Arduino UNO R4 WiFi
+    └── 📄 smart\_pot.ino          # Firmware Arduino (Sensore + Relè + Matrice LED)
+
 ```
 
-## 🔧 Configurazione
+\---
 
-### Policy di Irrigazione
-Le policy sono configurabili nel file `data_collector/policies/policies_conf.json`:
+## ⚙️ Configurazione
+
+### Configurazione Piante (`plants\_config.json`)
 
 ```json
-[
+{
+  "plants": \[
+    {
+      "plant\_id": "my\_felce",
+      "species": "Pteridofite",
+      "description": "Pianta Felce",
+      "sensors": \[
+        {
+          "humidity": {
+            "enabled": true,
+            "initial\_value": 80.0,
+            "unit": "%",
+            "min\_value": 50.0,
+            "max\_value": 150.0,
+            "is\_real": true
+          }
+        }
+      ],
+      "actuators": \[
+        {
+          "irrigation": {
+            "enabled": true,
+            "is\_real": true
+          }
+        }
+      ]
+    }
+  ]
+}
+
+```
+
+### Regole di Automazione (`policy\_conf.json`)
+
+```json
+\[
   {
-    "plant_id": "my_felce",
-    "policies": [
+    "plant\_id": "my\_felce",
+    "policies": \[
       {
         "sensor": "humidity",
         "condition": "<",
         "value": 75,
-        "actuator": "irrigation",
-        "action": "activate"
+        "action": "activate",
+        "actuator": "irrigation"
       },
       {
         "sensor": "humidity",
         "condition": ">",
         "value": 90,
-        "actuator": "irrigation",
-        "action": "deactivate"
+        "action": "deactivate",
+        "actuator": "irrigation"
       }
     ]
   }
 ]
-```
-
-### Configurazione Piante
-Le piante sono definite in `data_collector/factory/plants_config.json`:
-
-```json
-{
-  "plants": [
-    {
-      "plant_id": "my_felce",
-      "species": "Pteridofite",
-      "description": "Pianta Felce",
-      "sensors": [{
-        "humidity": {
-          "enabled": true,
-          "initial_value": 80.0,
-          "unit": "%",
-          "min_value": 50.0,
-          "max_value": 150.0,
-          "is_real": true
-        }
-      }],
-      "actuators": [{
-        "irrigation": {
-          "enabled": true,
-          "is_real": true
-        }
-      }]
-    }
-  ]
-}
-```
-
-## 📊 Monitoraggio
-
-### Dashboard Web
-- **URL**: http://localhost:3000
-- **Monitoraggio Real-time**: Visualizzazione umidità e stato irrigazione
-- **Aggiornamento automatico**: Polling ogni 10 secondi
-- **Controllo manuale**: Pulsanti start/stop irrigazione
-- **Grafici**: Andamento umidità ultime 24 ore
-- **Responsive**: Design adattivo mobile/tablet/desktop
-
-### API Endpoints (Backend Flask)
-Server in ascolto su **http://localhost:5000**
-
-- `GET /api/plants` - Lista tutte le piante con sensori e attuatori
-- `GET /api/plants/{plant_id}` - Dettagli pianta specifica
-- `GET /api/plants/{plant_id}/sensors/{sensor_type}` - Valore sensore corrente
-- `GET /api/plants/{plant_id}/sensors/{sensor_type}/history?hours=24` - Storico sensore
-- `POST /api/plants/{plant_id}/actuator/{actuator_name}` - Controllo attuatore
-  - Body: `{"action": "start"}` o `{"action": "stop"}`
-- `GET /api/status` - Stato generale del sistema
-
-## 🔄 Flusso di Dati
-
-### Telemetria (Sensori → Frontend)
-```
-Arduino/Simulazione → Bridge/MQTT → Data Collector Consumer → JSON Files → API Flask → Frontend
-   
-```
-
-### Comandi (Frontend → Attuatori)
-```
-Frontend → API Flask → Data Collector Producer → MQTT → Bridge/Arduino → Attuatori
 
 ```
 
-### Policy Automatiche
-```
-Data Collector Consumer → Policy Manager → Valutazione condizioni → Data Collector Producer → Attuatori
+\---
 
-```
+## 🚀 Installazione e Avvio
 
-## 🛠️ Sviluppo
+### Prerequisiti
 
-### Aggiungere Nuovo Sensore
-1. Creare classe in `smart_objects/sensors/`
-2. Ereditare da `Sensor[T]` (da `smart_objects/models/Sensor.py`)
-3. Implementare metodo `update()` per simulazione valori
-4. Aggiungere sensore in `data_collector/factory/plants_config.json`
-5. Implementare supporto in Arduino se necessario (`arduino/sensor_actuator.ino`)
+* **Python 3.8+**
+* **Node.js 18+** e **npm**
+* **Docker \& Docker Compose**
+* **Arduino IDE** (per caricare lo sketch sulla scheda)
 
-### Aggiungere Nuovo Attuatore
-1. Creare classe in `smart_objects/actuators/`
-2. Ereditare da `SwitchActuator` (da `smart_objects/models/SwitchActuator.py`)
-3. Implementare logica di controllo (activate/deactivate)
-4. Aggiungere attuatore in `data_collector/factory/plants_config.json`
-5. Aggiungere endpoint API in `backend/web_api_server.py`
-6. Implementare supporto in Arduino se necessario
+### 1\. Clonare il Repository
 
-### Aggiungere Nuova Policy
-1. Modificare `data_collector/policies/policies_conf.json`
-2. Aggiungere condizione con sensor, condition, value, actuator, action
-3. Il `policy_manager.py` valuterà automaticamente la nuova policy
-
-## 📝 Log e Debugging
-
-### File di Log
-- `mqtt_broker/mosquitto/log/mosquitto.log` - Log broker MQTT
-- `cloud_simulator/plants_log/` - Dati storici piante in formato JSON
-- Console output dei vari componenti (backend, data collector, bridge)
-
-### Livelli di Log
-- **INFO**: Operazioni normali
-- **DEBUG**: Dettagli tecnici (telemetria, comandi MQTT)
-- **WARNING**: Situazioni anomale
-- **ERROR**: Errori critici
-
-### Debug Utili
 ```bash
-# Monitorare messaggi MQTT in tempo reale
-mosquitto_sub -h localhost -t 'plant/#' -v
+git clone https://github.com/yourusername/Plants-System.git
+cd Plants-System
 
-# Verificare stato broker
-docker logs mqtt_broker
-
-# Verificare API
-curl http://localhost:5000/api/status
 ```
 
-## ⚠️ Note sullo Sviluppo
+### 2\. Caricare lo Sketch su Arduino
 
-### Componenti Frontend Non Utilizzati
-Il progetto include alcuni componenti React avanzati non ancora integrati nel sistema:
-- `alerts-panel.tsx` - Sistema completo di gestione avvisi
-- `humidity-chart.tsx` - Grafico umidità con selezione periodo (24h/7gg)
-- `plant-configuration.tsx` - Configurazione avanzata policy per pianta
-- `real-time-monitoring.tsx` - Dashboard avanzata con grafici multipli
-- `theme-provider.tsx` - Supporto tema scuro/chiaro
+Apri il file `arduino/sensor_actuator.ino` nell'Arduino IDE, seleziona la scheda **Arduino UNO R4 WiFi** e la porta COM corretta, quindi effettua il caricamento.
 
-Questi componenti sono funzionali e pronti per l'integrazione in future versioni.
+### 3\. Avviare il Broker MQTT (Docker)
 
-### Documentazione Aggiuntiva
-Per dettagli specifici consulta:
-- `doc/SYSTEM_DOCUMENTATION.md` - Documentazione architettura
-- `doc/WEB_DASHBOARD_README.md` - Guida dashboard web
-- `doc/MANUAL_CONTROL_README.md` - Controllo manuale irrigazione
-- `doc/TEST_BRIDGE_README.md` - Test bridge Arduino
+```bash
+cd mqtt\_broker
+docker-compose up -d
+cd ..
 
-## 🤝 Contribuire
+```
 
-1. Fork del repository
-2. Creare branch feature (`git checkout -b feature/AmazingFeature`)
-3. Commit delle modifiche (`git commit -m 'Add AmazingFeature'`)
-4. Push al branch (`git push origin feature/AmazingFeature`)
-5. Aprire Pull Request
+### 4\. Installare le Dipendenze Python
 
+```bash
+pip install -r requirements.txt
+
+```
+
+### 5\. Avviare il Bridge Serial-MQTT
+
+```bash
+python bridge/bridge\_Serial\_MQTT.py
+
+```
+
+### 6\. Avviare il Data Collector
+
+In un nuovo terminale:
+
+```bash
+python data\_collector/data\_collector\_main.py
+
+```
+
+### 7\. Avviare il Backend Flask REST API
+
+In un nuovo terminale:
+
+```bash
+python dashboard/web\_api\_server.py
+
+```
+
+### 8\. Installare ed Avviare il Frontend Next.js
+
+In un nuovo terminale:
+
+```bash
+cd dashboard
+npm install
+npm run dev
+
+```
+
+Visita **`http://localhost:3000`** nel browser per accedere alla dashboard.
+
+\---
+
+## 🔮 Sviluppi Futuri
+
+* **Sensori Aggiuntivi**: Integrazione di sensori di luminosità, temperatura ambientale e pH del terreno.
+* **Gestione Utenti e Notifiche Push**: Sistema di autenticazione e notifiche su smartphone per avvisi su serbatoio vuoto o anomalie.
+* **Interfaccia Grafica per Policy**: Modifica dinamica delle regole di irrigazione dalla dashboard senza modificare file JSON.
+* **Algoritmi Predittivi ML**: Utilizzo di modelli di Machine Learning per ottimizzare i consumi d'acqua in base alle condizioni meteo e alla specie vegetale.
+* **Supporto Multi-Vaso**: Gestione centralizzata di più vasi con risorse e serbatoi condivisi.
+
+\---
+
+## 🎓 Contesto Accademico
+
+Questo prototipo è stato sviluppato all'interno del corso di Internet of Things, erogato dall'Università degli Studi di Modena e Reggio Emilia (UNIMORE) e come elaborato finale.
+
+\---
 ## 📄 Licenza
 
 Distribuito sotto licenza MIT. Vedi `LICENSE` per maggiori informazioni.
