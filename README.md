@@ -4,7 +4,7 @@
 
 Il sistema raccoglie i dati dal sensore di umidità del terreno tramite un microcontrollore **Arduino UNO R4 WiFi**, li invia via connessione Seriale a un **Bridge Serial-MQTT** e li smista a un broker **Mosquitto**. Un **Data Collector** cloud in Python elabora i dati, gestisce il *Digital Twin* della pianta su file JSON, valuta le policy decisionali ed aziona la pompa di irrigazione. Un backend in **Flask** espone le API REST consumate da una dashboard web moderna sviluppata in **Next.js** e **React**.
 
-\---
+
 
 ## Caratteristiche Principali
 
@@ -15,7 +15,6 @@ Il sistema raccoglie i dati dal sensore di umidità del terreno tramite un micro
 * **Digital Twin \& Persistenza JSON**: Modellazione digitale dello stato del vaso con salvataggio dello storico misurazioni ed azioni degli attuatori.
 * **Architettura Modulare \& Disaccoppiata**: Implementazione basata sul pattern Publish/Subscribe (MQTT) con separazione netta tra logica hardware, data collector, backend e frontend.
 
-\---
 
 ## 🏗️ Architettura del Sistema
 
@@ -50,7 +49,6 @@ Il flusso informativo collega l'ambiente fisico al Cloud e alla Web App tramite 
 
 ```
 
-\---
 
 ## 🔌 Architettura Hardware e Circuiti
 
@@ -73,7 +71,6 @@ Il flusso informativo collega l'ambiente fisico al Cloud e alla Web App tramite 
 |**Circuito Potenza Pompa**|Relè COM / Relè NO|**+ 3V** Alimentatore Esterno / **+ (Rosso)** Pompa|
 |**Massa Comune**|**- (Nero)** Pompa / GND|**- 3V** Alimentatore Esterno / **GND** Arduino|
 
-\---
 
 ## 📡 Protocolli di Comunicazione e Topic MQTT
 
@@ -98,7 +95,7 @@ Il flusso informativo collega l'ambiente fisico al Cloud e alla Web App tramite 
 * **Telemetria Sensori**: `plant/sensor/humidity` (QoS 0)
 * **Comandi Attuatori**: `plant/actuator/irrigation` (Payload: `start` / `stop`)
 
-\---
+
 
 ## 💻 Moduli Software
 
@@ -136,7 +133,6 @@ Dashboard sviluppata con **Next.js 14**, **React**, **TypeScript**, **Tailwind C
 * **Controlli Manuali**: Pulsante Play/Stop per attivare/arrestare manualmente la pompa con feedback in tempo reale.
 * **Polling Automatico**: Aggiornamento periodico dell'interfaccia ogni 10 secondi.
 
-\---
 
 ## 📂 Struttura del Repository
 
@@ -165,8 +161,6 @@ Plants-System/
     └── 📄 smart\_pot.ino          # Firmware Arduino (Sensore + Relè + Matrice LED)
 
 ```
-
-\---
 
 ## ⚙️ Configurazione
 
@@ -309,7 +303,6 @@ npm run dev
 
 Visita **`http://localhost:3000`** nel browser per accedere alla dashboard.
 
-\---
 
 ## 🔮 Sviluppi Futuri
 
@@ -319,13 +312,11 @@ Visita **`http://localhost:3000`** nel browser per accedere alla dashboard.
 * **Algoritmi Predittivi ML**: Utilizzo di modelli di Machine Learning per ottimizzare i consumi d'acqua in base alle condizioni meteo e alla specie vegetale.
 * **Supporto Multi-Vaso**: Gestione centralizzata di più vasi con risorse e serbatoi condivisi.
 
-\---
 
 ## 🎓 Contesto Accademico
 
 Questo prototipo è stato sviluppato all'interno del corso di Internet of Things, erogato dall'Università degli Studi di Modena e Reggio Emilia (UNIMORE) e come elaborato finale.
 
-\---
 ## 📄 Licenza
 
 Distribuito sotto licenza MIT. Vedi `LICENSE` per maggiori informazioni.
